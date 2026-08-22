@@ -37,6 +37,7 @@ venv/
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+*.listing
 
 # ── OS / editor ─────────────────────────────────────────────
 .DS_Store
