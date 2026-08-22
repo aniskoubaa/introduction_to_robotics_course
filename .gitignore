@@ -1,0 +1,46 @@
+# ── Student data — never commit ─────────────────────────────
+05-students-attendance-records/*
+!05-students-attendance-records/README.md
+06-samples-of-students-graded-work/*
+!06-samples-of-students-graded-work/README.md
+08-clos-assessment/*
+!08-clos-assessment/README.md
+09-grades-and-grade-distributions/*
+!09-grades-and-grade-distributions/README.md
+
+# ── Instructor-only material ────────────────────────────────
+**/*_solutions.pdf
+**/*_solutions.tex
+**/*_key.pdf
+07-exams-answer-keys-or-assessment-rubrics/*
+!07-exams-answer-keys-or-assessment-rubrics/README.md
+
+# ── ROS 2 / colcon build artifacts ──────────────────────────
+code/build/
+code/install/
+code/log/
+*.bag
+*.db3
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ── LaTeX ───────────────────────────────────────────────────
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# ── OS / editor ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+~$*
