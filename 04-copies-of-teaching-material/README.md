@@ -56,8 +56,16 @@ preamble, not by convention. Mathematics and pseudocode use the light box instea
 **4. Every B session ends with something that runs.** A student must leave the room having
 seen their own node print, move, or draw in RViz2. Never a half-typed file.
 
-**6. Thirty slides is the ceiling for a 1.5-hour session.** Not a target — a ceiling. The
-count includes section-opener slides, because the students sit through those too.
+**6. No slide body exceeds 25 words.** Section dividers and code slides are exempt. A
+1.5-hour session runs **40–60 slides**. Slide count is not a quality signal; words per slide
+is. Everything cut goes into `\note{}` and compiles to a separate notes PDF.
+
+> ⚠️ **This rule replaces the former "30 slides is the ceiling".** That rule, combined with a
+> fixed amount of content, could only be satisfied by compressing prose onto slides — and the
+> Weeks 1–3 and 7 decks show the damage: a median of 57–96 words per slide against 12–20 in
+> the legacy ROS course that this material is modelled on. **Those eight decks predate this
+> rule and are scheduled for rewrite.** See
+> `../../docs/2026-08-22-2153-slide-design-review-against-legacy-decks.md`.
 
 **5. The ROS 2 distribution is named in exactly one place** — `../setup/README.md`. Every
 other document refers to it. A distribution upgrade must be a one-line change.
