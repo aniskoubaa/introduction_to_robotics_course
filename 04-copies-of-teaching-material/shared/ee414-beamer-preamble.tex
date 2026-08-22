@@ -9,8 +9,9 @@
 %     \title...\author...\date...
 %     \begin{document} ... \end{document}
 %
-% Build any deck with TWO pdflatex passes (three if it uses \fullslide,
-% whose TikZ page anchors come from the .aux).
+% Build any deck with THREE pdflatex passes. Two is not enough: the section
+% divider and \fullslide both position with `remember picture,overlay', whose
+% page anchors come from the .aux, so on pass two they are still wrong.
 %
 % Adapted from the SE 100 preamble: same palette, same terminal-window code
 % rule, same "under the lid" device renamed \begin{underhood} for this course.
@@ -46,14 +47,22 @@
 \setbeamertemplate{navigation symbols}{}
 \setbeamerfont{block title}{size=\normalsize}
 
+% Section divider, in the dark full-bleed style of the legacy decks: the room
+% goes dark for one beat, the new subject is the only thing on the screen, and
+% the course name sits underneath it so a student photographing the slide still
+% knows what it belongs to.
 \AtBeginSection[]{
   \begin{frame}[plain]
-    \vfill
-    \centering
-    \begin{beamercolorbox}[sep=10pt,center,rounded=true,shadow=true]{palette primary}
-      \usebeamerfont{title}\insertsectionhead
-    \end{beamercolorbox}
-    \vfill
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[primary] (current page.south west) rectangle (current page.north east);
+      \node[text=white, font=\Large\bfseries, align=center, text width=0.8\paperwidth]
+        at ([yshift=0.6cm]current page.center) {\insertsectionhead};
+      \draw[accent, line width=1pt]
+        ([xshift=-2.2cm,yshift=-0.15cm]current page.center) --
+        ([xshift=2.2cm,yshift=-0.15cm]current page.center);
+      \node[text=accent!85, font=\footnotesize]
+        at ([yshift=-0.75cm]current page.center) {EE\,414 --- Introduction to Robotics};
+    \end{tikzpicture}
   \end{frame}
 }
 
@@ -279,3 +288,92 @@
 \newcommand{\ubuntuver}{Ubuntu 24.04 LTS}
 \newcommand{\gazebover}{Gazebo Harmonic}
 \newcommand{\pyver}{3.12}
+
+% ---------------------------------------------------------------
+% COMMAND ANATOMY -- the signature device of this course.
+%
+%   \cmdanatomy{n}{caption}{tok1}{tok2}{tok3}{tok4}{tok5}
+%
+% The whole command is shown once, large. Token n is dark and bold; every other
+% token is faded almost to nothing, and one short caption hangs below it on a
+% leader line. Repeat the slide, moving n along, and a four-word command becomes
+% four slides that each teach exactly one thing.
+%
+% WHY IT IS WORTH FOUR SLIDES. A beginner reading
+%       ros2 run turtlesim turtlesim_node
+% cannot tell which words are ROS, which are the package, and which are the
+% program -- they are all lowercase, all underscored, all unfamiliar. Fading the
+% other three is what makes the question answerable. Students who have seen this
+% can parse a command they have never met; students who saw the line once,
+% whole, cannot.
+%
+% Unused trailing tokens are passed as {} .
+\makeatletter
+\newcommand{\ee@cmdtok}[3]{%
+  \edef\ee@pn{tok\the\numexpr#1-1\relax}%
+  \ifnum#1=#2\relax
+    \node[anchor=west, text=primary, font=\ttfamily\ee@cmdfont\bfseries]
+      (tok#1) at (\ee@pn.east) {\,#3};%
+    \coordinate (ee@hl) at (tok#1.south);%
+  \else
+    \node[anchor=west, text=primary!22, font=\ttfamily\ee@cmdfont]
+      (tok#1) at (\ee@pn.east) {\,#3};%
+  \fi}
+% The optional first argument is the size of the command line. \LARGE is the
+% default and the right answer for a three- or four-token command. A long one
+% -- anything past about forty characters -- must be stepped down to \large or
+% it runs off the slide; that is a real constraint of the device, and the cure
+% is usually to shorten the command being taught rather than shrink the type.
+\newcommand{\ee@cmdfont}{\LARGE}
+\newcommand{\cmdanatomy}[8][\LARGE]{%
+  \renewcommand{\ee@cmdfont}{#1}%
+  \vfill
+  \begin{center}
+  \begin{tikzpicture}
+    \coordinate (tok0) at (0,0);
+    \ee@cmdtok{1}{#2}{#4}%
+    \ee@cmdtok{2}{#2}{#5}%
+    \ee@cmdtok{3}{#2}{#6}%
+    \ee@cmdtok{4}{#2}{#7}%
+    \ee@cmdtok{5}{#2}{#8}%
+    % The bounding box is pinned to the command row and a fixed depth below it,
+    % NOT to the caption. Without this the picture is re-centred on every slide
+    % (the caption sits under a different token each time) and the command
+    % visibly jumps left and right through the sequence -- which destroys the
+    % one effect the device exists for: the line staying still while the
+    % highlight moves along it.
+    \useasboundingbox ([yshift=-2.5cm]tok0) rectangle (tok5.north east);
+    \draw[primary!45, line width=0.7pt] (ee@hl) -- ++(0,-0.6) coordinate (ee@cap);
+    \node[below, font=\small, text=primary!80, align=center, text width=6.4cm]
+      at (ee@cap) {#3};
+  \end{tikzpicture}
+  \end{center}
+  \vfill}
+\makeatother
+
+% ---------------------------------------------------------------
+% \figslide{title}{file}{the one sentence}{credit line, or {} for none}
+%
+% A figure that came from somewhere else carries its source ON THE SLIDE, in
+% small type, every time it is shown. Not a courtesy -- the students are being
+% taught to attribute, and a deck that quietly reuses a book's artwork teaches
+% the opposite of what the AI-tool policy in Week 1 asks of them.
+\newcommand{\figslide}[4]{%
+  \begin{frame}{#1}
+    \vspace{-0.3em}
+    \begin{center}
+      \includegraphics[width=0.90\textwidth,height=0.66\textheight,keepaspectratio]{#2}
+    \end{center}
+    \vspace{0.2em}
+    \centering{\small #3}
+    \vfill
+    {\tiny\color{primary!45} #4}
+  \end{frame}%
+}
+
+% \keyline{...} -- the one sentence the slide exists to deliver, in a bar.
+% At most one per slide. Two means the slide is really two slides.
+\newcommand{\keyline}[1]{%
+  \begin{beamercolorbox}[sep=6pt,center,rounded=true]{palette secondary}
+    \small #1
+  \end{beamercolorbox}}

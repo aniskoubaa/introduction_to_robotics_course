@@ -2,16 +2,31 @@
 % EE 414 - Introduction to Robotics
 % Week 2, Lecture A: The ROS 2 Computation Graph
 % Fall 2026 - Alfaisal University
-% Duration: 1.5 hours   |   30 slides
+% Duration: 1.5 hours
+%
+% REVISION (Aug 2026): rebuilt in the style of the instructor's own ROS
+% course. Three changes, all deliberate:
+%   1. Workspaces, colcon, sourcing and underlay/overlay MOVED OUT to W02B.
+%      They are things you type, and they now live in the session where you
+%      type them. This lecture was carrying nine concepts in ninety minutes.
+%   2. The four communication mechanisms are introduced with the legacy
+%      course's figures -- publisher/subscriber, the "what time is it?"
+%      service, the household-chores action -- before any table.
+%   3. `ros2 topic info --verbose' is taught with \cmdanatomy, one token at
+%      a time, because it is the command that answers the QoS question.
 %
 % Build: pdflatex EE414_W02A_computation_graph.tex   (twice)
-% logo.png must sit beside this file.
+% logo.png must sit beside this file; figures/ beside it too.
 % =====================================================================
 \documentclass[aspectratio=169]{beamer}
 \usetheme{Madrid}
 \usecolortheme{default}
 
 \input{../../shared/ee414-beamer-preamble.tex}
+
+% Every figure lifted from the ROS Robot Programming book carries this line.
+\newcommand{\pyocredit}{Figure: \emph{ROS Robot Programming}, Y.~Pyo,
+  H.~Cho, L.~Jung, D.~Lim (ROBOTIS, 2017). Reused from the instructor's ROS course.}
 
 \title[EE 414 --- Week 2A]{The ROS 2 Computation Graph}
 \subtitle{Nodes, messages, discovery, and the setting that decides whether anything arrives}
@@ -69,10 +84,13 @@
 \end{frame}
 
 % ---------------------------------------------------------------
+\figslide{The whole lecture, in one picture}{w02_graph}
+  {Two nodes. Four ways to talk. Nothing else --- and we spend today on the four arrows.}
+  {\pyocredit}
+
+% ---------------------------------------------------------------
 \begin{frame}{The node: the unit of a robot program}
-  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
-    A \textbf{node} is one process that does one job.
-  \end{beamercolorbox}
+  \keyline{A \textbf{node} is one process that does one job.}
 
   \vspace{0.9em}
   \begin{columns}[T,onlytextwidth]
@@ -100,39 +118,6 @@
     If you cannot say what a node does in one short sentence without using ``and'', it is
     two nodes.
   \end{underhood}
-\end{frame}
-
-% ---------------------------------------------------------------
-\begin{frame}{Four ways nodes talk}
-  \small
-  \begin{center}
-  \begin{tabular}{@{}p{1.9cm}p{3.3cm}p{2.5cm}p{3.0cm}@{}}
-    \toprule
-    \textbf{Mechanism} & \textbf{Shape} & \textbf{Use it for} & \textbf{Example} \\
-    \midrule
-    \textbf{Topic}
-      & one-way stream, many-to-many, nobody waits
-      & continuous data
-      & \texttt{/scan}, \texttt{/odom}, \texttt{/cmd\_vel} \\[0.35em]
-    \textbf{Service}
-      & request $\rightarrow$ reply, caller waits
-      & a quick question
-      & ``reset the odometry'' \\[0.35em]
-    \textbf{Action}
-      & goal, feedback, result --- cancellable
-      & long jobs
-      & ``navigate to the door'' \\[0.35em]
-    \textbf{Parameter}
-      & a named value the node reads, and you can change
-      & configuration
-      & \texttt{max\_speed = 0.22} \\
-    \bottomrule
-  \end{tabular}
-  \end{center}
-
-  \vspace{0.5em}
-  Topics carry almost all robot traffic --- and all of Weeks 4--6. Actions arrive properly in
-  Week 11, when you ask Nav2 to drive somewhere and it takes forty seconds.
 \end{frame}
 
 % ---------------------------------------------------------------
@@ -196,6 +181,104 @@
   \vspace{0.3em}
   \footnotesize\textbf{Which is also a bug waiting to happen.} Two things commanding one robot
   is exactly as bad as it sounds. Week 11 is partly about arbitrating that.
+\end{frame}
+
+% ===============================================================
+\section{Four ways nodes talk}
+% ===============================================================
+
+\figslide{One: a topic --- broadcast, and nobody waits}{w02_pubsub}
+  {The publisher does not know who is listening, or whether anyone is. That is the point.}
+  {\pyocredit}
+
+\figslide{Two: a service --- ask, and wait for the answer}{w02_service}
+  {One client, one server, one question, one reply. The client blocks until it comes back.}
+  {\pyocredit}
+
+\figslide{Three: an action --- a long job you can watch and cancel}{w02_action}
+  {``Mop the floor'' takes minutes. You get progress while it runs, and a result at the end.}
+  {\pyocredit}
+
+% ---------------------------------------------------------------
+\begin{frame}{And four: a parameter}
+  \small
+  A \textbf{parameter} is a named value a node reads at start-up, and that you can change
+  from outside while it runs.
+
+  \vspace{0.6em}
+  \begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \texttt{max\_speed} & \texttt{0.22} \quad metres per second \\
+    \texttt{scan\_topic} & \texttt{/scan} \\
+    \texttt{kp} & \texttt{1.5} \quad the gain in your controller \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.8em}
+  \begin{inthefield}
+    \footnotesize
+    The test of whether something is a parameter: \textbf{would you want to change it without
+    editing code?} A speed limit, yes. The number of wheels, no. Getting this wrong is why
+    some robot code has forty numbers hard-coded in the middle of a control loop.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The four, side by side}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{1.9cm}p{3.3cm}p{2.5cm}p{3.0cm}@{}}
+    \toprule
+    \textbf{Mechanism} & \textbf{Shape} & \textbf{Use it for} & \textbf{Example} \\
+    \midrule
+    \textbf{Topic}
+      & one-way stream, many-to-many, nobody waits
+      & continuous data
+      & \texttt{/scan}, \texttt{/odom}, \texttt{/cmd\_vel} \\[0.35em]
+    \textbf{Service}
+      & request $\rightarrow$ reply, caller waits
+      & a quick question
+      & ``reset the odometry'' \\[0.35em]
+    \textbf{Action}
+      & goal, feedback, result --- cancellable
+      & long jobs
+      & ``navigate to the door'' \\[0.35em]
+    \textbf{Parameter}
+      & a named value the node reads, and you can change
+      & configuration
+      & \texttt{max\_speed = 0.22} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  Topics carry almost all robot traffic --- and all of Weeks 4--6. Actions arrive properly in
+  Week 11, when you ask Nav2 to drive somewhere and it takes forty seconds.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{How to choose --- four questions, in order}
+  \small
+  \begin{enumerate}
+    \item \textbf{Does it arrive over and over, on its own?}\\
+          {\footnotesize Sensor readings, velocity commands, poses. $\Rightarrow$ \textbf{topic}}
+    \item \textbf{Do I need an answer before I can continue?}\\
+          {\footnotesize And does it come back immediately? $\Rightarrow$ \textbf{service}}
+    \item \textbf{Will it take seconds or minutes, and might I want to stop it?}\\
+          {\footnotesize $\Rightarrow$ \textbf{action}}
+    \item \textbf{Is it a setting, not an event?}\\
+          {\footnotesize $\Rightarrow$ \textbf{parameter}}
+  \end{enumerate}
+
+  \vspace{0.6em}
+  \begin{underhood}[The mistake this prevents]
+    \footnotesize
+    Using a service for something slow. The caller waits, its callbacks stop running, and the
+    node stops responding to anything else. Every semester somebody builds a
+    \texttt{drive\_to\_goal} service and cannot understand why their robot goes deaf.
+  \end{underhood}
 \end{frame}
 
 % ===============================================================
@@ -282,6 +365,11 @@ Vector3  angular     # x, y, z   radians / second
 \section{How nodes find each other}
 % ===============================================================
 
+\figslide{This process does not exist any more}{w02_roscore}
+  {In ROS 1 nothing connected until \texttt{roscore} was running. \rosver{} deleted it.}
+  {Screenshot: the instructor's ROS 1 course (2020), ROS Noetic. Shown as history, not as something you will run.}
+
+% ---------------------------------------------------------------
 \begin{frame}{There is no central process}
   \small
   When a node starts, it announces itself on the network and listens for others doing the
@@ -410,102 +498,79 @@ Subscription count: 1
   \footnotesize
   The subscriber asked for a guarantee the publisher does not offer, so the two are never
   matched. Not a bug --- the system refusing to pretend.
-  \begin{inthefield}
-    \footnotesize
-    \textbf{Memorise \texttt{ros2 topic info -{}-verbose}.} When a subscriber is silent and
-    the publisher is clearly publishing, nothing else answers the question this fast.
-  \end{inthefield}
-\end{frame}
-
-% ===============================================================
-\section{Workspaces, packages, and building}
-% ===============================================================
-
-\begin{frame}[fragile]{Where your code lives}
-  \begin{shells}
-ee414_ws/
-  src/                    <- YOUR code. Only this is yours.
-    ee414_w02_first_node/
-  build/                  <- generated. Never edit, never commit.
-  install/                <- generated. What actually gets run.
-  log/                    <- generated. Build and run logs.
-  \end{shells}
-
-  \vspace{0.5em}
-  \small
-  A \textbf{workspace} is a folder of packages you build together. A \textbf{package} is the
-  unit you build, share and install --- one folder, its own dependencies, its own nodes.
-
-  \vspace{0.4em}
-  \footnotesize
-  You edit \texttt{src/}. \texttt{colcon} produces the other three. If you are ever tempted to
-  fix something in \texttt{build/}, the answer is in \texttt{src/}.
 \end{frame}
 
 % ---------------------------------------------------------------
-\begin{frame}[fragile]{Build, then source. Always both.}
-  \begin{shells}
-$ cd ~/ee414_ws
-$ colcon build --symlink-install
-$ source install/setup.bash
-$ ros2 run ee414_w02_first_node talker
-  \end{shells}
+% Command anatomy. Four slides for one command, because this is THE command
+% that answers "both nodes are running and nothing arrives".
+\begin{frame}{The command that answers it}
+  \cmdanatomy{1}{The ROS 2 command-line tool. Every command in this course starts with it.}
+    {ros2}{topic}{info}{/scan}{-{}-verbose}
+\end{frame}
 
-  \vspace{0.5em}
-  \small
-  \textbf{Sourcing is not optional and it does not persist.} It edits the environment of
-  \emph{one shell}. A new terminal is a new shell, and knows nothing.
+\begin{frame}{The command that answers it}
+  \cmdanatomy{2}{The thing you are asking about: topics. Others are \texttt{node}, \texttt{service}, \texttt{param}, \texttt{bag}.}
+    {ros2}{topic}{info}{/scan}{-{}-verbose}
+\end{frame}
 
-  \vspace{0.5em}
-  \begin{underhood}[What sourcing actually does]
-    \footnotesize
-    It adds your \texttt{install/} to the paths ROS 2 searches. That is the entire mechanism
-    behind ``\texttt{Package not found}'' when the package plainly exists --- the shell was
-    never told where to look.
-  \end{underhood}
+\begin{frame}{The command that answers it}
+  \cmdanatomy{3}{What to do with it. \texttt{list}, \texttt{echo}, \texttt{hz}, \texttt{pub} are the others you will use.}
+    {ros2}{topic}{info}{/scan}{-{}-verbose}
+\end{frame}
+
+\begin{frame}{The command that answers it}
+  \cmdanatomy{4}{Which topic. The leading slash is part of the name.}
+    {ros2}{topic}{info}{/scan}{-{}-verbose}
+\end{frame}
+
+\begin{frame}{The command that answers it}
+  \cmdanatomy{5}{\textbf{Without this flag you do not see the QoS profiles} --- and the QoS profiles are the whole answer.}
+    {ros2}{topic}{info}{/scan}{-{}-verbose}
 \end{frame}
 
 % ---------------------------------------------------------------
-\begin{frame}{Underlay and overlay}
-  \begin{center}
-  \begin{tikzpicture}[node distance=0.45cm]
-    \node[hw, minimum width=8.2cm, minimum height=0.85cm] (under)
-      {\footnotesize \textbf{underlay} --- \texttt{/opt/ros/\ldots} : rclpy, Nav2, TF2, the standard messages};
-    \node[plan, minimum width=8.2cm, minimum height=0.85cm, above=of under] (over)
-      {\footnotesize \textbf{overlay} --- \texttt{\textasciitilde/ee414\_ws/install} : your packages};
-    \draw[flowarrow] (under) -- node[right,font=\scriptsize] {sourced first} (over);
-  \end{tikzpicture}
+\begin{frame}{Silent topic: the order to check, every time}
+  \small
+  \begin{enumerate}
+    \item \texttt{ros2 node list} --- \textbf{is the publisher even alive?}
+    \item \texttt{ros2 topic list} --- does the topic exist, spelled exactly that way?
+    \item \texttt{ros2 topic info <topic> -{}-verbose} --- counts first, then QoS.
+    \item \texttt{printenv ROS\_DOMAIN\_ID} --- \textbf{in both terminals.}
+  \end{enumerate}
+
+  \vspace{0.7em}
+  \begin{center}\footnotesize
+  \begin{tabular}{@{}p{4.8cm}p{6.0cm}@{}}
+    \toprule
+    Publisher 1, subscriber 0 & Different topic name, or different domain \\
+    Both 1, no data & QoS mismatch --- read the two profiles \\
+    Topic missing entirely & Publisher not running, or shell not sourced \\
+    \bottomrule
+  \end{tabular}
   \end{center}
 
-  \vspace{0.5em}
-  \small
-  Source the underlay, then your workspace. Your overlay wins where names collide --- which is
-  how you can develop a modified version of a system package without uninstalling anything.
-
-  \vspace{0.5em}
-  \begin{inthefield}
-    \footnotesize
-    Sourcing the overlay in the wrong order, or sourcing two different workspaces into one
-    shell, produces the strangest bugs in robotics: the code you are editing is not the code
-    that runs. When something is inexplicable, open a clean terminal.
-  \end{inthefield}
+  \vspace{0.4em}
+  \centering\footnotesize
+  \textbf{Learn this order now.} It is the same four commands in Week 11, on a robot with
+  forty topics.
 \end{frame}
 
-% ---------------------------------------------------------------
+% ===============================================================
+\section{Next}
+% ===============================================================
+
 \begin{frame}{What session B does with all of this}
   \begin{enumerate}\small
-    \item Create a workspace and a package.
-    \item Write a publisher --- a node that sends a message ten times a second.
-    \item Watch it from outside with \texttt{ros2 topic list}, \texttt{echo}, \texttt{hz}.
-    \item Write a subscriber, and see the two connect in \texttt{rqt\_graph}.
+    \item Run a robot simulator \emph{somebody else wrote}, and take its graph apart from the
+          command line.
+    \item Build a workspace and a package of your own.
+    \item Write a publisher, then a subscriber, and watch them find each other.
     \item Start both with a single launch file.
     \item Break it on purpose, five ways, and fix each.
   \end{enumerate}
 
   \vspace{0.8em}
-  \begin{beamercolorbox}[sep=6pt,center,rounded=true]{palette secondary}
-    \small Bring a laptop with the setup check passing. Without it, you will watch.
-  \end{beamercolorbox}
+  \keyline{Bring a laptop with the setup check passing. Without it, you will watch.}
 
   \vspace{0.5em}
   \centering\footnotesize

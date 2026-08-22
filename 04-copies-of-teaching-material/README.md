@@ -58,7 +58,11 @@ Mathematics and pseudocode use the light box instead.
 1.5-hour session runs **40–60 slides**. Slide count is not a quality signal; words per slide
 is. Everything cut goes into `\note{}` and compiles to a separate notes PDF.
 
-**5. Code is revealed one line per slide**, the new line highlighted (`\codestep`).
+**5. Code is revealed one line per slide**, the new line highlighted (`\codestep`). **A command
+is revealed one token per slide** (`\cmdanatomy`): the whole line stays put, every token but one
+fades to near-invisible, and one caption hangs below the live token. Any command whose tokens a
+first-year student cannot name gets this treatment — which in practice means the first time each
+`ros2` verb appears.
 
 **6. Real screenshots, not typeset listings**, wherever a student will compare against their
 own screen. A screenshot is the artifact of having run it — rule 2, discharged. Illustrations
@@ -67,6 +71,16 @@ generated may make a factual claim about a real person, place or piece of work.*
 
 **7. The ROS 2 distribution is named in exactly one place** — `../setup/README.md` — and
 reached everywhere else through `\rosver`.
+
+**7a. Every deck builds with THREE `pdflatex` passes.** The section divider and `\fullslide`
+position with `remember picture,overlay`, whose page anchors come from the `.aux`. After two
+passes a divider is a dark rectangle with no text on it, and the build reports no error —
+so this is a rule, not a preference.
+
+**7b. Borrowed artwork carries its source on the slide, in small type, every time it is
+shown** (`\figslide`, fourth argument). Not a courtesy. The students are being taught to
+attribute; a deck that quietly reuses a book's figures teaches the opposite of what the Week 1
+AI-tool policy asks of them.
 
 ### Flow
 
@@ -87,11 +101,18 @@ every B session ends with something that **runs** — never a half-typed file.
 student has felt the problem X solves. You cannot want quaternions until Euler angles have hurt
 you.
 
-> ⚠️ **Rules 4–6 and 8–12 postdate the Weeks 1–3 and 7 decks.** Those eight decks carry a median
+> ✅ **Week 2 was rebuilt against these rules on 22 August 2026** — workspaces moved from A to
+> B, B restructured demo-first on turtlesim, `\cmdanatomy` introduced, and the four
+> communication mechanisms given a figure each. It is the worked example of rules 5, 7b and 11.
+> See `week02/README.md`, "What changed in the August 2026 revision".
+
+> ⚠️ **Rules 4–6 and 8–12 postdate the Weeks 1, 3 and 7 decks.** Those eight decks carry a median
 > of 57–96 words per slide against 12–20 in the legacy ROS course they are modelled on, and
 > W07A introduces rotation before translation. They are **dense, not wrong** — deliverable as
 > they stand, and scheduled for retrofit *after* the unwritten weeks are authored natively in
-> the new format. See the plan, §6.
+> the new format. See the plan, §6. Week 2 has now been done; the density rule (4) is still
+> **not** satisfied even there — its slides are shorter than they were, but the prose slides
+> still run past 25 words. That is the remaining work, and it needs `\note{}` first.
 
 ## Critical path
 

@@ -2,12 +2,26 @@
 % EE 414 - Introduction to Robotics
 % Week 2, Lecture B: Your First Nodes  (hands-on session)
 % Fall 2026 - Alfaisal University
-% Duration: 1.5 hours   |   30 slides
+% Duration: 1.5 hours
 %
 % This is a WALKTHROUGH deck: students type along. Checkpoints are marked
 % with a "Checkpoint" box -- do not advance past one until the room is with you.
 %
-% Build: pdflatex EE414_W02B_first_nodes.tex   (twice)
+% REVISION (Aug 2026): restructured DEMO-FIRST, following the instructor's own
+% ROS course and standing rule 9. The session no longer opens with `pkg create'.
+% It opens with turtlesim -- a robot simulator the students did not write --
+% which they take apart from the command line before they write a single line.
+%
+% WHY. Building a talker first means the first graph a student inspects is a
+% graph they already understand, so the CLI looks like ceremony. Inspecting
+% somebody else's running system first makes the same commands the only way to
+% find out what is going on -- and that is what those commands are actually for
+% in Week 11, on a robot with forty topics that nobody in the room wrote.
+%
+% Also absorbed from W02A: workspaces, colcon, sourcing, underlay/overlay.
+% They belong in the session where they are typed.
+%
+% Build: pdflatex EE414_W02B_first_nodes.tex   (THREE passes)
 % logo.png must sit beside this file.
 % =====================================================================
 \documentclass[aspectratio=169]{beamer}
@@ -17,7 +31,7 @@
 \input{../../shared/ee414-beamer-preamble.tex}
 
 \title[EE 414 --- Week 2B]{Your First Nodes}
-\subtitle{A workspace, a publisher, a subscriber, and five ways to break them}
+\subtitle{Take a robot apart from the command line, then build one of your own}
 \author[A. Koubaa]{Prof.\ Anis Koubaa}
 \institute[Alfaisal University]{
     EE 414 --- Introduction to Robotics\\
@@ -35,16 +49,14 @@
 
 % ===============================================================
 \begin{frame}{How this session works}
-  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
-    \small You type. I type. We stop at every checkpoint until the room is together.
-  \end{beamercolorbox}
+  \keyline{You type. I type. We stop at every checkpoint until the room is together.}
 
   \vspace{0.8em}
   {\scriptsize\tableofcontents[hideallsubsections]}
 \end{frame}
 
 % ===============================================================
-\section{A workspace and a package}
+\section{A robot you did not write}
 % ===============================================================
 
 \begin{frame}[fragile]{Before anything else}
@@ -72,6 +84,237 @@ $ ros2 topic list
 \end{frame}
 
 % ---------------------------------------------------------------
+\begin{frame}{We start with somebody else's robot}
+  \small
+  \texttt{turtlesim} is a two-dimensional robot simulator that ships with \rosver. You did
+  not write it, you cannot see its source, and in the next twenty minutes you will find out
+  \textbf{exactly} how it is put together.
+
+  \vspace{0.8em}
+  \keyline{This is the skill. Not writing nodes --- reading a running system.}
+
+  \vspace{0.8em}
+  \begin{inthefield}
+    \footnotesize
+    In Week 11 you will start Nav2: roughly twenty nodes, none of them yours, and something
+    will not work. The four commands in this section are what you will use. Learning them on
+    a turtle costs you nothing; learning them on Nav2 costs you an afternoon.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+% Command anatomy. This is the first ROS 2 command the class ever runs,
+% and every token in it is unfamiliar. One slide each.
+\begin{frame}{Start it}
+  \cmdanatomy{1}{The ROS 2 command-line tool. Every command this semester begins here.}
+    {ros2}{run}{turtlesim}{turtlesim\_node}{}
+\end{frame}
+
+\begin{frame}{Start it}
+  \cmdanatomy{2}{The verb: start one node and keep it in the foreground.}
+    {ros2}{run}{turtlesim}{turtlesim\_node}{}
+\end{frame}
+
+\begin{frame}{Start it}
+  \cmdanatomy{3}{The \textbf{package} --- the installed folder the program was shipped in.}
+    {ros2}{run}{turtlesim}{turtlesim\_node}{}
+\end{frame}
+
+\begin{frame}{Start it}
+  \cmdanatomy{4}{The \textbf{executable} inside that package. Not the file name --- a name the package declared.}
+    {ros2}{run}{turtlesim}{turtlesim\_node}{}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{A second terminal, and something to drive it}
+  \begin{shells}
+$ ros2 run turtlesim turtle_teleop_key
+Use arrow keys to move the turtle. 'q' to quit.
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  Two processes. Neither was compiled with the other. Neither names the other anywhere in its
+  code. Press an arrow key and the turtle moves.
+
+  \vspace{0.6em}
+  \begin{underhood}[What just happened]
+    \footnotesize
+    \texttt{turtle\_teleop\_key} published a \texttt{Twist}. \texttt{turtlesim\_node}
+    subscribed to it. They found each other by \textbf{discovery}, because they are on the
+    same domain and agreed on a topic name --- and nothing else.
+  \end{underhood}
+
+  \vspace{0.3em}
+  \centering\footnotesize \textbf{Checkpoint 1.} Everyone has a turtle that moves.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Now take it apart --- third terminal}
+  \begin{shells}
+$ ros2 node list
+/turtlesim
+/teleop_turtle
+
+$ ros2 topic list
+/turtle1/cmd_vel
+/turtle1/color_sensor
+/turtle1/pose
+/parameter_events
+/rosout
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  You have just recovered the node list and the topic list of a program you have never seen
+  the source of, from outside, while it runs.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Ask one node what it does}
+  \begin{shells}
+$ ros2 node info /turtlesim
+Subscribers:
+  /turtle1/cmd_vel: geometry_msgs/msg/Twist
+Publishers:
+  /turtle1/pose: turtlesim/msg/Pose
+Services:
+  /clear
+  /spawn
+  /turtle1/set_pen
+  \end{shells}
+
+  \vspace{0.3em}
+  \footnotesize
+  There is Lecture A on one screen: it \textbf{subscribes} to a stream of commands, it
+  \textbf{publishes} a stream of state, and it offers \textbf{services} for things that happen
+  once. Topics for the flow, services for the events.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Read the contract}
+  \begin{shells}
+$ ros2 interface show geometry_msgs/msg/Twist
+Vector3  linear
+Vector3  angular
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  The same type you met this morning, printed by the machine rather than by me. Any topic,
+  any package, any robot: this command tells you what the message actually contains.
+
+  \vspace{0.6em}
+  \begin{inthefield}
+    \footnotesize
+    \texttt{ros2 interface show} is how you read a vendor's driver when its documentation is
+    a PDF from 2019 and the field names have changed. The installed interface definition
+    cannot be out of date --- it is what the code was built against.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Watch the messages go past}
+  \begin{shells}
+$ ros2 topic echo /turtle1/cmd_vel
+linear:
+  x: 2.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+---
+  \end{shells}
+
+  \vspace{0.3em}
+  \small
+  Leave this running and press the arrow keys. \textbf{Forward} changes \texttt{linear.x};
+  \textbf{turn} changes \texttt{angular.z}. Every other field stays zero, exactly as Lecture A
+  said it must for a wheeled robot.
+
+  \vspace{0.2em}
+  \centering\footnotesize \textbf{Checkpoint 2.} Everyone has seen a \texttt{Twist} change.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Drive it with no program at all}
+  \begin{shells}
+$ ros2 topic pub --rate 1 /turtle1/cmd_vel \
+      geometry_msgs/msg/Twist \
+      "{linear: {x: 2.0}, angular: {z: 1.8}}"
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  Close the teleop window first. The turtle drives in a circle, commanded from a shell.
+
+  \vspace{0.6em}
+  \begin{underhood}[Why this is not a party trick]
+    \footnotesize
+    A subscriber can be tested \textbf{before its publisher exists}. In Week 6 you will write
+    an obstacle-avoidance node and feed it fake scans this way, on a laptop, without a robot
+    and without a simulator.
+  \end{underhood}
+
+  \vspace{0.2em}
+  \centering\footnotesize \textbf{Checkpoint 3.} Everyone's turtle is driving in a circle.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Twenty minutes, no source code}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{5.4cm}p{5.6cm}@{}}
+    \toprule
+    \textbf{You found out} & \textbf{With} \\
+    \midrule
+    Which programs are running & \texttt{ros2 node list} \\[0.25em]
+    What data moves between them & \texttt{ros2 topic list} \\[0.25em]
+    What one program's job is & \texttt{ros2 node info} \\[0.25em]
+    What a message actually contains & \texttt{ros2 interface show} \\[0.25em]
+    What the values are, right now & \texttt{ros2 topic echo} \\[0.25em]
+    ...\ and you drove it yourself & \texttt{ros2 topic pub} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \keyline{You did not read one line of turtlesim's code. You did not need to.}
+
+  \vspace{0.4em}
+  \centering\footnotesize
+  Now build a system of your own --- and it will be inspectable in exactly the same way.
+\end{frame}
+
+% ===============================================================
+\section{Where your own code lives}
+% ===============================================================
+
+\begin{frame}[fragile]{Workspace, package, module}
+  \begin{shells}
+ee414_ws/
+  src/                    <- YOUR code. Only this is yours.
+    ee414_w02_first_node/
+  build/                  <- generated. Never edit, never commit.
+  install/                <- generated. What actually gets run.
+  log/                    <- generated. Build and run logs.
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  A \textbf{workspace} is a folder of packages you build together. A \textbf{package} is the
+  unit you build, share and install --- one folder, its own dependencies, its own nodes.
+  \texttt{turtlesim} is a package; yours will sit beside it.
+
+  \vspace{0.3em}
+  \footnotesize
+  You edit \texttt{src/}. \texttt{colcon} produces the other three. If you are ever tempted to
+  fix something in \texttt{build/}, the answer is in \texttt{src/}.
+\end{frame}
+
+% ---------------------------------------------------------------
 \begin{frame}[fragile]{Create the workspace}
   \begin{shells}
 $ mkdir -p ~/ee414_ws/src
@@ -95,7 +338,51 @@ $ source install/setup.bash
 \end{frame}
 
 % ---------------------------------------------------------------
-\begin{frame}[fragile]{Create the package}
+\begin{frame}{Underlay and overlay}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.45cm]
+    \node[hw, minimum width=8.2cm, minimum height=0.85cm] (under)
+      {\footnotesize \textbf{underlay} --- \texttt{/opt/ros/\ldots} : rclpy, turtlesim, Nav2, TF2};
+    \node[plan, minimum width=8.2cm, minimum height=0.85cm, above=of under] (over)
+      {\footnotesize \textbf{overlay} --- \texttt{\textasciitilde/ee414\_ws/install} : your packages};
+    \draw[flowarrow] (under) -- node[right,font=\scriptsize] {sourced first} (over);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.5em}
+  \small
+  Source the underlay, then your workspace. Your overlay wins where names collide --- which is
+  how you can develop a modified version of a system package without uninstalling anything.
+
+  \vspace{0.5em}
+  \begin{inthefield}
+    \footnotesize
+    Sourcing the overlay in the wrong order, or sourcing two different workspaces into one
+    shell, produces the strangest bugs in robotics: the code you are editing is not the code
+    that runs. When something is inexplicable, open a clean terminal.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+% Command anatomy: pkg create. Five tokens, four of them meaningless to a
+% beginner, and getting one wrong costs the rest of the session.
+\begin{frame}{Create the package}
+  \cmdanatomy[\large]{2}{Ask about packages. \texttt{create} is one verb; \texttt{list} and \texttt{prefix} are others.}
+    {ros2}{pkg}{create}{-{}-build-type}{ament\_python}
+\end{frame}
+
+\begin{frame}{Create the package}
+  \cmdanatomy[\large]{4}{A flag, so it needs a value. Leave it out and you get a C++ package by default.}
+    {ros2}{pkg}{create}{-{}-build-type}{ament\_python}
+\end{frame}
+
+\begin{frame}{Create the package}
+  \cmdanatomy[\large]{5}{The value: a \textbf{Python} package. The alternative, \texttt{ament\_cmake}, is C++ --- not used in this course.}
+    {ros2}{pkg}{create}{-{}-build-type}{ament\_python}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The whole command}
   \begin{shells}
 $ cd ~/ee414_ws/src
 $ ros2 pkg create --build-type ament_python \
@@ -105,19 +392,16 @@ $ ros2 pkg create --build-type ament_python \
 
   \vspace{0.5em}
   \small
-  \begin{center}
-  \begin{tabular}{@{}ll@{}}
-    \toprule
-    \texttt{-{}-build-type ament\_python} & a Python package (the alternative is C++) \\
-    \texttt{-{}-dependencies} & what it needs; written into the manifest for you \\
-    \bottomrule
-  \end{tabular}
-  \end{center}
+  The last token is the package name: lower case, underscores, no dashes, because it becomes
+  a Python module name. \texttt{-{}-dependencies} lists what the package needs, and writes
+  them into the manifest for you.
 
   \vspace{0.5em}
-  \footnotesize
-  Declaring dependencies now is not bureaucracy. It is how someone else --- or you, on the
-  robot in Week 14 --- installs what this package needs without guessing.
+  \begin{inthefield}
+    \footnotesize
+    Declaring dependencies now is not bureaucracy. It is how someone else --- or you, on the
+    robot in Week 14 --- installs what this package needs without guessing.
+  \end{inthefield}
 \end{frame}
 
 % ---------------------------------------------------------------
@@ -131,11 +415,12 @@ ee414_w02_first_node/
   resource/  test/
   \end{shells}
 
-  \vspace{0.3em}
+  \vspace{0.5em}
   \small
   Note the repeated name: the outer folder is the \textbf{package}, the inner one is the
   \textbf{Python module}. Your \texttt{.py} files go in the inner one.
 
+  \vspace{0.4em}
   \begin{underhood}
     \footnotesize
     Putting code in the outer folder is the single most common Week-2 mistake. It builds
@@ -214,9 +499,10 @@ entry_points={
 
   \begin{inthefield}
     \footnotesize
-    \textbf{The number-one cause of ``executable not found'' in this course.} The name before
-    \texttt{=} is what you type after \texttt{ros2 run}; the part after must match your file
-    and function exactly. A typo builds cleanly and fails at run time.
+    \textbf{This is where \texttt{turtlesim\_node} came from.} The third token of
+    \texttt{ros2 run turtlesim turtlesim\_node} is a name somebody declared in a line exactly
+    like the one above. It is also the number-one cause of ``executable not found'' here: a
+    typo builds cleanly and fails at run time.
   \end{inthefield}
 \end{frame}
 
@@ -233,63 +519,36 @@ $ ros2 run ee414_w02_first_node talker
 
   \vspace{0.4em}
   \small
-  \texttt{-{}-symlink-install} links your source instead of copying it, so editing a
-  \texttt{.py} file takes effect without rebuilding. Use it all semester.
+  \textbf{Sourcing is not optional and it does not persist.} It edits the environment of
+  \emph{one shell}; a new terminal knows nothing. \texttt{-{}-symlink-install} links your
+  source instead of copying it, so editing a \texttt{.py} file takes effect without rebuilding.
 
-  \vspace{0.4em}
+  \vspace{0.3em}
   \centering
   \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
-    \footnotesize \textbf{Checkpoint 1.} Everyone sees \texttt{hello} counting up. Hands up if not.
+    \footnotesize \textbf{Checkpoint 4.} Everyone sees \texttt{hello} counting up.
   \end{beamercolorbox}
 \end{frame}
 
-% ===============================================================
-\section{Looking at it from outside}
-% ===============================================================
-
-\begin{frame}[fragile]{Leave it running. Open a second terminal.}
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Inspect it the way you inspected the turtle}
   \begin{shells}
-$ source ~/ee414_ws/install/setup.bash
 $ ros2 node list
 /talker
-
-$ ros2 topic list
-/chatter
-/parameter_events
-/rosout
 
 $ ros2 topic echo /chatter
 data: hello 42
 ---
+
+$ ros2 topic hz /chatter
+average rate: 2.001        <- the rate you set, measured
   \end{shells}
 
   \vspace{0.3em}
   \footnotesize
-  \textbf{You added no logging to make this work.} The graph is inspectable because it is a
-  graph --- this is the property that will save you in Weeks 9 through 11.
-\end{frame}
-
-% ---------------------------------------------------------------
-\begin{frame}[fragile]{Three more commands worth memorising}
-  \begin{shells}
-$ ros2 topic hz /chatter
-average rate: 2.001        <- is it actually running at the rate you set?
-
-$ ros2 topic info /chatter --verbose
-Type: std_msgs/msg/String
-Publisher count: 1         <- is anyone publishing at all?
-
-$ ros2 topic pub /chatter std_msgs/msg/String "{data: injected}"
-  \end{shells}
-
-  \vspace{0.4em}
-  \small
-  The third one publishes \emph{without writing a node}. You can drive a robot from the
-  command line with it --- which is how you test a subscriber before its publisher exists.
-
-  \vspace{0.3em}
-  \centering\footnotesize
-  \textbf{Checkpoint 2.} Everyone has seen \texttt{echo}, \texttt{hz} and \texttt{info}.
+  Same four commands, your code this time. \textbf{You added no logging to make this work} ---
+  the graph is inspectable because it is a graph. That property is what will save you in
+  Weeks 9 through 11.
 \end{frame}
 
 % ===============================================================
@@ -323,7 +582,6 @@ class Listener(Node):
   \begin{shells}
 $ ros2 run ee414_w02_first_node listener
 [INFO] [listener]: got: hello 87
-[INFO] [listener]: got: hello 88
 
 $ rqt_graph
   \end{shells}
@@ -342,7 +600,7 @@ $ rqt_graph
   \vspace{0.2em}
   \centering
   \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
-    \footnotesize \textbf{Checkpoint 3.} You have drawn your first computation graph.
+    \footnotesize \textbf{Checkpoint 5.} You have drawn your first computation graph.
   \end{beamercolorbox}
 \end{frame}
 
@@ -466,8 +724,8 @@ $ printenv ROS_DOMAIN_ID                 # ... in BOTH terminals
 
   \vspace{0.3em}
   \centering\footnotesize
-  \textbf{Learn this order now.} It is the same four commands in Week 11, on a robot with
-  forty topics.
+  \textbf{The same order you used on the turtle this morning}, and the same order in Week 11
+  on a robot with forty topics.
 \end{frame}
 
 % ---------------------------------------------------------------
