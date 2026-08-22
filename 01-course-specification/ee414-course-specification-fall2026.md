@@ -118,7 +118,7 @@ mappings selected in the Program Specification.*
 | **3** | Communication models: publish/subscribe, request/response, goal-oriented | Topics and custom messages; services; parameters; actions | 1, 3 | Assignment 1 |
 | **4** | Differential-drive kinematics; pose, velocity, odometry | Open-loop motion: `/cmd_vel`, `/odom`, straight-line and rotation primitives | 2, 3 | Quiz 2 |
 | **5** | Feedback control for motion: proportional/PID, go-to-goal, stability and tuning | Closed-loop go-to-goal and waypoint-following controller | 2, 3 | Assignment 2 |
-| **6** | Sensors and actuators; LiDAR principles, noise and range models | `/scan` processing, reactive obstacle avoidance, wall following | 2, 3 | **Midterm Exam I** |
+| **6** | Sensors and actuators; LiDAR principles, noise and range models; commercial hardware | `/scan` processing, wall following, **Bug 0 — and watching it fail in a U-shaped trap** | 2, 3 | **Midterm Exam I** |
 | **7** | Rigid-body transformations: rotation matrices, homogeneous transforms, frames | TF2: broadcasting, listening, static transforms, debugging the tree in RViz2 | 2, 3 | Quiz 3 |
 | **8** | Robot modelling: links, joints, kinematic chains; simulation fidelity | URDF/Xacro model, Gazebo spawn, sensor plugins, RViz2 visualisation | 1, 3 | Assignment 3 |
 | **9** | Probabilistic state estimation: uncertainty, Bayes filter, Kalman/EKF; sensor fusion | EKF odometry fusion (`robot_localization`); `rosbag2` capture and replay | 2, 3 | Quiz 4 |
@@ -136,7 +136,7 @@ mappings selected in the Program Specification.*
 | 1 | Introduction to robotics and ROS 2 architecture | 9 |
 | 2 | Robot kinematics and motion modelling | 3 |
 | 3 | Feedback control for robot motion | 3 |
-| 4 | Sensors, perception and obstacle avoidance | 3 |
+| 4 | Sensors, perception and reactive navigation | 3 |
 | 5 | Transformations, TF2, URDF and simulation | 6 |
 | 6 | State estimation, localization and mapping | 6 |
 | 7 | Motion planning and autonomous navigation (Nav2) | 3 |

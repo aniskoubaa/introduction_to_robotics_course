@@ -40,45 +40,64 @@ weekNN/
 
 ## Standing rules
 
+Operative plan: `../../docs/2026-08-22-2230-deck-redesign-plan.md`.
+
+### Format
+
 **1. Exercise sets are generated from one source.** `EE414_WNN_exercises_body.tex` holds the
 questions and the answers. `..._exercises.tex` sets `\solutionsfalse`, `..._solutions.tex`
 sets `\solutionstrue`. A question and its answer can never drift apart.
 
 **2. Every ROS 2 command in the material has been run.** Not read, not adapted from a
 tutorial — executed on the pinned distribution, with the output pasted from the terminal.
-ROS 2 tutorials rot between distributions faster than any other material in this course.
 
-**3. Code always wears the terminal window bar.** Every Python listing, terminal session and
-traceback renders as a macOS terminal window. It tells a student at a glance that they are
-looking at something that runs on a machine rather than at prose about it. Enforced in the
-preamble, not by convention. Mathematics and pseudocode use the light box instead.
+**3. Code always wears the terminal window bar.** Enforced in the preamble, not by convention.
+Mathematics and pseudocode use the light box instead.
 
-**4. Every B session ends with something that runs.** A student must leave the room having
-seen their own node print, move, or draw in RViz2. Never a half-typed file.
-
-**6. No slide body exceeds 25 words.** Section dividers and code slides are exempt. A
+**4. No slide body exceeds 25 words.** Section dividers and code slides are exempt. A
 1.5-hour session runs **40–60 slides**. Slide count is not a quality signal; words per slide
 is. Everything cut goes into `\note{}` and compiles to a separate notes PDF.
 
-> ⚠️ **This rule replaces the former "30 slides is the ceiling".** That rule, combined with a
-> fixed amount of content, could only be satisfied by compressing prose onto slides — and the
-> Weeks 1–3 and 7 decks show the damage: a median of 57–96 words per slide against 12–20 in
-> the legacy ROS course that this material is modelled on. **Those eight decks predate this
-> rule and are scheduled for rewrite.** See
-> `../../docs/2026-08-22-2153-slide-design-review-against-legacy-decks.md`.
+**5. Code is revealed one line per slide**, the new line highlighted (`\codestep`).
 
-**5. The ROS 2 distribution is named in exactly one place** — `../setup/README.md`. Every
-other document refers to it. A distribution upgrade must be a one-line change.
+**6. Real screenshots, not typeset listings**, wherever a student will compare against their
+own screen. A screenshot is the artifact of having run it — rule 2, discharged.
+
+**7. The ROS 2 distribution is named in exactly one place** — `../setup/README.md` — and
+reached everywhere else through `\rosver`.
+
+### Flow
+
+**8. Every week opens with the previous week's solution failing.** The escalating problem
+statement is the spine of the course: *go to the goal* → *…without hitting anything* → *…in a
+building you have never seen*. Nothing is introduced before the student has watched the
+previous thing break.
+
+**9. Every mathematical topic gets one everyday analogy** before the formalism.
+
+**10. Every major concept closes with a numbered procedure** (`\procedure`) — *how to decide*,
+not just how it works.
+
+**11. Every B session is demo-first**: see it run, explore it from the CLI, then build it. And
+every B session ends with something that **runs** — never a half-typed file.
+
+**12. Why-first for tools; pain-first for mathematics.** Never answer "why X" before the
+student has felt the problem X solves. You cannot want quaternions until Euler angles have hurt
+you.
+
+> ⚠️ **Rules 4–6 and 8–12 postdate the Weeks 1–3 and 7 decks.** Those eight decks carry a median
+> of 57–96 words per slide against 12–20 in the legacy ROS course they are modelled on, and
+> W07A introduces rotation before translation. They are **dense, not wrong** — deliverable as
+> they stand, and scheduled for retrofit *after* the unwritten weeks are authored natively in
+> the new format. See the plan, §6.
 
 ## Critical path
 
-| ID | Artifact | Due |
-|---|---|---|
-| M1 | `setup/` guide + `check_ros2_setup.py`, tested on Windows/WSL2, macOS/Docker and native Ubuntu | **Before Week 1** |
-| M2 | Week 1–3 decks and labs — the ROS 2 on-ramp, where the course is won or lost | Before Week 1 |
-| M3 | Shared beamer preamble ✅ / exercise style ❌ | Before Week 1 |
-| M4 | `code/` starter workspace with one package per week | Rolling, 2 weeks ahead |
-| M5 | Expected-output transcripts for every lab (the automated key) | With each lab |
-| M6 | Gazebo world files and the TurtleBot3 simulation setup | Before Week 4 |
-| M7 | Project brief, milestones and rubric | Before Week 5 |
-| M8 | Ethics case studies for Week 13 | Before Week 13 |
+Superseded by `../../docs/2026-08-22-2230-deck-redesign-plan.md`. In short:
+
+| Horizon | Work |
+|---|---|
+| **Tonight** | `setup/` guide + `check_ros2_setup.py`; `ROS_DOMAIN_ID` assignment; three video slots + an out-of-scope slide + an instructor slide inserted into W01A |
+| **This week** | `\note{}` + notes-PDF target; the five macros (`\bigq`, `\codestep`, `\triptych`, `\pathmap`, `\procedure`); **rewrite W01B as the format pilot**; screenshot pipeline |
+| **Rolling** | Two weeks ahead, natively in the new format, ~18 h per week of material |
+| **Deferred** | Retrofit W02, W03, W01 — **except W07A, which is resequenced before Week 7 delivers** |

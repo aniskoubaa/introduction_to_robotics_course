@@ -135,12 +135,15 @@ approval** — treat it as a draft. No teaching material has been authored yet.
 
 ### Critical path
 
-1. **`setup/` guide + `check_ros2_setup.py`**, tested on all three routes. Both Week 1 decks
-   send students to it and the Week 2B session cannot run without it. This is now the only
-   thing blocking a deliverable week.
-2. `code/src/` starter packages for Weeks 2 and 3, plus their expected-output transcripts.
-3. Week 4 decks — differential-drive kinematics, and the first Gazebo session.
-4. Confirm the computer-equipped classroom and decide the Week 12 advanced topic.
+Full plan: [`docs/2026-08-22-2230-deck-redesign-plan.md`](docs/2026-08-22-2230-deck-redesign-plan.md).
+
+1. **`setup/` guide + `check_ros2_setup.py`** — both Week 1 decks send students to it and Week 2B
+   cannot run without it. The only thing blocking a deliverable fortnight.
+2. **The slide format** — `\note{}` support and five macros, then W01B rewritten as the pilot.
+   Nothing is authored densely after that.
+3. **Weeks 4–6 authored natively**, with **Bug 0 planted in Week 6B and left failing** so that
+   SLAM in Week 10 answers a failure the students watched happen.
+4. Confirm the timetable, the computer-equipped classroom, and the Week 12 advanced topic.
 
 ---
 
