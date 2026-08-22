@@ -20,6 +20,13 @@
 | Expected-output transcript | `ros2_lab/expected_output.txt` | ❌ — standing rule 2 |
 | Quiz 3 + key | `../../07-exams-answer-keys-or-assessment-rubrics/` | ❌ |
 
+> ⚠️ **Resequencing required before delivery.** W07A introduces rotation before translation and
+> never shows one point with two coordinate pairs — the concrete anchor of the whole week. 3D is
+> compressed into one table row, and "why quaternions" is answered before the student has felt
+> the problem. A full proposed resequence (≈45 slides, translation first) is in
+> `../../docs/2026-08-22-2210-content-and-flow-review-against-legacy-decks.md` §6.
+> W07B's checkpoint 4 should become the **turtle follower** rather than "watch a point move".
+
 > ⚠️ **Authored out of order.** Weeks 4–6 are still briefs. These decks refer backwards to
 > Week 4 (kinematics), Week 6 (LiDAR, obstacle avoidance) and Week 2 (`Header`, stamps), and
 > forwards to Weeks 8, 10 and 11. Check those references when 4–6 are written.
