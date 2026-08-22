@@ -1,0 +1,496 @@
+% =====================================================================
+% EE 414 - Introduction to Robotics
+% Week 2, Lecture B: Your First Nodes  (hands-on session)
+% Fall 2026 - Alfaisal University
+% Duration: 1.5 hours   |   30 slides
+%
+% This is a WALKTHROUGH deck: students type along. Checkpoints are marked
+% with a "Checkpoint" box -- do not advance past one until the room is with you.
+%
+% Build: pdflatex EE414_W02B_first_nodes.tex   (twice)
+% logo.png must sit beside this file.
+% =====================================================================
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\input{../../shared/ee414-beamer-preamble.tex}
+
+\title[EE 414 --- Week 2B]{Your First Nodes}
+\subtitle{A workspace, a publisher, a subscriber, and five ways to break them}
+\author[A. Koubaa]{Prof.\ Anis Koubaa}
+\institute[Alfaisal University]{
+    EE 414 --- Introduction to Robotics\\
+    College of Engineering\\
+    Alfaisal University
+}
+\date{Fall 2026 --- Week 2, Lecture B}
+\titlegraphic{\includegraphics[width=1.4cm]{logo.png}}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ===============================================================
+\begin{frame}{How this session works}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
+    \small You type. I type. We stop at every checkpoint until the room is together.
+  \end{beamercolorbox}
+
+  \vspace{0.8em}
+  {\scriptsize\tableofcontents[hideallsubsections]}
+\end{frame}
+
+% ===============================================================
+\section{A workspace and a package}
+% ===============================================================
+
+\begin{frame}[fragile]{Before anything else}
+  \begin{shells}
+$ printenv ROS_DISTRO
+$ printenv ROS_DOMAIN_ID
+$ ros2 topic list
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  Three answers you must see: your distribution name, \textbf{your} assigned domain ID, and a
+  list containing \texttt{/parameter\_events} and \texttt{/rosout}.
+
+  \vspace{0.5em}
+  \begin{underhood}[If \texttt{ROS\_DISTRO} is empty]
+    \footnotesize
+    You have not sourced the underlay in this terminal. That is not a broken installation ---
+    it is a fresh shell. Source it and try again.
+  \end{underhood}
+
+  \vspace{0.4em}
+  \centering\footnotesize
+  \textbf{Checkpoint 0.} Hand up if any of the three is wrong. Do not go on without it.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Create the workspace}
+  \begin{shells}
+$ mkdir -p ~/ee414_ws/src
+$ cd ~/ee414_ws
+$ colcon build
+$ source install/setup.bash
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  Building an empty workspace looks pointless. It is not --- it creates \texttt{install/} and
+  therefore \texttt{install/setup.bash}, which is the file every future terminal will source.
+
+  \vspace{0.6em}
+  \begin{inthefield}
+    \footnotesize
+    You will use this workspace for the rest of the semester. Every week adds one package to
+    \texttt{src/}. Do not create a new workspace per week --- the whole point is that packages
+    accumulate and are used together.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Create the package}
+  \begin{shells}
+$ cd ~/ee414_ws/src
+$ ros2 pkg create --build-type ament_python \
+      --dependencies rclpy std_msgs \
+      ee414_w02_first_node
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \texttt{-{}-build-type ament\_python} & a Python package (the alternative is C++) \\
+    \texttt{-{}-dependencies} & what it needs; written into the manifest for you \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \footnotesize
+  Declaring dependencies now is not bureaucracy. It is how someone else --- or you, on the
+  robot in Week 14 --- installs what this package needs without guessing.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{What it made for you}
+  \begin{shells}
+ee414_w02_first_node/
+  package.xml                     <- name, version, dependencies
+  setup.py                        <- how to install it; ENTRY POINTS live here
+  ee414_w02_first_node/           <- your Python module. Code goes HERE.
+      __init__.py
+  resource/  test/
+  \end{shells}
+
+  \vspace{0.3em}
+  \small
+  Note the repeated name: the outer folder is the \textbf{package}, the inner one is the
+  \textbf{Python module}. Your \texttt{.py} files go in the inner one.
+
+  \begin{underhood}
+    \footnotesize
+    Putting code in the outer folder is the single most common Week-2 mistake. It builds
+    without complaint and then cannot be found at run time.
+  \end{underhood}
+\end{frame}
+
+% ===============================================================
+\section{A publisher}
+% ===============================================================
+
+\begin{frame}[fragile]{\texttt{talker.py} --- in \texttt{ee414\_w02\_first\_node/}}
+  \begin{pycodes}
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+class Talker(Node):
+    def __init__(self):
+        super().__init__('talker')
+        self.pub = self.create_publisher(String, 'chatter', 10)
+        self.create_timer(0.5, self.tick)      # 2 Hz
+        self.i = 0
+    def tick(self):
+        msg = String()
+        msg.data = f'hello {self.i}'
+        self.pub.publish(msg)
+        self.get_logger().info(f'sent: {msg.data}')
+        self.i += 1
+  \end{pycodes}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The four lines that make it runnable}
+  \begin{pycodes}
+def main():
+    rclpy.init()
+    rclpy.spin(Talker())
+    rclpy.shutdown()
+  \end{pycodes}
+
+  \vspace{0.3em}
+  \footnotesize
+  \begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \texttt{rclpy.init()} & join the graph \\
+    \texttt{rclpy.spin(node)} & hand control to ROS 2: wait for events, call your callbacks \\
+    \texttt{rclpy.shutdown()} & leave cleanly \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \begin{underhood}[Where the loop went]
+    \footnotesize
+    \texttt{spin} \emph{is} the loop --- it blocks forever, waking to run timer and subscriber
+    callbacks. You never write \texttt{while True} in ROS 2: you declare what happens on each
+    event, and \texttt{spin} calls you.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Tell the build system the node exists}
+  \small In \texttt{setup.py}:
+
+  \begin{pycodes}
+entry_points={
+    'console_scripts': [
+        'talker = ee414_w02_first_node.talker:main',
+    ],
+},
+  \end{pycodes}
+
+  \footnotesize
+  Read it right to left: run \texttt{main}, in module
+  \texttt{ee414\_w02\_first\_node.talker}, as a command called \texttt{talker}.
+
+  \begin{inthefield}
+    \footnotesize
+    \textbf{The number-one cause of ``executable not found'' in this course.} The name before
+    \texttt{=} is what you type after \texttt{ros2 run}; the part after must match your file
+    and function exactly. A typo builds cleanly and fails at run time.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Build it and run it}
+  \begin{shells}
+$ cd ~/ee414_ws
+$ colcon build --symlink-install
+$ source install/setup.bash
+$ ros2 run ee414_w02_first_node talker
+[INFO] [talker]: sent: hello 0
+[INFO] [talker]: sent: hello 1
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  \texttt{-{}-symlink-install} links your source instead of copying it, so editing a
+  \texttt{.py} file takes effect without rebuilding. Use it all semester.
+
+  \vspace{0.4em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 1.} Everyone sees \texttt{hello} counting up. Hands up if not.
+  \end{beamercolorbox}
+\end{frame}
+
+% ===============================================================
+\section{Looking at it from outside}
+% ===============================================================
+
+\begin{frame}[fragile]{Leave it running. Open a second terminal.}
+  \begin{shells}
+$ source ~/ee414_ws/install/setup.bash
+$ ros2 node list
+/talker
+
+$ ros2 topic list
+/chatter
+/parameter_events
+/rosout
+
+$ ros2 topic echo /chatter
+data: hello 42
+---
+  \end{shells}
+
+  \vspace{0.3em}
+  \footnotesize
+  \textbf{You added no logging to make this work.} The graph is inspectable because it is a
+  graph --- this is the property that will save you in Weeks 9 through 11.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Three more commands worth memorising}
+  \begin{shells}
+$ ros2 topic hz /chatter
+average rate: 2.001        <- is it actually running at the rate you set?
+
+$ ros2 topic info /chatter --verbose
+Type: std_msgs/msg/String
+Publisher count: 1         <- is anyone publishing at all?
+
+$ ros2 topic pub /chatter std_msgs/msg/String "{data: injected}"
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  The third one publishes \emph{without writing a node}. You can drive a robot from the
+  command line with it --- which is how you test a subscriber before its publisher exists.
+
+  \vspace{0.3em}
+  \centering\footnotesize
+  \textbf{Checkpoint 2.} Everyone has seen \texttt{echo}, \texttt{hz} and \texttt{info}.
+\end{frame}
+
+% ===============================================================
+\section{A subscriber}
+% ===============================================================
+
+\begin{frame}[fragile]{\texttt{listener.py}}
+  \begin{pycodes}
+class Listener(Node):
+    def __init__(self):
+        super().__init__('listener')
+        self.create_subscription(String, 'chatter', self.on_msg, 10)
+
+    def on_msg(self, msg):
+        self.get_logger().info(f'got: {msg.data}')
+  \end{pycodes}
+
+  \vspace{0.5em}
+  \small
+  Four things must match the publisher: the \textbf{type} (\texttt{String}), the
+  \textbf{topic name} (\texttt{chatter}), the \textbf{QoS} (here, depth 10 --- compatible
+  defaults), and the \textbf{domain ID}.
+
+  \vspace{0.4em}
+  \footnotesize
+  Add a second entry point in \texttt{setup.py}, rebuild, and run it in a third terminal.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Two nodes, one graph}
+  \begin{shells}
+$ ros2 run ee414_w02_first_node listener
+[INFO] [listener]: got: hello 87
+[INFO] [listener]: got: hello 88
+
+$ rqt_graph
+  \end{shells}
+
+  \vspace{0.4em}
+  \begin{center}
+  \begin{tikzpicture}[node distance=1.1cm]
+    \node[rosnode] (t) {/talker};
+    \node[topicbox, right=of t, minimum width=1.6cm] (c) {/chatter};
+    \node[rosnode, right=of c] (l) {/listener};
+    \draw[dataflow] (t) -- (c);
+    \draw[dataflow] (c) -- (l);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.2em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 3.} You have drawn your first computation graph.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{What you just proved to yourself}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{4.6cm}p{6.4cm}@{}}
+    \toprule
+    \textbf{You did this} & \textbf{Which demonstrates} \\
+    \midrule
+    Started them in either order & No master, no start-up order \\[0.3em]
+    Killed the talker; listener survived & A node dies alone \\[0.3em]
+    Ran \texttt{topic echo} beside both & A third listener needs no change to the publisher \\[0.3em]
+    Neither node names the other & They agree on a topic and a type, nothing else \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.7em}
+  \centering
+  Four of Lecture A's claims, verified by you in twenty minutes. \textbf{Try killing the
+  talker now}, and watch the listener wait patiently rather than crash.
+\end{frame}
+
+% ===============================================================
+\section{One command instead of three}
+% ===============================================================
+
+\begin{frame}[fragile]{Launch files}
+  \small
+  Three terminals for two nodes. A real robot has fifteen. That does not scale, and you cannot
+  reproduce it reliably at 9\,a.m.\ on demo day.
+
+  \begin{pycodes}
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(package='ee414_w02_first_node', executable='talker'),
+        Node(package='ee414_w02_first_node', executable='listener'),
+    ])
+  \end{pycodes}
+
+  \vspace{0.3em}
+  \footnotesize
+  In \texttt{launch/chatter\_launch.py}, plus one line in \texttt{setup.py} so the folder is
+  installed. \textbf{Note:} this \texttt{Node} is a launch description, not the
+  \texttt{rclpy} \texttt{Node} you subclassed. Same word, different thing.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Run the whole system}
+  \begin{shells}
+$ colcon build --symlink-install
+$ source install/setup.bash
+$ ros2 launch ee414_w02_first_node chatter_launch.py
+[INFO] [talker-1]: sent: hello 0
+[INFO] [listener-2]: got: hello 0
+  \end{shells}
+
+  \vspace{0.3em}
+  \footnotesize
+  One command. Both nodes. \texttt{Ctrl-C} stops both together, and the prefixes tell you
+  which node each line came from.
+
+  \begin{inthefield}
+    \footnotesize
+    Launch files are also where parameters, remappings and namespaces are set --- which is how
+    the same node runs twice, on two robots, with different topic names and no code change.
+    Week 8 needs this; Week 11 is impossible without it.
+  \end{inthefield}
+\end{frame}
+
+% ===============================================================
+\section{Breaking it on purpose}
+% ===============================================================
+
+\begin{frame}{Five failures --- cause them, read the symptom, fix them}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{3.5cm}p{3.6cm}p{3.7cm}@{}}
+    \toprule
+    \textbf{Do this} & \textbf{Symptom} & \textbf{The lesson} \\
+    \midrule
+    New terminal, do not source & \texttt{Package not found} & Sourcing is per shell \\[0.3em]
+    Misspell the entry point & \texttt{No executable found} & The name is a mapping, not magic \\[0.3em]
+    Change the listener's domain ID & Both run. Silence. & Discovery is partitioned \\[0.3em]
+    Rename the topic in one node only & Both run. Silence. & Names are the whole contract \\[0.3em]
+    Set the listener QoS to \texttt{BEST\_EFFORT}, publisher \texttt{RELIABLE} & Both run. Silence. & QoS must be compatible \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \centering\footnotesize
+  \textbf{Three of the five look identical from the outside: two healthy nodes, no data.}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The diagnostic order that separates them}
+  \begin{shells}
+$ ros2 node list                         # are both alive?
+$ ros2 topic list                        # does the topic exist?
+$ ros2 topic info /chatter --verbose     # counts, types, QoS
+$ printenv ROS_DOMAIN_ID                 # ... in BOTH terminals
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{4.6cm}p{6.0cm}@{}}
+    \toprule
+    Publisher count 1, subscriber 0 & The subscriber is on another topic or domain \\
+    Both counts 1, no data & QoS mismatch --- read the profiles \\
+    Topic missing entirely & The publisher is not running, or not sourced \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.3em}
+  \centering\footnotesize
+  \textbf{Learn this order now.} It is the same four commands in Week 11, on a robot with
+  forty topics.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Before you leave, and before Week 3}
+  \small
+  \textbf{Leaving this room, you should have:} a workspace, a package, a talker, a listener,
+  a launch file that starts both, and five failures you have caused and fixed.
+
+  \vspace{0.6em}
+  \textbf{Assignment 1} is posted today, due Week 3. It extends this package: a publisher at a
+  rate you choose, a subscriber that computes something from what it receives, and a launch
+  file that starts the pair with parameters.
+
+  \vspace{0.6em}
+  \begin{underhood}[The habit to build now]
+    \footnotesize
+    Commit your workspace to Git today, and commit at the end of every session. In Week 14
+    your project mark depends partly on a repository history that shows three people working.
+    That history cannot be created retroactively.
+  \end{underhood}
+
+  \vspace{0.4em}
+  \centering\footnotesize Next week: services, parameters, and custom message types.
+\end{frame}
+
+\end{document}

@@ -113,6 +113,17 @@
 %                                     fragments, pseudocode, mathematics
 %
 % The `...s' variants (pycodes, shells) are the small ones, for a crowded slide.
+%
+% STANDING CONSTRAINT -- read this before writing a .msg or a shell comment.
+% Inside ANY of these boxes, a `#' MUST NOT be the first non-space character of a
+% line. Beamer's [fragile] scanner re-reads the frame body and treats a leading
+% `#' as a macro parameter, which fails with
+%       ! Illegal parameter number in definition of \next.
+% Leading whitespace does not help -- it is stripped before the scan.
+% A `#' anywhere else on the line is fine, which is why inline comments work:
+%       self.create_timer(0.1, self.tick)   # 10 Hz, forever      <- OK
+%       # geometry_msgs/msg/Twist                                 <- BREAKS THE BUILD
+% For a header comment, put the file or type name in the prose ABOVE the box.
 \usepackage{tcolorbox}
 \tcbuselibrary{listings,skins}
 \usepackage{listings}
@@ -185,13 +196,22 @@
 \newtcblisting{pycodes}[1][]{termbox, listing style=darkpys,  tightpad, #1, title={\termdots}, colbacktitle=termbar, coltitle=termfg}
 \newtcblisting{shells}[1][]{termbox,  listing style=darkterms, tightpad, #1, title={\termdots}, colbacktitle=termbar, coltitle=termfg}
 
-% The light box: for things that are NOT runnable. The contrast is the point.
+% The light box: for things that are NOT runnable -- .msg and .srv interface
+% definitions, URDF fragments, pseudocode. The contrast with the terminal box is
+% the point: no window bar means nothing here runs.
+%
+% NOTE: the style MUST be a named \lstdefinestyle used via `listing style='.
+% Passing `listing options={...}' inline instead re-parses the body and breaks on
+% any `#' in the listing -- which every .msg comment starts with.
+\lstdefinestyle{specstyle}{
+  basicstyle=\ttfamily\footnotesize\color{primary!85!black},
+  commentstyle=\color{primary!55},
+  columns=fullflexible, keepspaces=true, showstringspaces=false,
+}
 \newtcblisting{spec}[1][]{
-  enhanced, listing only,
+  enhanced, listing only, listing style=specstyle,
   colback=softgrey, colframe=primary!35, boxrule=0.6pt, arc=3pt,
-  left=8pt, right=8pt, top=5pt, bottom=5pt,
-  listing options={basicstyle=\ttfamily\footnotesize\color{primary!85!black},
-                   columns=fullflexible, keepspaces=true}, #1}
+  left=8pt, right=8pt, top=5pt, bottom=5pt, #1}
 
 % ---------------------------------------------------------------
 % "Under the hood" - the machine-level aside.

@@ -12,7 +12,7 @@ lectures pretending to be one.
 | Week | Topic | Lecture A | Lecture B | Exercises |
 |---|---|---|---|---|
 | 01 | Introduction to Robotics and the ROS 2 Ecosystem | ✅ Course Overview (30 sl.) | ✅ What Is a Robot? (30 sl.) | ❌ |
-| 02 | ROS 2 Architecture and the Computation Graph | ❌ | ❌ | ❌ |
+| 02 | ROS 2 Architecture and the Computation Graph | ✅ Computation Graph (24 sl.) | ✅ Your First Nodes (26 sl.) | ❌ |
 | 03 | Communication Models in ROS 2 | ❌ | ❌ | ❌ |
 | 04 | Differential-Drive Kinematics | ❌ | ❌ | ❌ |
 | 05 | Feedback Control for Robot Motion | ❌ | ❌ | ❌ |

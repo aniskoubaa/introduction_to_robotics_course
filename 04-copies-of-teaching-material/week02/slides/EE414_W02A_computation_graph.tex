@@ -1,0 +1,515 @@
+% =====================================================================
+% EE 414 - Introduction to Robotics
+% Week 2, Lecture A: The ROS 2 Computation Graph
+% Fall 2026 - Alfaisal University
+% Duration: 1.5 hours   |   30 slides
+%
+% Build: pdflatex EE414_W02A_computation_graph.tex   (twice)
+% logo.png must sit beside this file.
+% =====================================================================
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\input{../../shared/ee414-beamer-preamble.tex}
+
+\title[EE 414 --- Week 2A]{The ROS 2 Computation Graph}
+\subtitle{Nodes, messages, discovery, and the setting that decides whether anything arrives}
+\author[A. Koubaa]{Prof.\ Anis Koubaa}
+\institute[Alfaisal University]{
+    EE 414 --- Introduction to Robotics\\
+    College of Engineering\\
+    Alfaisal University
+}
+\date{Fall 2026 --- Week 2, Lecture A}
+\titlegraphic{\includegraphics[width=1.4cm]{logo.png}}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ===============================================================
+\begin{frame}{What this lecture does}
+  \begin{block}{Roadmap}
+    \small Last week we argued that robot software must be many small programs exchanging
+    messages. Today: what those programs are, what the messages are, how they find each
+    other, and why a correct-looking pair sometimes exchanges nothing at all.
+  \end{block}
+  \vspace{0.2em}
+  {\scriptsize\tableofcontents[hideallsubsections]}
+\end{frame}
+
+% ===============================================================
+\section{Nodes and the graph}
+% ===============================================================
+
+\begin{frame}{Where we left off}
+  \small
+  The naive robot program failed for five structural reasons:
+
+  \vspace{0.4em}
+  \begin{center}
+  \begin{tabular}{@{}p{5.0cm}p{6.0cm}@{}}
+    \toprule
+    \textbf{The problem} & \textbf{The answer we are about to build} \\
+    \midrule
+    One rate for everything      & Each node has its own timer \\
+    One crash kills everything   & Nodes are separate OS processes \\
+    One machine                  & Nodes discover each other over the network \\
+    Nothing is reusable          & Nodes agree on message \emph{types}, not on each other \\
+    You cannot see inside it     & Every message is inspectable from outside \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  Today is the vocabulary for all five. \textbf{Session B is where you type it.}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The node: the unit of a robot program}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
+    A \textbf{node} is one process that does one job.
+  \end{beamercolorbox}
+
+  \vspace{0.9em}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \textbf{Good nodes}
+    \begin{itemize}\footnotesize
+      \item \texttt{lidar\_driver} --- talk to the LiDAR, publish scans
+      \item \texttt{controller} --- turn a path into wheel velocities
+      \item \texttt{battery\_monitor} --- watch the voltage, warn
+    \end{itemize}
+
+    \column{0.48\textwidth}
+    \textbf{A node that will hurt you}
+    \begin{itemize}\footnotesize
+      \item \texttt{robot} --- reads sensors, plans, controls, logs, and draws the user
+            interface
+    \end{itemize}
+    \vspace{0.3em}
+    {\footnotesize It works. Then the planner gets slow, and your control loop goes with it.}
+  \end{columns}
+
+  \vspace{0.9em}
+  \begin{underhood}[The test]
+    \footnotesize
+    If you cannot say what a node does in one short sentence without using ``and'', it is
+    two nodes.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Four ways nodes talk}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{1.9cm}p{3.3cm}p{2.5cm}p{3.0cm}@{}}
+    \toprule
+    \textbf{Mechanism} & \textbf{Shape} & \textbf{Use it for} & \textbf{Example} \\
+    \midrule
+    \textbf{Topic}
+      & one-way stream, many-to-many, nobody waits
+      & continuous data
+      & \texttt{/scan}, \texttt{/odom}, \texttt{/cmd\_vel} \\[0.35em]
+    \textbf{Service}
+      & request $\rightarrow$ reply, caller waits
+      & a quick question
+      & ``reset the odometry'' \\[0.35em]
+    \textbf{Action}
+      & goal, feedback, result --- cancellable
+      & long jobs
+      & ``navigate to the door'' \\[0.35em]
+    \textbf{Parameter}
+      & a named value the node reads, and you can change
+      & configuration
+      & \texttt{max\_speed = 0.22} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  Topics carry almost all robot traffic --- and all of Weeks 4--6. Actions arrive properly in
+  Week 11, when you ask Nav2 to drive somewhere and it takes forty seconds.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Topics: nobody knows who is listening}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.5cm and 1.3cm]
+    \node[rosnode] (drv) {lidar\_driver};
+    \node[topicbox, right=of drv, minimum width=1.5cm] (t) {/scan};
+    \node[rosnode, right=of t] (avoid) {avoider};
+    \node[rosnode, above=of avoid] (slam)  {slam};
+    \node[rosnode, below=of avoid] (rviz)  {rviz2};
+
+    \draw[dataflow] (drv) -- (t);
+    \draw[dataflow] (t) -- (avoid);
+    \draw[dataflow] (t.north) -- ++(0,0.5) -| (slam.west);
+    \draw[dataflow] (t.south) -- ++(0,-0.5) -| (rviz.west);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.2em}
+  \small
+  \texttt{lidar\_driver} publishes and moves on. It does not know three nodes are listening,
+  and behaves identically if none are.
+
+  \begin{underhood}[Why this matters more than it looks]
+    \footnotesize
+    Adding a fourth listener needs \textbf{no change to the publisher} --- which is how you
+    attach a recorder or a visualiser to a running robot without restarting the code that is
+    driving it.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{A real graph: TurtleBot3, doing nothing yet}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.45cm and 1.1cm, font=\scriptsize]
+    \node[rosnode] (hw)   {turtlebot3\_node};
+    \node[topicbox, right=of hw, minimum width=1.4cm] (scan) {/scan};
+    \node[topicbox, above=of scan, minimum width=1.4cm] (odom) {/odom};
+    \node[topicbox, below=of scan, minimum width=1.4cm] (cmd) {/cmd\_vel};
+    \node[rosnode, right=of scan] (yours) {your\_node};
+    \node[rosnode, above=of yours] (tf)    {robot\_state\_pub};
+    \node[rosnode, below=of yours] (tele)  {teleop};
+
+    \draw[dataflow] (hw.east) -- (scan.west);
+    \draw[dataflow] (hw.north east) -- (odom.west);
+    \draw[dataflow] (scan) -- (yours);
+    \draw[dataflow] (odom) -- (tf);
+    \draw[dataflow] (yours.south) -- (cmd.east);
+    \draw[dataflow] (tele) -- (cmd.east);
+    \draw[dataflow] (cmd.west) -- (hw.south east);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.3em}
+  \small
+  Six processes, started separately, that have never been compiled together. Two of them
+  (\texttt{your\_node} and \texttt{teleop}) publish to the same topic --- and the hardware node
+  accepts both, because a topic is many-to-many.
+
+  \vspace{0.3em}
+  \footnotesize\textbf{Which is also a bug waiting to happen.} Two things commanding one robot
+  is exactly as bad as it sounds. Week 11 is partly about arbitrating that.
+\end{frame}
+
+% ===============================================================
+\section{Messages: the contract}
+% ===============================================================
+
+\begin{frame}[fragile]{A message is a typed contract}
+  \small A topic is not a pipe for arbitrary bytes. It carries \textbf{one declared type},
+  and both sides are checked.
+
+  \vspace{0.3em}
+  {\footnotesize\texttt{geometry\_msgs/msg/Twist}}
+  \begin{spec}
+Vector3  linear      # x, y, z   metres / second
+Vector3  angular     # x, y, z   radians / second
+  \end{spec}
+
+  \vspace{0.4em}
+  For a differential-drive robot only two of those six numbers mean anything:
+  \texttt{linear.x} (forward) and \texttt{angular.z} (turn). The rest must be zero --- a
+  wheeled robot cannot move sideways.
+
+  \vspace{0.4em}
+  \begin{underhood}
+    \footnotesize
+    The light box means \textbf{not runnable}. This is an interface definition, compiled into
+    Python and C++ classes at build time. That is why a typo in a field name fails when you
+    build, not at 3 a.m.\ on the robot.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The types you will meet this semester}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{3.9cm}p{1.7cm}p{4.6cm}@{}}
+    \toprule
+    \textbf{Type} & \textbf{Topic} & \textbf{Carries} \\
+    \midrule
+    {\footnotesize\texttt{geometry\_msgs/Twist}}    & \texttt{/cmd\_vel} & Commanded $v$ and $\omega$ \\
+    {\footnotesize\texttt{sensor\_msgs/LaserScan}}  & \texttt{/scan}     & One LiDAR sweep: ranges, angles, timestamps \\
+    {\footnotesize\texttt{nav\_msgs/Odometry}}      & \texttt{/odom}     & Estimated pose and velocity, with covariance \\
+    {\footnotesize\texttt{sensor\_msgs/Imu}}        & \texttt{/imu}      & Angular rate, linear acceleration \\
+    {\footnotesize\texttt{nav\_msgs/OccupancyGrid}} & \texttt{/map}      & The map, as a grid of cells \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \begin{inthefield}
+    \footnotesize
+    These are not this course's conventions --- they are the field's. A robot from a different
+    vendor publishes \texttt{sensor\_msgs/LaserScan} on \texttt{/scan}. Learn the type once,
+    and your obstacle-avoidance node works on hardware you have never seen.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Every message is stamped, and that is not a detail}
+  \small
+  Most sensor messages carry a \texttt{std\_msgs/Header}: a timestamp and the name of the
+  coordinate frame the data is expressed in.
+
+  \vspace{0.6em}
+  \begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \texttt{stamp} & when the measurement was \emph{taken} --- not when it arrived \\
+    \texttt{frame\_id} & which frame it is measured in --- \texttt{base\_link}, \texttt{laser}, \texttt{map} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.8em}
+  \begin{underhood}[Truth 2, in a struct]
+    \footnotesize
+    Last week: nothing is instantaneous. The stamp is how a robot copes --- it lets a node
+    fuse a scan taken 100\,ms ago with odometry taken 20\,ms ago, \emph{correctly}. Week 7
+    (TF2) and Week 9 (estimation) are built entirely on these two fields.
+  \end{underhood}
+\end{frame}
+
+% ===============================================================
+\section{How nodes find each other}
+% ===============================================================
+
+\begin{frame}{There is no central process}
+  \small
+  When a node starts, it announces itself on the network and listens for others doing the
+  same. Publishers and subscribers on the same topic then connect \textbf{directly}.
+
+  \vspace{0.5em}
+  \begin{center}
+  \begin{tabular}{@{}p{2.6cm}p{4.1cm}p{4.3cm}@{}}
+    \toprule
+    & \textbf{ROS 1} & \textbf{ROS 2} \\
+    \midrule
+    Finding each other & A central \texttt{roscore} kept the directory & Distributed discovery --- no directory \\[0.3em]
+    If that dies       & Nothing new can connect. The robot goes deaf. & There is nothing to die \\[0.3em]
+    Start-up order     & Master first, always & Any order \\[0.3em]
+    Delivery guarantees& One behaviour, take it or leave it & Chosen per topic (next section) \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \footnotesize
+  This is the main reason ROS 2 exists, and the main reason it appears in products where
+  ROS 1 largely did not. It is a rewrite, not an upgrade.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The consequence you met in Week 1}
+  \small
+  Discovery is \textbf{automatic} and reaches everyone on the network segment. In a shared
+  lab, that is a problem:
+
+  \begin{shells}
+$ ros2 node list
+/drive_forward          <- yours
+/drive_forward_1        <- the person behind you
+/turtlebot3_node        <- someone's robot, somewhere
+  \end{shells}
+
+  \vspace{0.4em}
+  \begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \texttt{ROS\_DOMAIN\_ID} & partitions discovery. Same ID $\Rightarrow$ you see each other. \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \footnotesize
+  \textbf{First diagnostic question of the entire semester:} a topic is obviously being
+  published and your node sees nothing --- are you on the same domain ID?
+\end{frame}
+
+% ===============================================================
+\section{Quality of Service}
+% ===============================================================
+
+\begin{frame}{The setting everyone skips, and then loses a day to}
+  \small
+  A publisher and a subscriber must agree on \textbf{how} messages are delivered, not just on
+  the type. That agreement is the QoS profile.
+
+  \vspace{0.6em}
+  \begin{center}
+  \begin{tabular}{@{}p{2.4cm}p{4.0cm}p{4.4cm}@{}}
+    \toprule
+    \textbf{Setting} & \textbf{Options} & \textbf{What it decides} \\
+    \midrule
+    Reliability & \texttt{RELIABLE} / \texttt{BEST\_EFFORT}
+      & Retry lost messages, or let them go \\[0.3em]
+    Durability & \texttt{VOLATILE} / \texttt{TRANSIENT\_LOCAL}
+      & Does a late subscriber get the last message, or nothing until the next one? \\[0.3em]
+    History + depth & \texttt{KEEP\_LAST(n)} / \texttt{KEEP\_ALL}
+      & How many to hold while the subscriber is busy \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \footnotesize These are not performance knobs. They change whether your data arrives at all.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Choosing: it depends what the data is for}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{block}{\small LiDAR scans --- \texttt{BEST\_EFFORT}}
+      \footnotesize
+      10 per second. If one is lost, another arrives in 100\,ms.\\[0.3em]
+      Retrying a stale scan is worse than useless: it delays the fresh one behind it.
+    \end{block}
+
+    \column{0.48\textwidth}
+    \begin{block}{\small A map --- \texttt{TRANSIENT\_LOCAL}}
+      \footnotesize
+      Published once, rarely.\\[0.3em]
+      A node that starts late must still receive it --- otherwise it waits forever for a
+      message that already happened.
+    \end{block}
+  \end{columns}
+
+  \vspace{0.9em}
+  \begin{underhood}[The rule of thumb]
+    \footnotesize
+    \textbf{Streams} of sensor data: best-effort, shallow queue. \textbf{State} that is
+    published once and must not be missed: reliable and transient-local. Commands
+    (\texttt{/cmd\_vel}): reliable --- a dropped stop command is a crash.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The failure that looks like nothing at all}
+  \footnotesize
+  Publisher is \texttt{BEST\_EFFORT}. Subscriber demands \texttt{RELIABLE}. Both start
+  cleanly, report no errors, and \textbf{nothing is ever delivered.}
+
+  \begin{shells}
+$ ros2 topic info /scan --verbose
+Publisher count: 1
+  Reliability: BEST_EFFORT
+Subscription count: 1
+  Reliability: RELIABLE      <- incompatible: no connection
+  \end{shells}
+
+  \footnotesize
+  The subscriber asked for a guarantee the publisher does not offer, so the two are never
+  matched. Not a bug --- the system refusing to pretend.
+  \begin{inthefield}
+    \footnotesize
+    \textbf{Memorise \texttt{ros2 topic info -{}-verbose}.} When a subscriber is silent and
+    the publisher is clearly publishing, nothing else answers the question this fast.
+  \end{inthefield}
+\end{frame}
+
+% ===============================================================
+\section{Workspaces, packages, and building}
+% ===============================================================
+
+\begin{frame}[fragile]{Where your code lives}
+  \begin{shells}
+ee414_ws/
+  src/                    <- YOUR code. Only this is yours.
+    ee414_w02_first_node/
+  build/                  <- generated. Never edit, never commit.
+  install/                <- generated. What actually gets run.
+  log/                    <- generated. Build and run logs.
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  A \textbf{workspace} is a folder of packages you build together. A \textbf{package} is the
+  unit you build, share and install --- one folder, its own dependencies, its own nodes.
+
+  \vspace{0.4em}
+  \footnotesize
+  You edit \texttt{src/}. \texttt{colcon} produces the other three. If you are ever tempted to
+  fix something in \texttt{build/}, the answer is in \texttt{src/}.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Build, then source. Always both.}
+  \begin{shells}
+$ cd ~/ee414_ws
+$ colcon build --symlink-install
+$ source install/setup.bash
+$ ros2 run ee414_w02_first_node talker
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  \textbf{Sourcing is not optional and it does not persist.} It edits the environment of
+  \emph{one shell}. A new terminal is a new shell, and knows nothing.
+
+  \vspace{0.5em}
+  \begin{underhood}[What sourcing actually does]
+    \footnotesize
+    It adds your \texttt{install/} to the paths ROS 2 searches. That is the entire mechanism
+    behind ``\texttt{Package not found}'' when the package plainly exists --- the shell was
+    never told where to look.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Underlay and overlay}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.45cm]
+    \node[hw, minimum width=8.2cm, minimum height=0.85cm] (under)
+      {\footnotesize \textbf{underlay} --- \texttt{/opt/ros/\ldots} : rclpy, Nav2, TF2, the standard messages};
+    \node[plan, minimum width=8.2cm, minimum height=0.85cm, above=of under] (over)
+      {\footnotesize \textbf{overlay} --- \texttt{\textasciitilde/ee414\_ws/install} : your packages};
+    \draw[flowarrow] (under) -- node[right,font=\scriptsize] {sourced first} (over);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.5em}
+  \small
+  Source the underlay, then your workspace. Your overlay wins where names collide --- which is
+  how you can develop a modified version of a system package without uninstalling anything.
+
+  \vspace{0.5em}
+  \begin{inthefield}
+    \footnotesize
+    Sourcing the overlay in the wrong order, or sourcing two different workspaces into one
+    shell, produces the strangest bugs in robotics: the code you are editing is not the code
+    that runs. When something is inexplicable, open a clean terminal.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{What session B does with all of this}
+  \begin{enumerate}\small
+    \item Create a workspace and a package.
+    \item Write a publisher --- a node that sends a message ten times a second.
+    \item Watch it from outside with \texttt{ros2 topic list}, \texttt{echo}, \texttt{hz}.
+    \item Write a subscriber, and see the two connect in \texttt{rqt\_graph}.
+    \item Start both with a single launch file.
+    \item Break it on purpose, five ways, and fix each.
+  \end{enumerate}
+
+  \vspace{0.8em}
+  \begin{beamercolorbox}[sep=6pt,center,rounded=true]{palette secondary}
+    \small Bring a laptop with the setup check passing. Without it, you will watch.
+  \end{beamercolorbox}
+
+  \vspace{0.5em}
+  \centering\footnotesize
+  \textbf{Quiz 1 today} --- nodes, topics, the four mechanisms, and one QoS question.
+\end{frame}
+
+\end{document}

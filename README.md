@@ -129,15 +129,18 @@ approval** — treat it as a draft. No teaching material has been authored yet.
 |---|---|
 | 01 Course specification | ✅ Drafted, pending approval |
 | 02 Syllabus | ❌ Blocked on approval |
-| 04 Teaching material | ❌ Scaffold only — weeks 01–15 folders with briefs |
+| 04 Teaching material | ⚠️ Weeks 1–2 decks authored and built; weeks 3–15 are briefs |
 | `setup/`, `code/`, `project/` | ❌ Briefs written, artifacts not authored |
 | 03, 05–09 | ❌ Filled during and after delivery |
 
 ### Critical path
 
-1. `setup/` guide + `check_ros2_setup.py`, tested on all three routes — **before Week 1**.
-2. Weeks 1–3 decks and labs — the ROS 2 on-ramp, where the course is won or lost.
-3. Shared LaTeX preambles, so 15 weeks of material look like one course.
+1. **`setup/` guide + `check_ros2_setup.py`**, tested on all three routes. Both Week 1 decks
+   send students to it and the Week 2B session cannot run without it. This is now the only
+   thing blocking a deliverable week.
+2. `code/src/ee414_w02_first_node/` — the Week 2 starter package, plus its expected-output
+   transcript.
+3. Week 3 decks (services, parameters, custom messages) and Assignment 1.
 4. Confirm the computer-equipped classroom and decide the Week 12 advanced topic.
 
 ---
