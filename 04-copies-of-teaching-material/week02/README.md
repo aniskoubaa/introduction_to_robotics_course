@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Lecture (2 h)** | Nodes, discovery, DDS, QoS profiles; the ROS 1 → ROS 2 redesign and what it fixed |
-| **ROS 2 practice (1 h)** | First Python node with `rclpy`; CLI tools (`ros2 node`, `ros2 topic`); `rqt_graph`; launch files |
+| **Lecture A (1.5 h)** | Nodes, discovery, DDS, QoS profiles; the ROS 1 → ROS 2 redesign and what it fixed |
+| **Lecture B (1.5 h) — ROS 2** | First Python node with `rclpy`; CLI tools (`ros2 node`, `ros2 topic`); `rqt_graph`; launch files |
 | **CLO served** | CLO 1 |
 | **Assessment this week** | Quiz 1 |
 | **Reading** | see `../../readings/topic01_foundations_and_ros2/` |
@@ -17,9 +17,10 @@
 | ROS 2 lab sheet | `ros2_lab/README.md` | ❌ not authored |
 | ROS 2 starter package | `../../code/src/` | ❌ not authored |
 
-## Lecture
+## Lectures
 
-_One deck, 2 hours. Fill this table once the deck exists._
+_Two decks, 1.5 hours each, 30 slides maximum. A deck that runs past 30 slides
+is two lectures pretending to be one._
 
 | File | Duration | Contents |
 |---|---|---|
@@ -27,16 +28,16 @@ _One deck, 2 hours. Fill this table once the deck exists._
 
 Build: `pdflatex <file>.tex` twice. Shared preamble at `../shared/ee414-beamer-preamble.tex`.
 
-## ROS 2 practice hour
+## Lecture B — the ROS 2 session
 
 **Goal:** First Python node with `rclpy`; CLI tools (`ros2 node`, `ros2 topic`); `rqt_graph`; launch files
 
-Every practice hour ends with something that **runs**. Students leave the room having seen
+Every B session ends with something that **runs**. Students leave the room having seen
 their own node print, move, or draw in RViz2 — never with a half-typed file.
 
 | Item | Status |
 |---|---|
-| Lab sheet (step-by-step, 1 hour, checkpoint at each step) | ❌ |
+| Lab sheet (step-by-step, 1.5 hours, checkpoint at each step) | ❌ |
 | Starter package under `code/src/` | ❌ |
 | Expected-output transcript (for the key) | ❌ |
 | Common-failure list (what breaks, and the fix) | ❌ |

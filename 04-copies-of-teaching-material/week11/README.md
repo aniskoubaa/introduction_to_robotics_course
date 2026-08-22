@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Lecture (2 h)** | Configuration space; Dijkstra and A\*; global vs. local planners; costmaps and recovery behaviours |
-| **ROS 2 practice (1 h)** | The **Nav2** stack: behaviour tree, planner and controller servers; autonomous point-to-point navigation |
+| **Lecture A (1.5 h)** | Configuration space; Dijkstra and A\*; global vs. local planners; costmaps and recovery behaviours |
+| **Lecture B (1.5 h) — ROS 2** | The **Nav2** stack: behaviour tree, planner and controller servers; autonomous point-to-point navigation |
 | **CLO served** | CLO 2, CLO 3 |
 | **Assessment this week** | Quiz 5 |
 | **Reading** | see `../../readings/topic06_planning_and_navigation/` |
@@ -17,9 +17,10 @@
 | ROS 2 lab sheet | `ros2_lab/README.md` | ❌ not authored |
 | ROS 2 starter package | `../../code/src/` | ❌ not authored |
 
-## Lecture
+## Lectures
 
-_One deck, 2 hours. Fill this table once the deck exists._
+_Two decks, 1.5 hours each, 30 slides maximum. A deck that runs past 30 slides
+is two lectures pretending to be one._
 
 | File | Duration | Contents |
 |---|---|---|
@@ -27,16 +28,16 @@ _One deck, 2 hours. Fill this table once the deck exists._
 
 Build: `pdflatex <file>.tex` twice. Shared preamble at `../shared/ee414-beamer-preamble.tex`.
 
-## ROS 2 practice hour
+## Lecture B — the ROS 2 session
 
 **Goal:** The **Nav2** stack: behaviour tree, planner and controller servers; autonomous point-to-point navigation
 
-Every practice hour ends with something that **runs**. Students leave the room having seen
+Every B session ends with something that **runs**. Students leave the room having seen
 their own node print, move, or draw in RViz2 — never with a half-typed file.
 
 | Item | Status |
 |---|---|
-| Lab sheet (step-by-step, 1 hour, checkpoint at each step) | ❌ |
+| Lab sheet (step-by-step, 1.5 hours, checkpoint at each step) | ❌ |
 | Starter package under `code/src/` | ❌ |
 | Expected-output transcript (for the key) | ❌ |
 | Common-failure list (what breaks, and the fix) | ❌ |

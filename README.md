@@ -17,10 +17,9 @@ be "designing, building and programming robots." This redesign closes that gap.
 
 Three commitments run through every artifact here:
 
-**1. Theory on Monday, running code the same hour.** Each 3-hour week is 2 hours of lecture
-plus 1 hour of in-class ROS 2 practice. A concept introduced at the board is realised as a
-node that runs in Gazebo before the students leave the room. Kinematics is not finished when
-the equation is derived; it is finished when the robot drives.
+**1. Theory in session A, running code in session B.** Each week is two 1.5-hour sessions.
+A concept derived at the board on Sunday is a node running in Gazebo on Tuesday. Kinematics
+is not finished when the equation is derived; it is finished when the robot drives.
 
 **2. The industrial toolchain, not a teaching toy.** ROS 2, Gazebo, RViz2, `colcon`, TF2,
 `slam_toolbox`, Nav2, `rosbag2`. A graduate who has configured Nav2 and debugged a transform
@@ -41,7 +40,7 @@ given node and writing one on paper are 40% of every exam blueprint.
 | | |
 |---|---|
 | **Credits** | 3 (3-0-0) · 45 contact hours · classroom 100% |
-| **Weekly shape** | 2 h lecture + 1 h in-class ROS 2 practice |
+| **Weekly shape** | Two 1.5-hour sessions: A = theory, B = ROS 2, same week |
 | **Structure** | 11 taught weeks + 4 weeks for examination, project and review |
 | **Prerequisite** | EE 306 Control and Feedback Systems Design · Python and Linux assumed |
 | **Stack** | ROS 2 Jazzy · Ubuntu 24.04 · Gazebo Harmonic · Python 3.12 |

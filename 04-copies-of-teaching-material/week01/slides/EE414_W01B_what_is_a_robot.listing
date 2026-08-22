@@ -1,0 +1,11 @@
+$ ros2 topic list
+/cmd_vel
+/odom
+/scan
+
+$ ros2 topic echo /cmd_vel
+linear:
+  x: 0.2
+  y: 0.0
+angular:
+  z: 0.0

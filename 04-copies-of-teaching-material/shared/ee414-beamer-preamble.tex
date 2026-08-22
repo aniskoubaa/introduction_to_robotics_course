@@ -1,0 +1,236 @@
+% =====================================================================
+% EE 414 - Introduction to Robotics
+% Shared beamer preamble for the weekly lecture decks.
+%
+% A deck is:
+%     \documentclass[aspectratio=169]{beamer}
+%     \usetheme{Madrid}\usecolortheme{default}
+%     \input{../../shared/ee414-beamer-preamble.tex}
+%     \title...\author...\date...
+%     \begin{document} ... \end{document}
+%
+% Build any deck with TWO pdflatex passes (three if it uses \fullslide,
+% whose TikZ page anchors come from the .aux).
+%
+% Adapted from the SE 100 preamble: same palette, same terminal-window code
+% rule, same "under the lid" device renamed \begin{underhood} for this course.
+% =====================================================================
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,shapes.geometric,positioning,calc,fit,backgrounds}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+
+\graphicspath{{./}{./figures/}}
+
+% ---------------------------------------------------------------
+% House colour palette - shared with the other Alfaisal course decks.
+\definecolor{primary}{RGB}{10,37,64}
+\definecolor{secondary}{RGB}{99,91,255}
+\definecolor{accent}{RGB}{0,212,255}
+\definecolor{success}{RGB}{50,213,131}
+\definecolor{warning}{RGB}{255,193,7}
+\definecolor{danger}{RGB}{220,53,69}
+\definecolor{softgrey}{RGB}{240,242,245}
+
+\setbeamercolor{structure}{fg=secondary}
+\setbeamercolor{palette primary}{bg=primary,fg=white}
+\setbeamercolor{palette secondary}{bg=secondary,fg=white}
+\setbeamercolor{palette tertiary}{bg=accent,fg=white}
+\setbeamertemplate{navigation symbols}{}
+\setbeamerfont{block title}{size=\normalsize}
+
+\AtBeginSection[]{
+  \begin{frame}[plain]
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=10pt,center,rounded=true,shadow=true]{palette primary}
+      \usebeamerfont{title}\insertsectionhead
+    \end{beamercolorbox}
+    \vfill
+  \end{frame}
+}
+
+% ---------------------------------------------------------------
+% TikZ styles.
+%   sense / plan / act  - the three stages of the autonomy loop, colour-coded
+%                         once here and used identically in every deck, so a
+%                         student reads the colour before reading the label.
+%   node2 / topicbox    - ROS 2 computation-graph drawings.
+\tikzset{
+  sense/.style={rectangle, rounded corners=4pt, minimum width=2.5cm,
+                minimum height=0.8cm, text centered, draw=accent!80!black,
+                fill=accent!15, font=\footnotesize},
+  plan/.style={rectangle, rounded corners=4pt, minimum width=2.5cm,
+               minimum height=0.8cm, text centered, draw=secondary,
+               fill=secondary!12, font=\footnotesize},
+  act/.style={rectangle, rounded corners=4pt, minimum width=2.5cm,
+              minimum height=0.8cm, text centered, draw=success!70!black,
+              fill=success!18, font=\footnotesize},
+  world/.style={ellipse, minimum width=2.4cm, minimum height=0.9cm,
+                text centered, draw=primary, fill=primary!10, font=\footnotesize},
+  rosnode/.style={ellipse, minimum width=2.4cm, minimum height=0.85cm,
+                  text centered, draw=secondary, fill=secondary!12,
+                  font=\footnotesize\ttfamily},
+  topicbox/.style={rectangle, minimum width=2.0cm, minimum height=0.55cm,
+                   text centered, draw=primary!60, fill=softgrey,
+                   font=\scriptsize\ttfamily},
+  hw/.style={rectangle, minimum width=2.2cm, minimum height=0.8cm,
+             text centered, draw=warning!80!black, fill=warning!20,
+             font=\footnotesize},
+  flowarrow/.style={-{Stealth[length=2.5mm]}, thick, draw=primary},
+  dataflow/.style={-{Stealth[length=2mm]}, semithick, draw=secondary}
+}
+
+% ---------------------------------------------------------------
+% Full-bleed infographic slide. The title bar is part of the image,
+% so the frame carries no beamer title and no furniture.
+\newcommand{\fullslide}[1]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture,overlay]
+      \node at (current page.center)
+        {\includegraphics[width=\paperwidth,height=\paperheight]{#1}};
+    \end{tikzpicture}
+  \end{frame}%
+}
+
+% ---------------------------------------------------------------
+% RULE: every code box in this course wears the macOS terminal window bar.
+% The three traffic lights are what tell a student, at a glance, that they are
+% looking at something that RUNS ON A MACHINE rather than at prose about it.
+% There is no bare-box variant: the title keys are applied AFTER the caller's
+% options, so passing [notitle] has no effect. Do not add an exception.
+%
+%   \begin{pycode} ... \end{pycode}   a Python (rclpy) source file
+%   \begin{shell}  ... \end{shell}    a terminal session or program output
+%   \begin{spec}   ... \end{spec}     NOT runnable: .msg definitions, URDF
+%                                     fragments, pseudocode, mathematics
+%
+% The `...s' variants (pycodes, shells) are the small ones, for a crowded slide.
+\usepackage{tcolorbox}
+\tcbuselibrary{listings,skins}
+\usepackage{listings}
+
+\definecolor{termbg}{RGB}{30,30,32}
+\definecolor{termbar}{RGB}{58,58,60}
+\definecolor{termedge}{RGB}{88,88,92}
+\definecolor{termfg}{RGB}{219,219,219}
+\definecolor{termcom}{RGB}{106,153,85}
+\definecolor{termkw}{RGB}{86,156,214}
+\definecolor{termstr}{RGB}{206,145,120}
+\definecolor{termfun}{RGB}{220,220,170}
+\definecolor{termerr}{RGB}{241,76,76}
+\definecolor{dotr}{RGB}{255,95,86}
+\definecolor{doty}{RGB}{255,189,46}
+\definecolor{dotg}{RGB}{39,201,63}
+
+\newcommand{\termdots}{%
+  \begin{tikzpicture}[baseline=-0.65ex]
+    \fill[dotr] (0,0)     circle (2.7pt);
+    \fill[doty] (0.34,0)  circle (2.7pt);
+    \fill[dotg] (0.68,0)  circle (2.7pt);
+  \end{tikzpicture}}
+
+% Python source: VS Code "Dark+" palette, so what a student sees on the slide
+% is what their editor shows them ten minutes later.
+\lstdefinestyle{darkpy}{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize\color{termfg},
+  keywordstyle=\color{termkw},
+  stringstyle=\color{termstr},
+  commentstyle=\color{termcom},
+  emph={print,len,range,float,int,str,super,min,max,abs,round},
+  emphstyle=\color{termfun},
+  emph={[2]rclpy,Node,create_publisher,create_subscription,create_timer,spin,
+        Twist,LaserScan,Odometry,String},
+  emphstyle={[2]\color{termfun}},
+  showstringspaces=false, columns=fullflexible, keepspaces=true,
+}
+% Terminal output: same lexer, keywords left plain, errors picked out in red.
+\lstdefinestyle{darkterm}{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize\color{termfg},
+  keywordstyle=\color{termfg},
+  stringstyle=\color{termstr},
+  commentstyle=\color{termcom},
+  emph={ros2,colcon,rviz2,gazebo,source,export},
+  emphstyle=\color{termfun},
+  emph={[2]ERROR,error,FATAL,Failed,failed,Traceback},
+  emphstyle={[2]\color{termerr}\bfseries},
+  emph={[3]INFO,OK,PASS},
+  emphstyle={[3]\color{termcom}},
+  showstringspaces=false, columns=fullflexible, keepspaces=true,
+}
+
+\tcbset{termbox/.style={
+  enhanced, listing only,
+  colback=termbg, colframe=termedge, boxrule=0.5pt,
+  arc=9pt, outer arc=9pt,
+  left=10pt, right=10pt, top=6pt, bottom=6pt,
+  title={\termdots}, colbacktitle=termbar, coltitle=termfg,
+  toptitle=3.5pt, bottomtitle=3.5pt, lefttitle=10pt, titlerule=0pt,
+}}
+\lstdefinestyle{darkpys}{style=darkpy,     basicstyle=\ttfamily\scriptsize\color{termfg}}
+\lstdefinestyle{darkterms}{style=darkterm, basicstyle=\ttfamily\scriptsize\color{termfg}}
+\tcbset{tightpad/.style={top=4pt, bottom=4pt, toptitle=3pt, bottomtitle=3pt}}
+
+\newtcblisting{pycode}[1][]{termbox, listing style=darkpy,    #1, title={\termdots}, colbacktitle=termbar, coltitle=termfg}
+\newtcblisting{shell}[1][]{termbox,  listing style=darkterm,  #1, title={\termdots}, colbacktitle=termbar, coltitle=termfg}
+\newtcblisting{pycodes}[1][]{termbox, listing style=darkpys,  tightpad, #1, title={\termdots}, colbacktitle=termbar, coltitle=termfg}
+\newtcblisting{shells}[1][]{termbox,  listing style=darkterms, tightpad, #1, title={\termdots}, colbacktitle=termbar, coltitle=termfg}
+
+% The light box: for things that are NOT runnable. The contrast is the point.
+\newtcblisting{spec}[1][]{
+  enhanced, listing only,
+  colback=softgrey, colframe=primary!35, boxrule=0.6pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt,
+  listing options={basicstyle=\ttfamily\footnotesize\color{primary!85!black},
+                   columns=fullflexible, keepspaces=true}, #1}
+
+% ---------------------------------------------------------------
+% "Under the hood" - the machine-level aside.
+%
+% STANDING DEVICE. Wherever a slide states a rule about how a robot or ROS 2
+% behaves, the reason belongs in one of these, immediately after it. A student
+% who can answer "why does it behave that way?" with something other than
+% "because ROS does" is not memorising.
+%
+% FOUR LINES MAXIMUM. Deliberately out of scope in this course: the DDS wire
+% protocol, real-time kernel scheduling, and the internals of the executor.
+% Naming the exclusion here is what stops it creeping in.
+\newenvironment{underhood}[1][Under the hood]{%
+  \begin{tcolorbox}[enhanced, colback=primary!6, colframe=primary!45,
+                    boxrule=0.6pt, arc=3pt,
+                    left=8pt, right=8pt, top=5pt, bottom=5pt,
+                    title={#1}, colbacktitle=primary!85!black, coltitle=white,
+                    fonttitle=\footnotesize\bfseries,
+                    toptitle=2pt, bottomtitle=2pt, titlerule=0pt]%
+}{\end{tcolorbox}}
+
+% "In the field" - the industrial-reality aside. Same shape, different colour:
+% where \underhood explains a mechanism, this one says what it costs in a real
+% deployment. Use sparingly, and never as decoration.
+\newenvironment{inthefield}[1][In the field]{%
+  \begin{tcolorbox}[enhanced, colback=success!7, colframe=success!50!black,
+                    boxrule=0.6pt, arc=3pt,
+                    left=8pt, right=8pt, top=5pt, bottom=5pt,
+                    title={#1}, colbacktitle=success!45!black, coltitle=white,
+                    fonttitle=\footnotesize\bfseries,
+                    toptitle=2pt, bottomtitle=2pt, titlerule=0pt]%
+}{\end{tcolorbox}}
+
+% ---------------------------------------------------------------
+% THE PINNED STACK. This macro and setup/README.md are the ONLY two places in
+% the course where the distribution is named. Every deck, exercise and lab
+% sheet writes \rosver, never the literal name. A distribution upgrade is then
+% two edits, not a search across fifteen weeks of LaTeX that will miss three.
+\newcommand{\rosver}{ROS\,2 Jazzy}
+\newcommand{\ubuntuver}{Ubuntu 24.04 LTS}
+\newcommand{\gazebover}{Gazebo Harmonic}
+\newcommand{\pyver}{3.12}

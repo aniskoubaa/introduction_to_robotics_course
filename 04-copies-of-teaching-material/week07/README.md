@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Lecture (2 h)** | Rotation matrices, homogeneous transforms, frame composition; why a robot needs a transform tree |
-| **ROS 2 practice (1 h)** | TF2: broadcasting, listening, static transforms; reading and debugging the tree in RViz2 |
+| **Lecture A (1.5 h)** | Rotation matrices, homogeneous transforms, frame composition; why a robot needs a transform tree |
+| **Lecture B (1.5 h) — ROS 2** | TF2: broadcasting, listening, static transforms; reading and debugging the tree in RViz2 |
 | **CLO served** | CLO 2, CLO 3 |
 | **Assessment this week** | Quiz 3 |
 | **Reading** | see `../../readings/topic04_modelling_and_simulation/` |
@@ -17,9 +17,10 @@
 | ROS 2 lab sheet | `ros2_lab/README.md` | ❌ not authored |
 | ROS 2 starter package | `../../code/src/` | ❌ not authored |
 
-## Lecture
+## Lectures
 
-_One deck, 2 hours. Fill this table once the deck exists._
+_Two decks, 1.5 hours each, 30 slides maximum. A deck that runs past 30 slides
+is two lectures pretending to be one._
 
 | File | Duration | Contents |
 |---|---|---|
@@ -27,16 +28,16 @@ _One deck, 2 hours. Fill this table once the deck exists._
 
 Build: `pdflatex <file>.tex` twice. Shared preamble at `../shared/ee414-beamer-preamble.tex`.
 
-## ROS 2 practice hour
+## Lecture B — the ROS 2 session
 
 **Goal:** TF2: broadcasting, listening, static transforms; reading and debugging the tree in RViz2
 
-Every practice hour ends with something that **runs**. Students leave the room having seen
+Every B session ends with something that **runs**. Students leave the room having seen
 their own node print, move, or draw in RViz2 — never with a half-typed file.
 
 | Item | Status |
 |---|---|
-| Lab sheet (step-by-step, 1 hour, checkpoint at each step) | ❌ |
+| Lab sheet (step-by-step, 1.5 hours, checkpoint at each step) | ❌ |
 | Starter package under `code/src/` | ❌ |
 | Expected-output transcript (for the key) | ❌ |
 | Common-failure list (what breaks, and the fix) | ❌ |

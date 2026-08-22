@@ -30,7 +30,7 @@ the lecture and realised the same week as running ROS 2 code in Gazebo. The mode
 load: **11 taught weeks + 4 weeks** for examination, project and review.
 
 Credit structure stays at the standard Alfaisal **3 (3-0-0)**, 45 contact hours, classroom
-100%. Each 3-hour week runs as **2 h lecture + 1 h in-class ROS 2 practice** in a
+100%. Each week runs as **two 1.5-hour sessions** — A for theory, B for ROS 2 — in a
 computer-equipped classroom. No laboratory credit is claimed.
 
 ## The four CLOs

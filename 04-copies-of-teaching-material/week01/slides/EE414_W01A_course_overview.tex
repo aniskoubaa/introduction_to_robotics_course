@@ -1,0 +1,606 @@
+% =====================================================================
+% EE 414 - Introduction to Robotics
+% Week 1, Lecture A: Course Overview
+% Fall 2026 - Alfaisal University
+% Duration: 1.5 hours   |   28 slides
+%
+% Build: pdflatex EE414_W01A_course_overview.tex   (twice)
+% logo.png must sit beside this file.
+% =====================================================================
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\input{../../shared/ee414-beamer-preamble.tex}
+
+\title[EE 414 --- Week 1A]{Course Overview}
+\subtitle{Introduction to Robotics}
+\author[A. Koubaa]{Prof.\ Anis Koubaa}
+\institute[Alfaisal University]{
+    EE 414 --- Introduction to Robotics\\
+    College of Engineering\\
+    Alfaisal University
+}
+\date{Fall 2026 --- Week 1, Lecture A}
+\titlegraphic{\includegraphics[width=1.4cm]{logo.png}}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ===============================================================
+\begin{frame}{What this lecture does}
+  \begin{block}{Roadmap}
+    \small What EE 414 asks you to learn, why it is built the way it is, how you will be
+    assessed, and what you must do before the next class.
+  \end{block}
+  \vspace{0.2em}
+  {\scriptsize\tableofcontents[hideallsubsections]}
+\end{frame}
+
+% ===============================================================
+\section{What this course is about}
+% ===============================================================
+
+\begin{frame}{The course in one sentence}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
+    \large EE 414 teaches you to make a machine \textbf{act, on its own, in the physical world}.
+  \end{beamercolorbox}
+
+  \vspace{0.9em}
+
+  \textbf{ROS\,2} is the framework we write those machines in. It is the tool, not the subject.
+
+  \vspace{0.9em}
+
+  \begin{block}{From the course specification}
+    \small
+    ``This course introduces the foundations of robotics --- modelling, control, perception,
+    localization, mapping and motion planning --- and develops them through practical software
+    implementation using the Robot Operating System 2 (ROS\,2).''
+  \end{block}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Two courses you could take. This is the second one.}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+    \begin{block}{\small A robotics theory course}
+      \footnotesize
+      You derive the kinematics.\\
+      You solve for the trajectory.\\
+      You are examined on the derivation.\\[0.4em]
+      You graduate having \textbf{never made a robot move}.
+    \end{block}
+
+    \column{0.48\textwidth}
+    \begin{block}{\small This course}
+      \footnotesize
+      You derive the kinematics on Sunday.\\
+      On Tuesday the robot drives with it.\\
+      When it does not drive, you find out why.\\[0.4em]
+      You graduate having \textbf{built the thing}.
+    \end{block}
+  \end{columns}
+
+  \vspace{0.8em}
+  The mathematics is not reduced. It is \emph{finished} --- an equation is finished when
+  something moves because of it.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Where you end up}
+  \small By Week 11 you will have a robot that does this, and you will have written
+  every part of it:
+
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.36cm and 0.9cm]
+    \node[sense] (map)  {builds a map of a room it has never seen};
+    \node[plan,  below=of map]  (loc)  {works out where it is in that map};
+    \node[plan,  below=of loc]  (plan) {plans a path to a goal you click};
+    \node[act,   below=of plan] (ctrl) {drives there, around what is in the way};
+    \draw[flowarrow] (map)  -- (loc);
+    \draw[flowarrow] (loc)  -- (plan);
+    \draw[flowarrow] (plan) -- (ctrl);
+  \end{tikzpicture}
+  \end{center}
+
+  \begin{inthefield}
+    \footnotesize The same stack --- ROS\,2, SLAM, Nav2 --- runs on warehouse robots and
+    inspection rovers today. Configuring it is a real first week of work.
+  \end{inthefield}
+\end{frame}
+
+% ===============================================================
+\section{Why robotics is hard, and what we do about it}
+% ===============================================================
+
+\begin{frame}{Three reasons robotics is harder than the software you have written}
+  \small
+  \begin{table}
+    \begin{tabular}{@{}p{3.1cm}p{4.0cm}p{4.4cm}@{}}
+      \toprule
+      \textbf{The difficulty} & \textbf{Why it bites} & \textbf{What this course does} \\
+      \midrule
+      The world is \newline uncertain
+        & Your sensor reports 2.31\,m. The wall is at 2.28\,m. Neither number is wrong.
+        & Estimation is taught as a first-class topic (Weeks 9--10), not an appendix. \\[0.4em]
+      Everything runs \newline at once
+        & Sensing, planning and control do not take turns. They all run, always, at
+          different rates.
+        & ROS\,2 from Week 1, so concurrency is the normal case and not a shock. \\[0.4em]
+      There is no undo
+        & A wrong loop prints wrong output. A wrong velocity command hits a wall.
+        & Simulation first, every week. Hardware only once the code has earned it. \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The gap this course exists to close}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+    \textbf{What you can already do}
+    \begin{itemize}\footnotesize
+      \item Write a Python program that computes an answer
+      \item Design a feedback controller on paper (EE 306)
+      \item Analyse a system in the frequency domain
+    \end{itemize}
+
+    \column{0.47\textwidth}
+    \textbf{What a robot needs}
+    \begin{itemize}\footnotesize
+      \item Ten programs running at once, talking to each other
+      \item A controller whose input arrives late, noisy, and sometimes not at all
+      \item A decision every 50\,ms, forever, with no human watching
+    \end{itemize}
+  \end{columns}
+
+  \vspace{1.0em}
+  \begin{underhood}[The point]
+    \footnotesize
+    EE 306 gave you the controller. This course gives you everything between the controller
+    and the wheels --- and that ``everything'' is where robots actually fail.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The four course learning outcomes}
+  \small
+  \begin{table}
+    \begin{tabular}{@{}p{2.0cm}p{7.4cm}p{2.1cm}@{}}
+      \toprule
+      & \textbf{By the end of this course you can\ldots} & \textbf{Bloom level} \\
+      \midrule
+      \textbf{CLO 1}\newline EXPLAIN
+        & Explain robot system architectures and the ROS\,2 computation graph.
+        & Understand \\[0.3em]
+      \textbf{CLO 2}\newline ANALYZE
+        & Analyze robot kinematics, motion control and state estimation problems.
+        & Analyze \\[0.3em]
+      \textbf{CLO 3}\newline DEVELOP
+        & Develop ROS\,2 software for robot perception, localization and navigation.
+        & Create \\[0.3em]
+      \textbf{CLO 4}\newline EVALUATE
+        & Evaluate ethical and safety implications of autonomous robots within a team.
+        & Evaluate \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.2em}
+  Four outcomes. One verb each. Short enough that you can recall them without opening
+  the document --- and every exam question you will sit maps to exactly one of them.
+\end{frame}
+
+% ===============================================================
+\section{How the course works}
+% ===============================================================
+
+\begin{frame}{The weekly shape}
+  \begin{center}
+  \begin{tikzpicture}[node distance=1.1cm]
+    \node[plan, minimum width=4.6cm, minimum height=1.5cm, align=center] (a)
+      {\textbf{Lecture A} --- 1.5\,h\\[0.2em] the idea, the mathematics,\\ the derivation};
+    \node[act, minimum width=4.6cm, minimum height=1.5cm, align=center, right=of a] (b)
+      {\textbf{Lecture B} --- 1.5\,h\\[0.2em] the same idea, running,\\ in ROS\,2};
+    \draw[flowarrow] (a) -- node[above,font=\scriptsize] {same week} (b);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.5em}
+  \begin{itemize}
+    \item \textbf{Bring a laptop to Lecture B.} It is not a demonstration you watch.
+    \item Every B session ends with something that \textbf{runs} --- your node printing,
+          your robot moving, your frame appearing in RViz2.
+    \item If you leave a B session with a half-typed file, tell me before you leave. That
+          is a failure of the session, not of you.
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The semester: 11 taught weeks, then 4}
+  \scriptsize
+  \begin{columns}[T,onlytextwidth]
+    \column{0.49\textwidth}
+    \begin{tabular}{@{}clp{1.15cm}@{}}
+      \toprule
+      \textbf{Wk} & \textbf{Topic} & \textbf{Due} \\
+      \midrule
+      1  & Robotics and the ROS\,2 ecosystem & --- \\
+      2  & ROS\,2 computation graph & Quiz 1 \\
+      3  & Topics, services, actions & Asgn 1 \\
+      4  & Differential-drive kinematics & Quiz 2 \\
+      5  & Feedback control for motion & Asgn 2 \\
+      6  & Sensors, actuators, LiDAR & \textbf{MT I} \\
+      7  & Transformations and TF2 & Quiz 3 \\
+      8  & Robot modelling: URDF, Gazebo & Asgn 3 \\
+      \bottomrule
+    \end{tabular}
+
+    \column{0.49\textwidth}
+    \begin{tabular}{@{}clp{1.15cm}@{}}
+      \toprule
+      \textbf{Wk} & \textbf{Topic} & \textbf{Due} \\
+      \midrule
+      9  & Probabilistic state estimation & Quiz 4 \\
+      10 & Localization, mapping (SLAM) & Asgn 4 \\
+      11 & Motion planning, Nav2 & Quiz 5 \\
+      \midrule
+      12 & Integration + advanced topic & \textbf{MT II} \\
+      13 & Robot ethics and safety & Review \\
+      14 & Review and project demos & \textbf{Project} \\
+      15 & --- & \textbf{Final} \\
+      \bottomrule
+    \end{tabular}
+  \end{columns}
+
+  \vspace{0.7em}
+  \normalsize
+  Weeks 12--15 carry no new required material. A week lost to a holiday or a university event
+  is absorbed \textbf{without dropping a topic}.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Every week is one block of one robot}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.35cm and 0.55cm]
+    \node[sense] (per)  {Perception};
+    \node[sense, right=of per]  (est)  {Estimation};
+    \node[plan,  right=of est]  (loc)  {Localization};
+    \node[plan,  right=of loc]  (pln)  {Planning};
+    \node[act,   right=of pln]  (ctl)  {Control};
+
+    \node[below=0.12cm of per, font=\tiny] {Wk 6};
+    \node[below=0.12cm of est, font=\tiny] {Wk 9};
+    \node[below=0.12cm of loc, font=\tiny] {Wk 10};
+    \node[below=0.12cm of pln, font=\tiny] {Wk 11};
+    \node[below=0.12cm of ctl, font=\tiny] {Wk 5};
+
+    \draw[dataflow] (per) -- (est);
+    \draw[dataflow] (est) -- (loc);
+    \draw[dataflow] (loc) -- (pln);
+    \draw[dataflow] (pln) -- (ctl);
+
+    \node[world, below=1.3cm of loc] (w) {the world};
+    \draw[dataflow] (w.west) -- ++(-2.6,0) |- (per.south west);
+    \draw[dataflow] (ctl.south) |- (w.east);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.4em}
+  \small
+  Weeks 2--3 build the \emph{plumbing} that lets these blocks talk. Weeks 4 and 7--8 build the
+  \emph{model} they all share. Nothing in this course is a standalone topic --- by Week 12
+  every block is running at the same time, on the same robot.
+\end{frame}
+
+% ===============================================================
+\section{Course information}
+% ===============================================================
+
+\begin{frame}{Practical information}
+  \small
+  \begin{table}
+    \begin{tabular}{@{}p{3.0cm}p{8.4cm}@{}}
+      \toprule
+      Instructor      & Prof.\ Anis Koubaa --- \texttt{akoubaa@alfaisal.edu} \\
+      Office hours    & Announced in the syllabus, and by appointment \\
+      Credits         & 3 (3-0-0) --- two 1.5-hour sessions each week \\
+      Prerequisite    & EE 306 Control and Feedback Systems Design \\
+      Assumed         & Python, and enough Linux to move around a terminal \\
+      LMS             & \texttt{elearning.alfaisal.edu} --- announcements, grades, submissions \\
+      Course repo     & Slides, starter packages, lab sheets. Pull before every class. \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+
+  \vspace{0.3em}
+  \begin{underhood}[If your Linux is weak]
+    \footnotesize
+    Say so in Week 1, not Week 6. The setup guide has a short primer, and the Week 2 session
+    assumes you have worked through it. Nobody has ever failed this course on Linux --- people
+    fail it by hiding that they were lost in Week 2.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The stack, pinned}
+  \begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    Middleware   & \rosver{} \\
+    Operating system & \ubuntuver{} \\
+    Simulator    & \gazebover{} \\
+    Language     & Python \pyver{} (\texttt{rclpy}) \\
+    Visualisation & RViz2 \\
+    Robot        & TurtleBot3 --- in simulation, and on hardware where available \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.9em}
+  \begin{itemize}\small
+    \item \textbf{Everything is done in simulation first.} Gazebo is not a lesser version of
+          the course; it is where the work happens. Hardware is a bonus, not a dependency.
+    \item \textbf{Python only.} Production robotics uses C++ as well, and we will say where
+          and why --- but nothing in this course is assessed in it.
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Books --- and the one that is not a book}
+  \small
+  \textbf{Essential}
+  \begin{itemize}\footnotesize
+    \item P.\ Corke, \emph{Robotics, Vision and Control: Fundamental Algorithms in Python},
+          3rd ed., Springer, 2023.
+    \item The \textbf{official ROS\,2 documentation}, \texttt{docs.ros.org}. Treated as a
+          primary source, and \textbf{examinable}.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \textbf{Supportive} --- for the weeks that need depth
+  \begin{itemize}\footnotesize
+    \item Siegwart, Nourbakhsh, Scaramuzza, \emph{Introduction to Autonomous Mobile Robots} --- kinematics, sensors
+    \item Thrun, Burgard, Fox, \emph{Probabilistic Robotics} --- estimation, SLAM
+    \item Lynch \& Park, \emph{Modern Robotics} --- rigid-body transformations
+  \end{itemize}
+
+  \vspace{0.5em}
+  \begin{inthefield}
+    \footnotesize
+    Reading documentation \emph{is} the professional skill here --- CLO 1 names it. In this
+    field a textbook is three years behind the tool you are being paid to use.
+  \end{inthefield}
+\end{frame}
+
+% ===============================================================
+\section{Assessment}
+% ===============================================================
+
+\begin{frame}{How the 100\% is made}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \column{0.55\textwidth}
+    \begin{tabular}{@{}lrl@{}}
+      \toprule
+      \textbf{Component} & \textbf{\%} & \textbf{When} \\
+      \midrule
+      Attendance and participation & 5  & throughout \\
+      ROS\,2 assignments (4) & 15 & Wk 3, 5, 8, 10 \\
+      Quizzes (5, short)     & 5  & Wk 2, 4, 7, 9, 11 \\
+      Midterm Exam I         & 15 & Week 6 \\
+      Midterm Exam II        & 15 & Week 12 \\
+      Course project         & 20 & Weeks 13--14 \\
+      Final Exam             & 25 & Exam week \\
+      \midrule
+      \textbf{Total}         & \textbf{100} & \\
+      \bottomrule
+    \end{tabular}
+
+    \column{0.42\textwidth}
+    \begin{block}{\small Two mercies}
+      \footnotesize
+      The \textbf{lowest assignment} is dropped.\\
+      The \textbf{lowest quiz} is dropped.\\[0.4em]
+      One bad week does not follow you to December.
+    \end{block}
+    \begin{block}{\small One warning}
+      \footnotesize
+      There are \textbf{no bonus marks}. Plan on the 100 that exists.
+    \end{block}
+  \end{columns}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{What a written exam looks like for a software course}
+  \small
+  A robotics exam that only asks you to derive equations does not measure this course.
+  Every exam here is built to a fixed blueprint:
+
+  \vspace{0.5em}
+  \begin{center}
+  \begin{tabular}{@{}llr@{}}
+    \toprule
+    \textbf{Section} & \textbf{What you do} & \textbf{Weight} \\
+    \midrule
+    Recall     & Definitions, ROS\,2 vocabulary & $\le$10\% \\
+    Explain    & Why a mechanism exists, how the architecture fits & 20\% \\
+    Analyze    & Kinematics, control, estimation, planning --- worked by hand & 30\% \\
+    Read code  & Given a node: what does it do, what does it publish? & 20\% \\
+    Write code & Complete a node, a callback, a launch entry, on paper & 20\% \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.7em}
+  \textbf{40\% of every exam is code, on paper.} If you have only ever copied commands from a
+  tutorial, that 40\% is where it shows. This is deliberate.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Assignments and the project}
+  \small
+  \textbf{Four ROS\,2 assignments} (Weeks 3, 5, 8, 10). Each extends what the Lecture B
+  session started. Marked on functionality 50, ROS\,2 idiom and package structure 20,
+  code quality 20, report or demo 10.
+
+  \vspace{0.7em}
+  \textbf{The project} --- teams of 3, Weeks 13--14, 20\% of the course.
+  \begin{itemize}\footnotesize
+    \item A complete autonomous behaviour: warehouse delivery, coverage cleaning, frontier
+          exploration, person following --- or your own proposal.
+    \item Deliverables: a Git repository, a live demo, a 6-page report, a 10-minute talk.
+    \item \textbf{Proposal due Week 5.} Teams form in Week 4. Start thinking now.
+  \end{itemize}
+
+  \vspace{0.5em}
+  \begin{underhood}[The individual question]
+    \footnotesize
+    At the demo, each member is asked about a part of the system they did \emph{not} write.
+    A team that cannot explain its own robot has not met CLO 3, whatever the robot does.
+  \end{underhood}
+\end{frame}
+
+% ===============================================================
+\section{Policies}
+% ===============================================================
+
+\begin{frame}{Attendance, integrity, and the rules that matter}
+  \small
+  \textbf{Attendance.} University policy, strictly applied. Attendance is taken in the first
+  minutes. Missing a Lecture B session is expensive in a way that missing a lecture is not ---
+  the environment moves forward and you do not.
+
+  \vspace{0.7em}
+  \textbf{Academic integrity.} Submitting another person's work as your own --- copied code,
+  a repository forked without attribution, a paraphrased report --- brings course failure and
+  possible suspension, per the university policy.
+
+  \vspace{0.7em}
+  \textbf{Open-source code.} Robotics runs on other people's packages, and using them is
+  correct engineering. \textbf{Attribute it.} Name the package, the version and the licence
+  in your report. Using \texttt{slam\_toolbox} is expected; presenting it as yours is
+  plagiarism. We spend Week 13 on exactly this line.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Using AI coding tools}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
+    \small Permitted in assignments and the project. \textbf{Not} permitted in examinations.
+  \end{beamercolorbox}
+
+  \vspace{0.8em}
+  Two conditions, and they are not negotiable:
+
+  \begin{enumerate}\small
+    \item \textbf{Disclose.} Say what you used and for what, in the report.
+    \item \textbf{Defend.} Be able to explain and justify every line you submit, on the spot.
+  \end{enumerate}
+
+  \vspace{0.8em}
+  \begin{inthefield}
+    \footnotesize
+    An assistant will happily give you ROS\,1 code, or code for a distribution three versions
+    old, and it will look right. Debugging that is a skill this course teaches --- and the
+    reason condition 2 exists. The exam is on paper for the same reason.
+  \end{inthefield}
+\end{frame}
+
+% ===============================================================
+\section{Getting set up}
+% ===============================================================
+
+\begin{frame}{Before the next class}
+  \small
+  Everything from Week 2 onward assumes a working \rosver{} installation. Budget
+  \textbf{60--90 minutes}. Start tonight, not the night before.
+
+  \vspace{0.6em}
+  \begin{center}
+  \begin{tabular}{@{}llp{4.6cm}@{}}
+    \toprule
+    \textbf{Route} & \textbf{For} & \textbf{Note} \\
+    \midrule
+    A --- Native \ubuntuver{} & A spare machine or dual boot & Best performance \\
+    B --- WSL2 on Windows 11  & Most of you & GUI apps work via WSLg \\
+    C --- Docker              & macOS, incl.\ Apple Silicon & Gazebo runs slower \\
+    D --- Lab machines        & Fallback & Pre-imaged; nothing persists \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  The guide is in \texttt{setup/} in the course repository, with a script that checks your
+  installation and prints a pass/fail table. \textbf{Run it. Bring the output to Week 2.}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{One setting that will save the whole room}
+  \small
+  ROS\,2 nodes find each other automatically over the network. In a shared lab, that means
+  \textbf{your robot will be driven by the person sitting behind you} --- and neither of you
+  will understand why.
+
+  \begin{shells}
+$ echo "export ROS_DOMAIN_ID=17" >> ~/.bashrc
+$ source ~/.bashrc
+  \end{shells}
+
+  \vspace{0.4em}
+  You will be assigned a number this week. Put it in your \texttt{.bashrc} today.
+
+  \vspace{0.5em}
+  \begin{underhood}
+    \footnotesize
+    The domain ID partitions the discovery traffic: nodes only see nodes on the same ID.
+    It is the first thing to check when a node ``cannot see'' a topic that is obviously
+    being published.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Your checklist for this week}
+  \begin{enumerate}
+    \item Clone the course repository, and read \texttt{setup/README.md}.
+    \item Install \rosver{} by the route that fits your machine.
+    \item Run the setup check script --- every row must say \texttt{PASS}.
+    \item Set your assigned \texttt{ROS\_DOMAIN\_ID}.
+    \item Skim the ROS\,2 ``Concepts'' page. You will not understand all of it. Skim it anyway
+          --- Lecture 2A is much easier when the vocabulary is not brand new.
+    \item Start thinking about who you want in your project team.
+  \end{enumerate}
+
+  \vspace{0.8em}
+  \begin{inthefield}[If you get stuck]
+    \footnotesize
+    Post on the LMS forum, not by email --- twenty people hit the same installation error, and
+    the first person to post it saves the other nineteen.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Next: Lecture 1B}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette primary}
+    \large What \emph{is} a robot --- and why does robot software need a framework at all?
+  \end{beamercolorbox}
+
+  \vspace{1.0em}
+  We will look at:
+  \begin{itemize}\small
+    \item What separates a robot from a very good machine
+    \item The sense--plan--act loop, and the four blocks every autonomous robot has
+    \item Three hard truths about the physical world that shape all of robotics
+    \item Why nobody writes robot software as one program any more --- and what ROS\,2 does
+          about it
+  \end{itemize}
+
+  \vspace{1.0em}
+  \centering \small Questions now, or \texttt{akoubaa@alfaisal.edu}.
+\end{frame}
+
+\end{document}

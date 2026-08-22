@@ -1,54 +1,114 @@
-# Week 01 — Introduction to Robotics and the ROS 2 Ecosystem
+# Week 1 — Introduction to Robotics and the ROS 2 Ecosystem
 
 | | |
 |---|---|
-| **Lecture (2 h)** | Robot taxonomy and applications; the sense–plan–act loop; robot software architecture; why robotics needs middleware |
-| **ROS 2 practice (1 h)** | Ubuntu + ROS 2 installation verified; `colcon` workspace created; first package built |
-| **CLO served** | CLO 1 |
+| **Lecture A (1.5 h)** | Course overview: what the course is for, how it works, assessment, policies, setup |
+| **Lecture B (1.5 h)** | What is a robot: sense–plan–act, anatomy, the autonomy pipeline, why robot software needs a framework |
+| **CLO served** | CLO 1 (both) · CLO 4 introduced in A (AI policy, attribution) |
 | **Assessment this week** | — |
-| **Reading** | see `../../readings/topic01_foundations_and_ros2/` |
+| **Tooling rung** | T0 — **no computer required in either session.** Installation is homework. |
+| **Reading** | ROS 2 documentation, "Concepts" page (skim); Corke Ch. 1 |
 
 ## Status
 
 | Artifact | Path | Status |
 |---|---|---|
-| Lecture deck | `slides/EE414_W01_*.tex` / `.pdf` | ❌ not authored |
+| Lecture A deck | `slides/EE414_W01A_course_overview.tex` / `.pdf` | ✅ 30 slides, builds clean |
+| Lecture B deck | `slides/EE414_W01B_what_is_a_robot.tex` / `.pdf` | ✅ 30 slides, builds clean |
+| Shared preamble | `../shared/ee414-beamer-preamble.tex` | ✅ |
 | Exercise set + key | `exercises/EE414_W01_exercises.pdf` / `_solutions.pdf` | ❌ not authored |
-| ROS 2 lab sheet | `ros2_lab/README.md` | ❌ not authored |
-| ROS 2 starter package | `../../code/src/` | ❌ not authored |
+| Setup guide (M1) | `../../setup/README.md` + `check_ros2_setup.py` | ❌ **critical path** |
 
-## Lecture
-
-_One deck, 2 hours. Fill this table once the deck exists._
+## Lectures
 
 | File | Duration | Contents |
 |---|---|---|
-| `slides/EE414_W01_....tex` / `.pdf` | 2 h · — slides | — |
+| `slides/EE414_W01A_course_overview.tex` | 1.5 h · 30 slides | What the course is for; the theory-course/this-course contrast; where you end up by Week 11; three reasons robotics is hard; the four CLOs; the weekly A/B shape; the 11+4 calendar; the pipeline-to-weeks map; logistics; the pinned stack; books; assessment and the exam blueprint; assignments and project; policies; AI-tool policy; setup and `ROS_DOMAIN_ID`; the week's checklist |
+| `slides/EE414_W01B_what_is_a_robot.tex` | 1.5 h · 30 slides | Which of these is a robot; sense–plan–act definition; the loop; automation vs autonomy; robot families; why mobile robots; anatomy; the sensor table; the differential drive; the five-block pipeline; "go to the door" traced; three hard truths; the naive `while` loop and its five failures; the computation graph as the answer; ROS 2 honestly; the ecosystem; a first node; `ros2 topic echo` |
 
-Build: `pdflatex <file>.tex` twice. Shared preamble at `../shared/ee414-beamer-preamble.tex`.
+Build: `pdflatex <file>.tex` twice. `logo.png` must sit beside the `.tex`.
 
-## ROS 2 practice hour
-
-**Goal:** Ubuntu + ROS 2 installation verified; `colcon` workspace created; first package built
-
-Every practice hour ends with something that **runs**. Students leave the room having seen
-their own node print, move, or draw in RViz2 — never with a half-typed file.
-
-| Item | Status |
-|---|---|
-| Lab sheet (step-by-step, 1 hour, checkpoint at each step) | ❌ |
-| Starter package under `code/src/` | ❌ |
-| Expected-output transcript (for the key) | ❌ |
-| Common-failure list (what breaks, and the fix) | ❌ |
+**Known cosmetic issue:** W01B reports one 0.51 pt overfull `\hbox` (0.18 mm) on the
+"go to the door" frame. It does not resize with the column widths, so it is not the table.
+Below the visual threshold; left alone rather than chased.
 
 ## Teaching notes
 
-_To be written after first delivery._
+**Deliver A and B in the same week, in order.** A sets the contract; B is the first real
+content. If only one session runs in Week 1, run A — B can compress into Week 2A, but a cohort
+that never got the assessment rules will be arguing about them in Week 6.
+
+**W01A, "Two courses you could take."** This is the slide that sets expectations for the
+semester, and it is the one to deliver slowly. The cohort arriving from EE 306 expects a
+mathematics course. Some of them will be disappointed, and it is better that they find out in
+Week 1 than in Week 4 when the first ROS 2 assignment lands.
+
+**W01A, the exam blueprint slide.** State plainly that **40% of every written exam is code on
+paper**. Every year, some students assume a software course means the exam is a tutorial recap.
+Saying it in Week 1, and again in Week 5, is what prevents that conversation in January.
+
+**W01A, the AI-tool policy.** Do not rush it. The two conditions — disclose, and defend — are
+the whole policy, and the "in the field" note is the argument for them: an assistant will
+confidently produce ROS 1 code, or code for a distribution three versions old, and it looks
+right. Debugging that is a skill this course teaches.
+
+**W01B slide 3, "Which of these is a robot?"** Run it as an activity, not a slide. Ask for
+hands, take two disagreements, and let the argument run for three or four minutes before
+advancing. The definition on the next slide only lands if the students have already discovered
+that they disagree about the elevator and the LLM. If time is short, take just the CNC machine
+and the robot vacuum — that pair alone produces the argument.
+
+**W01B, the three hard truths.** These are the load-bearing slides of the lecture. Everything
+in Weeks 9–11 exists because of truth 1, and the entire ROS 2 section exists because of truth
+3. Deliver the truths, then let the "how do you write one program that does all five, at five
+different rates?" question hang for a moment before moving on. The answer should feel earned,
+not announced.
+
+**W01B, the naive `while` loop.** Do not present it as a mistake. It is what everyone writes
+first, it is correct, and it is readable — and it fails for five *structural* reasons that no
+amount of careful coding inside it can fix. Students who are told "that's wrong" learn nothing;
+students who are shown why the obvious thing breaks will remember the graph.
+
+**W01B, "A first look at a node."** Read it for shape only. Do not explain `super().__init__`,
+QoS, or the executor — Week 2 does all of it. The single point is: *no `while` loop; you
+declare what happens on each tick and the framework calls you.*
+
+**Register.** Both decks are written for non-native English speakers: short sentences, no
+idiom, every term defined at first use. Keep that register when adapting.
+
+## Before Week 2 — what students must have done
+
+1. Cloned the repository and read `setup/README.md`.
+2. Installed the pinned distribution by the route that fits their machine.
+3. Run the setup check script — every row `PASS` — and brought the output.
+4. Set their assigned `ROS_DOMAIN_ID`.
+
+**Assign the domain IDs in Week 1.** Without them, the Week 2 session is a room in which
+everyone's nodes see everyone else's, and nobody understands why. This costs ten minutes to
+prevent and half a session to diagnose.
+
+## To be produced for this week
+
+| Item | Status |
+|---|---|
+| Setup guide + `check_ros2_setup.py`, tested on native / WSL2 / Docker | ❌ **blocks Week 2** |
+| Exercise set (no computer): the robot/not-a-robot argument written up, pipeline tracing, the five failures of the naive loop | ❌ |
+| `ROS_DOMAIN_ID` assignment list | ❌ |
+| Figures for `slides/figures/`, each with the prompt that produced it | ❌ |
 
 ## Consistency checks
 
-Figures stated in this week's material must match the approved specification:
+These decks state figures that must match the approved specification. If any change, update
+both decks:
 
-- Assessment weights — participation 5, assignments 15, quizzes 5, MT1 15, MT2 15, project 20, final 25.
-- The four CLOs — EXPLAIN · ANALYZE · DEVELOP · EVALUATE.
-- ROS 2 distribution pinned in `../../setup/README.md`. Do not name a version anywhere else.
+- Assessment weights (W01A) — participation 5, assignments 15, quizzes 5, MT1 15, MT2 15,
+  project 20, final 25.
+- Exam blueprint (W01A) — recall ≤10%, explain 20%, analyze 30%, read code 20%, write code 20%.
+- The four CLOs and their Bloom levels (W01A).
+- The 11+4 calendar and every "Week N" cross-reference in W01B (the pipeline map, the sensor
+  fusion note, the ecosystem table).
+- No bonus marks (W01A).
+- Project proposal due Week 5; teams form Week 4.
+
+**The distribution name appears in neither deck as literal text** — both use `\rosver` from the
+shared preamble, which is defined once and mirrors `setup/README.md`. Keep it that way.

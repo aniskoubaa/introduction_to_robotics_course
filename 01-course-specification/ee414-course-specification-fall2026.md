@@ -20,9 +20,10 @@
 
 **3 (3-0-0)** — 45 contact hours over 15 weeks, per the standard Alfaisal EE structure.
 
-Each 3-hour week is delivered as **2 hours of lecture + 1 hour of in-class ROS 2 practice**,
-conducted in a computer-equipped classroom (or on student laptops). The practice hour remains
-formally part of the lecture allocation; no separate laboratory credit is claimed.
+Each week is delivered as **two 1.5-hour sessions**. Session **A** develops the theory;
+session **B** implements the same idea in ROS 2, in a computer-equipped classroom (or on
+student laptops). Session B remains formally part of the lecture allocation; no separate
+laboratory credit is claimed.
 
 ### 2. Course Type
 
@@ -70,8 +71,9 @@ None.
 | 3 | Hybrid | — | — |
 | 4 | Distance learning | — | — |
 
-*LMS support (recorded ROS 2 walkthroughs, course code repository, auto-graded exercises)
-supplements the classroom but carries no separate contact-hour allocation.*
+*Two 1.5-hour sessions per week for 15 weeks = 45 contact hours. LMS support (recorded
+ROS 2 walkthroughs, course code repository, auto-graded exercises) supplements the classroom
+but carries no separate contact-hour allocation.*
 
 ### 8. Contact Hours
 
@@ -107,9 +109,9 @@ mappings selected in the Program Specification.*
 
 ## C. Course Content — 11 Technical Weeks + 4 Assessment/Project Weeks
 
-### C.1 Weekly Plan (3 hours per week: 2 h lecture + 1 h in-class ROS 2 practice)
+### C.1 Weekly Plan (two 1.5-hour sessions per week)
 
-| Week | Lecture topic (theory) | In-class ROS 2 practice | CLO | Assessment |
+| Week | Session A — theory (1.5 h) | Session B — ROS 2 (1.5 h) | CLO | Assessment |
 |---|---|---|---|---|
 | **1** | Introduction to robotics: taxonomy, applications, sense–plan–act; why middleware exists | Ubuntu + ROS 2 installation, `colcon` workspace, first package | 1 | — |
 | **2** | ROS 2 architecture: computation graph, DDS, discovery, QoS; ROS 1 → ROS 2 rationale | Nodes in Python (`rclpy`), CLI tools, `rqt_graph`, launch files | 1 | Quiz 1 |
@@ -217,7 +219,7 @@ software quality and ROS 2 idiom (20%), report (20%), presentation (10%), peer/t
 |---|---|---|
 | 1 | Nine CLO rows, five of them with PLO mappings, teaching strategies and assessments but **no outcome statement** | Reduced to **four** Bloom-anchored CLOs (Understand / Analyze / Create / Evaluate), each measurable and short enough to memorise; all eight PLOs still covered |
 | 2 | CLO 1.1 assessed by "Forum Postings / Role-Playing" — not credible evidence for a modelling and control outcome | Knowledge and analysis CLOs assessed by quizzes, midterms and final exam; design CLO by ROS 2 deliverables and project; values CLO by report, presentation and peer evaluation |
-| 3 | Objective promised "designing, building and programming robots" with no software, tooling or platform identified | ROS 2, Gazebo, RViz2, `colcon`, TF2, `slam_toolbox`, Nav2 and `rosbag2` named explicitly and exercised weekly; credit structure kept at the standard **3 (3-0-0)**, with 1 of the 3 weekly hours run as in-class ROS 2 practice |
+| 3 | Objective promised "designing, building and programming robots" with no software, tooling or platform identified | ROS 2, Gazebo, RViz2, `colcon`, TF2, `slam_toolbox`, Nav2 and `rosbag2` named explicitly and exercised weekly; credit structure kept at the standard **3 (3-0-0)**, with the second of the two weekly sessions run as in-class ROS 2 practice |
 | 4 | Content gaps: no forward kinematics, no sensors, no transformations; topic 2 listed inverse kinematics only | Added rigid-body transformations and TF2, URDF modelling and simulation, sensors and actuators, LiDAR perception |
 | 5 | No coverage of ethics, safety or professional responsibility despite PLO 7 / PLO 8 mappings | Week 13 dedicated to robot ethics, safety cases and open-source licensing; assessed under CLO 4 |
 | 6 | Content week count not aligned to the academic calendar | Explicit 11 technical weeks + 4 weeks for exam, project and review |
