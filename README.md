@@ -129,7 +129,7 @@ approval** — treat it as a draft. No teaching material has been authored yet.
 |---|---|
 | 01 Course specification | ✅ Drafted, pending approval |
 | 02 Syllabus | ❌ Blocked on approval |
-| 04 Teaching material | ⚠️ Weeks 1–3 decks authored and built; weeks 4–15 are briefs |
+| 04 Teaching material | ⚠️ Weeks 1–3 and 7 decks authored and built; the rest are briefs |
 | `setup/`, `code/`, `project/` | ❌ Briefs written, artifacts not authored |
 | 03, 05–09 | ❌ Filled during and after delivery |
 

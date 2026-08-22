@@ -1,0 +1,445 @@
+% =====================================================================
+% EE 414 - Introduction to Robotics
+% Week 7, Lecture B: TF2 in Practice  (hands-on)
+% Fall 2026 - Alfaisal University
+% Duration: 1.5 hours   |   28 slides
+%
+% WALKTHROUGH deck: students type along. Stop at every checkpoint.
+%
+% REMINDER: a `#' may not be the first non-space character of a line inside
+% pycode / shell / spec. See the standing constraint in the shared preamble.
+%
+% Build: pdflatex EE414_W07B_tf2.tex   (twice)
+% logo.png must sit beside this file.
+% =====================================================================
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\input{../../shared/ee414-beamer-preamble.tex}
+
+\title[EE 414 --- Week 7B]{TF2 in Practice}
+\subtitle{Publishing frames, asking for transforms, and reading the four errors}
+\author[A. Koubaa]{Prof.\ Anis Koubaa}
+\institute[Alfaisal University]{
+    EE 414 --- Introduction to Robotics\\
+    College of Engineering\\
+    Alfaisal University
+}
+\date{Fall 2026 --- Week 7, Lecture B}
+\titlegraphic{\includegraphics[width=1.4cm]{logo.png}}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ===============================================================
+\begin{frame}{How this session works}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
+    \small You will not multiply a single matrix today. TF2 does the algebra.
+  \end{beamercolorbox}
+
+  \vspace{0.7em}
+  \small
+  Your job is the part TF2 cannot do for you: \textbf{publish the right links}, and
+  \textbf{ask the right question}. Both are easy to get subtly wrong, and both fail loudly ---
+  which is good news.
+
+  \vspace{0.5em}
+  {\scriptsize\tableofcontents[hideallsubsections]}
+\end{frame}
+
+% ===============================================================
+\section{Looking at a tree that already exists}
+% ===============================================================
+
+\begin{frame}[fragile]{Start the robot, then look at its frames}
+  \begin{shells}
+$ ros2 launch turtlebot3_gazebo empty_world.launch.py
+
+$ ros2 run tf2_tools view_frames
+Listening to tf data for 5.0 seconds...
+Generating graph in frames.pdf
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  Open \texttt{frames.pdf}. You are looking at the tree from Lecture A, drawn from the live
+  robot --- with the publisher of each link named on the edge.
+
+  \vspace{0.3em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 1.} Everyone has a \texttt{frames.pdf} with
+    \texttt{odom}, \texttt{base\_link} and \texttt{base\_scan} in it.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Ask for one transform, from the terminal}
+  \begin{shells}
+$ ros2 run tf2_ros tf2_echo base_link base_scan
+At time 0.0
+- Translation: [0.000, 0.000, 0.172]
+- Rotation: in Quaternion [0.000, 0.000, 0.000, 1.000]
+- Rotation: in RPY (radian) [0.000, -0.000, 0.000]
+  \end{shells}
+
+  \footnotesize
+  The laser is 17.2\,cm above \texttt{base\_link}, unrotated, constant. The dynamic one:
+
+  \begin{shells}
+$ ros2 run tf2_ros tf2_echo odom base_link
+  \end{shells}
+
+  \footnotesize
+  \textbf{Drive with teleop and watch this one change.} That is the difference between a
+  static link and a dynamic one, on your screen.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Who publishes what --- and why it matters}
+  \footnotesize
+  \begin{center}
+  \begin{tabular}{@{}p{3.0cm}p{3.9cm}p{4.0cm}@{}}
+    \toprule
+    \textbf{Link} & \textbf{Published by} & \textbf{Character} \\
+    \midrule
+    \texttt{map} $\rightarrow$ \texttt{odom}
+      & AMCL or SLAM (Week 10) & Jumps. Corrects the drift below it. \\[0.3em]
+    \texttt{odom} $\rightarrow$ \texttt{base\_link}
+      & The odometry source & Smooth, continuous, drifts forever \\[0.3em]
+    \texttt{base\_link} $\rightarrow$ \texttt{base\_scan}
+      & \texttt{robot\_state\_} \texttt{publisher}, from the URDF (Week 8) & Constant \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \begin{underhood}[Why localization inserts a frame]
+    \footnotesize
+    A planner needs \emph{smooth} pose: \texttt{odom} $\rightarrow$ \texttt{base\_link}.
+    A goal needs \emph{correct} pose: \texttt{map} $\rightarrow$ \texttt{base\_link}. Splitting
+    them lets one be smooth and the other be right. This is the design you will rely on in
+    Weeks 10 and 11.
+  \end{underhood}
+\end{frame}
+
+% ===============================================================
+\section{Publishing a frame}
+% ===============================================================
+
+\begin{frame}[fragile]{A static link, with no code at all}
+  \footnotesize Mount a camera 10\,cm forward and 20\,cm up from the robot centre:
+
+  \begin{shells}
+$ ros2 run tf2_ros static_transform_publisher \
+      --x 0.10 --y 0.0 --z 0.20 \
+      --roll 0 --pitch 0 --yaw 0 \
+      --frame-id base_link --child-frame-id camera_link
+  \end{shells}
+
+  \begin{shells}
+$ ros2 run tf2_ros tf2_echo base_link camera_link
+  \end{shells}
+
+  \footnotesize
+  \textbf{Use the named flags, not bare numbers.} The deprecated positional form orders its
+  arguments differently --- the source of many backwards-mounted sensors.
+
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 2.} \texttt{camera\_link} appears in \texttt{view\_frames}.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{A dynamic link, from a node}
+  \begin{pycodes}
+from tf2_ros import TransformBroadcaster
+from geometry_msgs.msg import TransformStamped
+
+self.br = TransformBroadcaster(self)
+
+def tick(self):
+    t = TransformStamped()
+    t.header.stamp = self.get_clock().now().to_msg()
+    t.header.frame_id = 'base_link'        <- PARENT
+    t.child_frame_id  = 'tool_link'        <- CHILD
+    t.transform.translation.x = 0.3
+    t.transform.rotation.w = 1.0
+    self.br.sendTransform(t)
+  \end{pycodes}
+
+  \vspace{0.2em}
+  \footnotesize
+  \texttt{header.frame\_id} is the \textbf{parent}, \texttt{child\_frame\_id} the child.
+  Swapping them builds a tree that is inside out --- and it will still run.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Two traps in that code}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{4.3cm}p{6.5cm}@{}}
+    \toprule
+    \textbf{The trap} & \textbf{What it costs you} \\
+    \midrule
+    \texttt{rotation.w} left at its default \texttt{0.0}
+      & An all-zero quaternion is not a rotation. Every lookup through this link is garbage,
+        and nothing warns you. \textbf{Identity is $w=1$.} \\[0.4em]
+    Using \texttt{time.time()} instead of \texttt{get\_clock()}
+      & In simulation the clock is not wall time. Your transform is stamped in a different
+        era from every other message, and lookups fail. \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.7em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 3.} Your \texttt{tool\_link} appears, and
+    \texttt{tf2\_echo} shows 0.3\,m forward.
+  \end{beamercolorbox}
+
+  \vspace{0.3em}
+  \footnotesize
+  Try it once with \texttt{w = 0.0} and look at what \texttt{tf2\_echo} reports. Ten seconds,
+  and you will never forget it.
+\end{frame}
+
+% ===============================================================
+\section{Asking for a transform}
+% ===============================================================
+
+\begin{frame}[fragile]{The listener}
+  \begin{pycodes}
+from tf2_ros import Buffer, TransformListener
+
+self.buffer = Buffer()
+self.listener = TransformListener(self.buffer, self)
+
+def tick(self):
+    try:
+        tf = self.buffer.lookup_transform(
+                'odom',          <- TARGET: what frame I want the answer in
+                'base_scan',     <- SOURCE: what frame the data is in now
+                rclpy.time.Time())
+    except TransformException as e:
+        self.get_logger().warn(f'no transform yet: {e}')
+        return
+  \end{pycodes}
+
+  \vspace{0.2em}
+  \footnotesize
+  \texttt{rclpy.time.Time()} is time zero, which means \textbf{``the latest you have''}.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The argument order, which everyone gets wrong once}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette primary}
+    \small \texttt{lookup\_transform(target, source, time)}\\[0.3em]
+    returns $T_{\text{target},\,\text{source}}$ --- \textbf{takes source data \emph{to} target}
+  \end{beamercolorbox}
+
+  \vspace{0.8em}
+  \small
+  Lecture A's notation, unchanged: the inner indices cancel. If you have a point in
+  \texttt{base\_scan} and want it in \texttt{odom}, you ask for
+  \texttt{lookup\_transform('odom', 'base\_scan', t)}.
+
+  \vspace{0.8em}
+  \begin{underhood}[Why swapping them is so dangerous]
+    \footnotesize
+    The reversed call is \textbf{perfectly valid} --- it returns the inverse. No error, no
+    warning. Your obstacle simply appears on the wrong side of the robot, and the robot
+    steers into it. This is the frame bug promised in Lecture A.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Transforming actual data}
+  \begin{pycodes}
+from tf2_geometry_msgs import do_transform_point
+from geometry_msgs.msg import PointStamped
+
+p = PointStamped()
+p.header.frame_id = 'base_scan'
+p.point.x = 2.1
+
+tf = self.buffer.lookup_transform('odom', 'base_scan', rclpy.time.Time())
+p_odom = do_transform_point(p, tf)
+  \end{pycodes}
+
+  \vspace{0.4em}
+  \small
+  \textbf{Do not extract the numbers and do the arithmetic yourself.} The helper handles the
+  quaternion correctly, and hand-rolled versions are where sign errors live.
+
+  \vspace{0.3em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 4.} Drive the robot; watch a fixed \texttt{base\_scan}
+    point move in \texttt{odom}.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Why that checkpoint is the whole week}
+  \small
+  A point at 2.1\,m in front of the \emph{laser} is a different place in the world every time
+  the robot moves. A point in \texttt{odom} stays put.
+
+  \vspace{0.7em}
+  \begin{center}
+  \begin{tabular}{@{}p{3.3cm}p{7.4cm}@{}}
+    \toprule
+    Obstacle avoidance (Wk 6) & Works in \texttt{base\_link}: ``is something in front of \emph{me}?'' \\[0.3em]
+    Mapping (Wk 10) & Needs \texttt{odom} or \texttt{map}: a wall must stay where it is when the robot moves \\[0.3em]
+    Navigation (Wk 11) & Needs \texttt{map}: the goal does not move when the robot does \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \centering
+  \textbf{Every one of those is the same call with different frame names.} That is why this
+  week is worth ninety minutes of your semester.
+\end{frame}
+
+% ===============================================================
+\section{The four errors you will meet}
+% ===============================================================
+
+\begin{frame}{Cause each one. Read it. Fix it.}
+  \footnotesize
+  \begin{center}
+  \begin{tabular}{@{}p{3.3cm}p{3.6cm}p{3.9cm}@{}}
+    \toprule
+    \textbf{Do this} & \textbf{The message} & \textbf{The cause} \\
+    \midrule
+    Look up immediately at start-up
+      & ``\texttt{base\_scan} passed to lookupTransform does not exist''
+      & The buffer is empty. Nothing is wrong --- you asked too early. \\[0.35em]
+    Ask for \texttt{now()} instead of \texttt{Time()}
+      & ``requires extrapolation into the future''
+      & The transform for that instant has not arrived yet. \\[0.35em]
+    Sleep 30\,s, then ask for an old stamp
+      & ``requires extrapolation into the past''
+      & The buffer discarded it. Your node was too slow. \\[0.35em]
+    Publish \texttt{odom} $\rightarrow$ \texttt{base\_link} from a second node
+      & No error. The robot twitches.
+      & Two parents for one child. \textbf{The dangerous one.} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette danger}
+    \footnotesize \textbf{Checkpoint 5.} Everyone has seen all four.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The first two are not bugs. Handle them.}
+  \begin{pycodes}
+try:
+    tf = self.buffer.lookup_transform('odom', 'base_scan',
+                                      rclpy.time.Time())
+except TransformException:
+    return          <- normal for the first second. Try again next tick.
+  \end{pycodes}
+
+  \vspace{0.4em}
+  \small
+  A node that starts before the transform publisher \textbf{must} tolerate a few seconds of
+  failure. Nodes start in any order --- that is Week 2's no-master design, and this is the
+  price of it.
+
+  \vspace{0.4em}
+  \begin{inthefield}
+    \footnotesize
+    \textbf{Never crash on a missing transform, and never retry in a loop inside the callback.}
+    Return, and let the next tick try again. A callback never waits --- Week 3's rule, still
+    holding.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The fourth one, found in one command}
+  \begin{shells}
+$ ros2 run tf2_tools view_frames
+$ ros2 topic info /tf --verbose
+Publisher count: 2        <- both publishing odom -> base_link
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  Two publishers of the same link produce a transform that flickers between two answers at
+  whatever rate they happen to run. The robot twitches, the map smears, and \textbf{nothing
+  reports an error}.
+
+  \vspace{0.5em}
+  \begin{underhood}[Why a tree makes this findable]
+    \footnotesize
+    Lecture A: one parent per frame. Because that rule exists, ``this child has two parents''
+    is a detectable, meaningful fault. In a general graph it would just be another edge.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Seeing it instead of reading it}
+  \small
+  In RViz2, add the \textbf{TF} display and set the fixed frame to \texttt{odom}.
+
+  \vspace{0.6em}
+  \begin{center}
+  \begin{tabular}{@{}p{3.6cm}p{7.1cm}@{}}
+    \toprule
+    Axes at every frame & Red $x$, green $y$, blue $z$ --- your sensor's real pose on the robot \\[0.3em]
+    Drive with teleop & \texttt{base\_link} moves; \texttt{base\_scan} moves rigidly with it \\[0.3em]
+    Set fixed frame to \texttt{base\_link} & Now the \emph{world} moves and the robot sits still. Same data, different question. \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \begin{inthefield}
+    \footnotesize
+    \textbf{Changing the fixed frame is the fastest way to understand frames}, and the fastest
+    way to diagnose one. A sensor mounted backwards is obvious in one glance here, and invisible
+    in a table of numbers.
+  \end{inthefield}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Before you leave}
+  \small
+  \textbf{Leaving this room:} a tree you have drawn, a static frame published from the command
+  line, a dynamic frame published from your own node, a point transformed between frames while
+  the robot drives, and all four TF errors caused and read.
+
+  \vspace{0.7em}
+  \begin{center}
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    \texttt{view\_frames} & What is the tree, and who publishes each link? \\
+    \texttt{tf2\_echo} & What is this one transform, right now? \\
+    RViz2 TF display & Does it look right? \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.6em}
+  \begin{underhood}[Next week]
+    \footnotesize
+    Week 8 stops publishing frames by hand. You describe the robot once in URDF, and
+    \texttt{robot\_state\_publisher} emits the whole static tree for you --- correctly, and from
+    a single source of truth.
+  \end{underhood}
+\end{frame}
+
+\end{document}

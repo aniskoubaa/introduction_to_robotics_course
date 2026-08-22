@@ -17,7 +17,7 @@ lectures pretending to be one.
 | 04 | Differential-Drive Kinematics | ❌ | ❌ | ❌ |
 | 05 | Feedback Control for Robot Motion | ❌ | ❌ | ❌ |
 | 06 | Sensors, Actuators and LiDAR Perception | ❌ | ❌ | ❌ |
-| 07 | Rigid-Body Transformations and TF2 | ❌ | ❌ | ❌ |
+| 07 | Rigid-Body Transformations and TF2 | ✅ Transformations (21 sl.) | ✅ TF2 in Practice (21 sl.) | ❌ |
 | 08 | Robot Modelling: URDF and Simulation | ❌ | ❌ | ❌ |
 | 09 | Probabilistic State Estimation | ❌ | ❌ | ❌ |
 | 10 | Localization and Mapping | ❌ | ❌ | ❌ |
