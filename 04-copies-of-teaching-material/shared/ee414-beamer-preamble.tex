@@ -246,6 +246,35 @@
 }{\end{tcolorbox}}
 
 % ---------------------------------------------------------------
+% \videoslide{title}{what the clip is}{the one sentence to say after it}
+%
+% A video slot. The deck cannot embed video, and should not: the clip lives in
+% a folder beside the deck (or in a browser tab), and this slide is the cue.
+% The URL for each clip is recorded in the week README, never on the slide --
+% links rot, and a dead link on a projected slide is worse than no slide.
+%
+% RULE: a video slot is followed by ONE sentence, and that sentence names what
+% the students just saw in the course's own vocabulary. A clip with no naming
+% sentence is entertainment.
+\newcommand{\videoslide}[3]{%
+  \begin{frame}{#1}
+    \vfill
+    \begin{center}
+      \begin{tcolorbox}[enhanced, colback=primary!8, colframe=primary!45,
+                        boxrule=0.8pt, arc=6pt, width=0.82\textwidth,
+                        left=14pt, right=14pt, top=12pt, bottom=12pt]
+        \centering
+        {\Huge\color{primary!70}$\blacktriangleright$}\\[0.7em]
+        {\small #2}
+      \end{tcolorbox}
+    \end{center}
+    \vfill
+    \centering{\small #3}
+    \vfill
+  \end{frame}%
+}
+
+% ---------------------------------------------------------------
 % THE PINNED STACK. This macro and setup/README.md are the ONLY two places in
 % the course where the distribution is named. Every deck, exercise and lab
 % sheet writes \rosver, never the literal name. A distribution upgrade is then

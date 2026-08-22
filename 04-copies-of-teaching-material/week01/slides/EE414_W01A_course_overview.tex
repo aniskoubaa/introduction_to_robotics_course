@@ -30,6 +30,37 @@
   \titlepage
 \end{frame}
 
+% ---------------------------------------------------------------
+% One slide. It buys attention that the content then has to earn anyway.
+% VERIFY the affiliation and title lines before first delivery.
+\begin{frame}{Who is teaching this}
+  \small
+  \begin{columns}[T,onlytextwidth]
+    \column{0.56\textwidth}
+    \textbf{Prof.\ Anis Koubaa}
+    \begin{itemize}\footnotesize
+      \item Professor of Computer Science, Alfaisal University
+      \item Director, Robotics and Internet-of-Things (RIOTU) Lab
+      \item Research: mobile robots, drones, deep learning, IoT
+    \end{itemize}
+
+    \column{0.40\textwidth}
+    \begin{block}{\small On this subject}
+      \footnotesize
+      Author of best-selling online courses on ROS, and of the Springer
+      \emph{Robot Operating System} book series.
+    \end{block}
+  \end{columns}
+
+  \vspace{0.8em}
+  \begin{inthefield}[Why this matters to you]
+    \footnotesize
+    The material in this course is the material I teach to practising engineers.
+    It is not a simplified classroom version --- which is the reason it is
+    demanding, and the reason it is worth the semester.
+  \end{inthefield}
+\end{frame}
+
 % ===============================================================
 \begin{frame}{What this lecture does}
   \begin{block}{Roadmap}
@@ -43,6 +74,24 @@
 % ===============================================================
 \section{What this course is about}
 % ===============================================================
+
+% Four clips, ~2.5 minutes total, before a single technical claim.
+% URLs are in ../README.md -- never on the slide.
+\videoslide{Warehouse robots, at scale}
+  {45\,s --- an autonomous mobile robot fleet moving stock in a live warehouse}
+  {The largest deployed fleet of \emph{exactly} the software stack in this course.}
+
+\videoslide{Where people should not go}
+  {45\,s --- a legged or wheeled robot inspecting an industrial plant}
+  {No map, no GPS, nobody nearby. Week 10 is about the first of those.}
+
+\videoslide{A robot changing its mind}
+  {30\,s --- a mobile robot re-planning around a person who steps into its path}
+  {You will configure this exact behaviour in Week 11.}
+
+\videoslide{Built here}
+  {45\,s --- research robots and drones from the RIOTU Lab}
+  {Every one of these runs on what you are about to learn.}
 
 \begin{frame}{The course in one sentence}
   \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
@@ -349,6 +398,33 @@
     \item \textbf{Python only.} Production robotics uses C++ as well, and we will say where
           and why --- but nothing in this course is assessed in it.
   \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{What this course does \emph{not} cover}
+  \small
+  Forty-five contact hours buys one complete pipeline, taught properly. It does not buy
+  everything. Know this in Week 1, not Week 9:
+
+  \vspace{0.5em}
+  \begin{center}
+  \begin{tabular}{@{}p{3.6cm}p{7.1cm}@{}}
+    \toprule
+    \textbf{Not here} & \textbf{Where to get it} \\
+    \midrule
+    Computer vision, OpenCV & A dedicated vision course; the perception in EE 414 is LiDAR \\[0.25em]
+    Aerial robots, drones & Same foundations, different dynamics --- take this course first \\[0.25em]
+    Robotic manipulation & One optional session in Week 12, if the class chooses it \\[0.25em]
+    C++ for ROS 2 & Production robotics uses it; this course assesses Python only \\[0.25em]
+    ROS 1, \texttt{catkin}, \texttt{roscore} & Superseded. We teach ROS 2 throughout. \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.4em}
+  \footnotesize
+  Ask me for reading on any of these. \textbf{What you get instead} is one robot that maps a
+  room it has never seen and drives across it --- built by you, end to end.
 \end{frame}
 
 % ---------------------------------------------------------------

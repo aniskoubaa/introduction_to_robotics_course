@@ -13,7 +13,7 @@
 
 | Artifact | Path | Status |
 |---|---|---|
-| Lecture A deck | `slides/EE414_W01A_course_overview.tex` / `.pdf` | ✅ 30 slides, builds clean |
+| Lecture A deck | `slides/EE414_W01A_course_overview.tex` / `.pdf` | ✅ 36 slides, builds clean |
 | Lecture B deck | `slides/EE414_W01B_what_is_a_robot.tex` / `.pdf` | ✅ 30 slides, builds clean |
 | Shared preamble | `../shared/ee414-beamer-preamble.tex` | ✅ |
 | Exercise set + key | `exercises/EE414_W01_exercises.pdf` / `_solutions.pdf` | ❌ not authored |
@@ -23,7 +23,7 @@
 
 | File | Duration | Contents |
 |---|---|---|
-| `slides/EE414_W01A_course_overview.tex` | 1.5 h · 30 slides | What the course is for; the theory-course/this-course contrast; where you end up by Week 11; three reasons robotics is hard; the four CLOs; the weekly A/B shape; the 11+4 calendar; the pipeline-to-weeks map; logistics; the pinned stack; books; assessment and the exam blueprint; assignments and project; policies; AI-tool policy; setup and `ROS_DOMAIN_ID`; the week's checklist |
+| `slides/EE414_W01A_course_overview.tex` | 1.5 h · 36 slides | **Who is teaching this**; **four video slots**; what the course is for; the theory-course/this-course contrast; where you end up by Week 11; three reasons robotics is hard; the four CLOs; the weekly A/B shape; the 11+4 calendar; the pipeline-to-weeks map; logistics; the pinned stack; books; **what this course does not cover**; assessment and the exam blueprint; assignments and project; policies; AI-tool policy; setup and `ROS_DOMAIN_ID`; the week's checklist |
 | `slides/EE414_W01B_what_is_a_robot.tex` | 1.5 h · 30 slides | Which of these is a robot; sense–plan–act definition; the loop; automation vs autonomy; robot families; why mobile robots; anatomy; the sensor table; the differential drive; the five-block pipeline; "go to the door" traced; three hard truths; the naive `while` loop and its five failures; the computation graph as the answer; ROS 2 honestly; the ecosystem; a first node; `ros2 topic echo` |
 
 Build: `pdflatex <file>.tex` twice. `logo.png` must sit beside the `.tex`.
@@ -32,11 +32,49 @@ Build: `pdflatex <file>.tex` twice. `logo.png` must sit beside the `.tex`.
 "go to the door" frame. It does not resize with the column widths, so it is not the table.
 Below the visual threshold; left alone rather than chased.
 
+## ⚠️ Before delivering — two things to fill in
+
+### 1. The four video clips
+
+The deck has four `\videoslide` slots opening section 1, ~2.5 minutes total, before any
+technical claim. **The URLs live here, never on the slide** — a dead link on a projected slide
+is worse than no slide. Download the clips to `slides/video/` if the room's network is
+unreliable.
+
+| # | Slot | Length | What to find | URL / file |
+|---|---|---|---|---|
+| 1 | Warehouse robots, at scale | 45 s | An AMR fleet moving stock in a live warehouse (Amazon Robotics, Locus, Geek+) | ❌ |
+| 2 | Where people should not go | 45 s | A legged or wheeled robot inspecting an industrial plant (ANYbotics, Spot at a refinery) | ❌ |
+| 3 | A robot changing its mind | 30 s | A mobile robot re-planning around a person who steps into its path — **a Nav2 demo, so it is literally Week 11** | ❌ |
+| 4 | Built here | 45 s | RIOTU Lab robots and drones — your own footage | ❌ |
+
+**Each clip is followed by exactly one sentence**, already on the slide, naming what they just
+saw in the course's vocabulary. A clip with no naming sentence is entertainment. Do not add a
+fifth clip; four is already the limit of what an opening will carry.
+
+### 2. The instructor slide
+
+Slide 2 states: Professor of Computer Science at Alfaisal University; Director of the RIOTU Lab;
+research in mobile robots, drones, deep learning and IoT; author of best-selling online ROS
+courses and of the Springer *Robot Operating System* series.
+
+**Verify the affiliation and title lines before first delivery** — they were written from the
+legacy PSU-era decks and the current wording has not been confirmed.
+
 ## Teaching notes
 
 **Deliver A and B in the same week, in order.** A sets the contract; B is the first real
 content. If only one session runs in Week 1, run A — B can compress into Week 2A, but a cohort
 that never got the assessment rules will be arguing about them in Week 6.
+
+**W01A, the four video slots.** Play them, then stop. The temptation is to narrate over the
+clip; do not. The naming sentence after each one is the teaching, and it lands only in silence
+after the clip ends. Total elapsed time should be under four minutes including the sentences.
+
+**W01A, the out-of-scope slide.** Deliver it plainly and without apology. Students who arrived
+expecting drones, vision or arms need to know in Week 1, and the slide ends on what they get
+instead — one robot that maps a room it has never seen and drives across it. That trade is a
+good one and should sound like one.
 
 **W01A, "Two courses you could take."** This is the slide that sets expectations for the
 semester, and it is the one to deliver slowly. The cohort arriving from EE 306 expects a
