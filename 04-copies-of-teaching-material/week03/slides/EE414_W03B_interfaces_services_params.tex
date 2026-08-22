@@ -1,0 +1,481 @@
+% =====================================================================
+% EE 414 - Introduction to Robotics
+% Week 3, Lecture B: Interfaces, Services, Parameters, Actions (hands-on)
+% Fall 2026 - Alfaisal University
+% Duration: 1.5 hours   |   28 slides
+%
+% WALKTHROUGH deck: students type along. Stop at every checkpoint.
+%
+% REMINDER: a `#' may not be the first non-space character of a line inside
+% pycode / shell / spec. See the standing constraint in the shared preamble.
+%
+% Build: pdflatex EE414_W03B_interfaces_services_params.tex   (twice)
+% logo.png must sit beside this file.
+% =====================================================================
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\input{../../shared/ee414-beamer-preamble.tex}
+
+\title[EE 414 --- Week 3B]{Your Own Interfaces}
+\subtitle{A custom message, a service, parameters, and one deliberate deadlock}
+\author[A. Koubaa]{Prof.\ Anis Koubaa}
+\institute[Alfaisal University]{
+    EE 414 --- Introduction to Robotics\\
+    College of Engineering\\
+    Alfaisal University
+}
+\date{Fall 2026 --- Week 3, Lecture B}
+\titlegraphic{\includegraphics[width=1.4cm]{logo.png}}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+% ===============================================================
+\begin{frame}{How this session works}
+  \begin{beamercolorbox}[sep=8pt,center,rounded=true]{palette secondary}
+    \small You type. We stop at every checkpoint until the room is together.
+  \end{beamercolorbox}
+
+  \vspace{0.8em}
+  {\scriptsize\tableofcontents[hideallsubsections]}
+
+  \vspace{0.4em}
+  \centering\footnotesize
+  Your Week 2 workspace, one new interfaces package, one new nodes package.
+\end{frame}
+
+% ===============================================================
+\section{An interfaces package}
+% ===============================================================
+
+\begin{frame}[fragile]{Two packages, one for definitions}
+  \begin{shells}
+$ cd ~/ee414_ws/src
+$ ros2 pkg create --build-type ament_cmake  ee414_w03_interfaces
+$ ros2 pkg create --build-type ament_python \
+      --dependencies rclpy std_msgs ee414_w03_nodes
+  \end{shells}
+
+  \vspace{0.5em}
+  \small
+  Note the different build types. \texttt{ament\_cmake} for the definitions, because interface
+  generation is a CMake job; \texttt{ament\_python} for your nodes, as last week.
+
+  \vspace{0.4em}
+  \begin{underhood}
+    \footnotesize
+    Trying to put a \texttt{.msg} in your Python package is the first thing most people try.
+    It builds, generates nothing, and the import fails at run time with a message that does
+    not mention the cause.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Write the definitions}
+  {\footnotesize\texttt{ee414\_w03\_interfaces/msg/WheelState.msg}}
+  \begin{spec}
+std_msgs/Header  header
+float64          left_rad_s
+float64          right_rad_s
+bool             estopped
+  \end{spec}
+
+  {\footnotesize\texttt{ee414\_w03\_interfaces/srv/ResetOdom.srv}}
+  \begin{spec}
+bool zero_heading
+---
+bool success
+string message
+  \end{spec}
+
+  \footnotesize
+  Folders \texttt{msg/} and \texttt{srv/}, exactly. Files \texttt{CamelCase}, fields
+  \texttt{snake\_case} --- the generator enforces both.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Three lines in \texttt{CMakeLists.txt}}
+  \begin{spec}
+find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/WheelState.msg"
+  "srv/ResetOdom.srv"
+  DEPENDENCIES std_msgs
+)
+  \end{spec}
+
+  \vspace{0.4em}
+  \small
+  And two dependencies in \texttt{package.xml}. The exact lines are in the lab sheet ---
+  \textbf{copy them}. Nobody memorises this, including me.
+
+  \vspace{0.4em}
+  \footnotesize
+  \texttt{DEPENDENCIES std\_msgs} is required because \texttt{WheelState} embeds a
+  \texttt{Header}. Omit it and the build fails with a message about an unknown type.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Build, and check that it exists}
+  \begin{shells}
+$ cd ~/ee414_ws
+$ colcon build --packages-select ee414_w03_interfaces
+$ source install/setup.bash
+$ ros2 interface show ee414_w03_interfaces/msg/WheelState
+std_msgs/Header header
+float64 left_rad_s
+float64 right_rad_s
+bool estopped
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  If \texttt{interface show} prints your fields, the generator ran and the Python class exists.
+  If it says the interface is unknown, the build did not generate it --- fix that before
+  writing any node.
+
+  \vspace{0.2em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 1.} Everyone can \texttt{interface show} their own message.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Use it from a node}
+  \begin{pycodes}
+from ee414_w03_interfaces.msg import WheelState
+msg = WheelState()
+msg.header.stamp = self.get_clock().now().to_msg()
+msg.header.frame_id = 'base_link'
+msg.left_rad_s  = 2.4
+msg.right_rad_s = 2.4
+msg.estopped = False
+self.pub.publish(msg)
+  \end{pycodes}
+
+  \footnotesize
+  Import path is \texttt{package.msg}, then the type name. Fields are plain attributes.
+
+  \begin{underhood}[Stamping is a habit, not a formality]
+    \footnotesize
+    \texttt{self.get\_clock().now()} --- never \texttt{time.time()}. In simulation the clock
+    is not wall time, and a node using it disagrees with the whole robot. Week 8 shows this.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Echo your own type}
+  \begin{shells}
+$ ros2 topic echo /wheel_state
+header:
+  stamp:
+    sec: 1755855012
+  frame_id: base_link
+left_rad_s: 2.4
+right_rad_s: 2.4
+estopped: false
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  Your own type, inspectable from the command line with no extra work --- because you declared
+  it properly rather than packing numbers into a string.
+
+  \vspace{0.2em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 2.} Everyone sees their own fields in \texttt{echo}.
+  \end{beamercolorbox}
+\end{frame}
+
+% ===============================================================
+\section{A service, both halves}
+% ===============================================================
+
+\begin{frame}[fragile]{The server}
+  \begin{pycodes}
+from ee414_w03_interfaces.srv import ResetOdom
+
+class OdomNode(Node):
+    def __init__(self):
+        super().__init__('odom_node')
+        self.x = 12.5
+        self.create_service(ResetOdom, 'reset_odom', self.on_reset)
+
+    def on_reset(self, request, response):
+        self.x = 0.0
+        response.success = True
+        response.message = 'odometry zeroed'
+        return response
+  \end{pycodes}
+
+  \vspace{0.2em}
+  \footnotesize
+  A service callback receives \texttt{request}, fills \texttt{response}, and \textbf{returns
+  it}. Forgetting the return is the most common mistake --- the caller then waits forever.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Test it before writing a client}
+  \begin{shells}
+$ ros2 service list
+/reset_odom
+$ ros2 service call /reset_odom \
+      ee414_w03_interfaces/srv/ResetOdom "{zero_heading: true}"
+response:
+  success: True
+  message: 'odometry zeroed'
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  \textbf{One half at a time.} The server is now proven. Anything that goes wrong from here is
+  in the client --- which is a much smaller place to look.
+
+  \vspace{0.2em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 3.} Everyone has called their own service from the terminal.
+  \end{beamercolorbox}
+\end{frame}
+
+% ===============================================================
+\section{The deadlock, on purpose}
+% ===============================================================
+
+\begin{frame}[fragile]{Write the version that hangs}
+  \small Add this to a \emph{subscriber callback} --- and be ready to press \texttt{Ctrl-C}:
+
+  \begin{pycodes}
+def on_msg(self, msg):
+    future = self.cli.call_async(ResetOdom.Request())
+    rclpy.spin_until_future_complete(self, future)    <- HANGS
+    self.get_logger().info('never printed')
+  \end{pycodes}
+
+  \vspace{0.4em}
+  \small
+  It looks correct. It reads correctly. The node freezes, prints nothing more, and does not
+  crash --- which is the worst combination, because there is no error to search for.
+
+  \vspace{0.3em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette danger}
+    \footnotesize \textbf{Checkpoint 4.} Everyone's node is now hung. Look at it for a moment.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Why it hangs, in one picture}
+  \begin{center}
+  \begin{tikzpicture}[node distance=0.7cm, font=\scriptsize]
+    \node[plan, minimum width=7.4cm, minimum height=0.8cm] (spin) {\texttt{spin} --- runs one callback at a time};
+    \node[act,  minimum width=5.4cm, minimum height=0.8cm, below=of spin] (cb) {your callback --- waiting for the reply};
+    \node[sense, minimum width=5.4cm, minimum height=0.8cm, below=of cb] (rep) {the reply --- waiting to be delivered by \texttt{spin}};
+    \draw[dataflow] (spin) -- node[right,font=\tiny] {called} (cb);
+    \draw[dataflow, draw=danger] (cb) -- node[right,font=\tiny,text=danger] {waits for} (rep);
+    \draw[dataflow, draw=danger] (rep.west) -- ++(-1.1,0) |- node[left,font=\tiny,text=danger,pos=0.25] {needs} (spin.west);
+  \end{tikzpicture}
+  \end{center}
+
+  \vspace{0.4em}
+  \centering\small
+  A circle. Your callback is waiting for something only \texttt{spin} can deliver, and
+  \texttt{spin} is inside your callback.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The fix: hand the waiting back to spin}
+  \begin{pycodes}
+def on_msg(self, msg):
+    future = self.cli.call_async(ResetOdom.Request())
+    future.add_done_callback(self.on_reply)
+    return
+
+def on_reply(self, future):
+    self.get_logger().info(f'reply: {future.result().message}')
+  \end{pycodes}
+
+  \footnotesize
+  The callback \textbf{returns immediately}. \texttt{spin} regains control, delivers the reply,
+  and calls \texttt{on\_reply}. Two short callbacks instead of one that waits.
+
+  \begin{inthefield}
+    \footnotesize
+    \textbf{The rule: a callback never waits.} It does its work and returns; anything that
+    takes time becomes a second callback. Internalise this and a whole class of ROS 2 hang
+    stops happening to you.
+  \end{inthefield}
+\end{frame}
+
+% ===============================================================
+\section{Parameters}
+% ===============================================================
+
+\begin{frame}[fragile]{Declare, then read}
+  \begin{pycodes}
+class Driver(Node):
+    def __init__(self):
+        super().__init__('driver')
+        self.declare_parameter('max_speed', 0.22)
+        self.declare_parameter('frame_id', 'base_link')
+        self.create_timer(0.1, self.tick)
+
+    def tick(self):
+        v = self.get_parameter('max_speed').value
+        self.get_logger().info(f'v = {v}')
+  \end{pycodes}
+
+  \vspace{0.4em}
+  \small
+  Read the parameter \textbf{inside} \texttt{tick}, not once in \texttt{\_\_init\_\_}. That is
+  what makes a live change take effect.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Change it while it runs}
+  \begin{shells}
+$ ros2 param list /driver
+$ ros2 param get /driver max_speed
+Double value is: 0.22
+$ ros2 param set /driver max_speed 0.35
+Set parameter successful
+  \end{shells}
+
+  \vspace{0.4em}
+  \small
+  Watch the node's output change without restarting it. \textbf{That is tuning}, and it is how
+  you will find your controller gains in Week 5 and your costmap sizes in Week 11.
+
+  \vspace{0.3em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 5.} Everyone has changed a running node's behaviour from the terminal.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{Where the values belong for good}
+  \begin{pycodes}
+Node(package='ee414_w03_nodes', executable='driver',
+     parameters=[{'max_speed': 0.15, 'frame_id': 'base_link'}])
+  \end{pycodes}
+
+  \vspace{0.5em}
+  \small
+  A value set from the terminal is gone when the node restarts. A value in a launch file is
+  \textbf{reproducible} --- and reproducibility is what a demo day needs.
+
+  \vspace{0.5em}
+  \begin{underhood}[The workflow]
+    \footnotesize
+    Tune live with \texttt{param set} until it behaves. Then write the value you found into the
+    launch file. Students who skip the second step spend demo day wondering why the robot is
+    worse than it was yesterday.
+  \end{underhood}
+\end{frame}
+
+% ===============================================================
+\section{A first action client}
+% ===============================================================
+
+\begin{frame}[fragile]{Watch one work, from the terminal}
+  \begin{shells}
+$ ros2 run action_tutorials_py fibonacci_action_server
+
+$ ros2 action list
+/fibonacci
+$ ros2 action send_goal /fibonacci \
+      action_tutorials_interfaces/action/Fibonacci "{order: 10}" --feedback
+Goal accepted with ID: 8a1f...
+Feedback: partial_sequence: [0, 1, 1, 2, 3]
+Result: sequence: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+  \end{shells}
+
+  \vspace{0.3em}
+  \small
+  Run it \textbf{without} \texttt{-{}-feedback} as well, and compare. The difference between
+  the two runs is the entire reason actions exist.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}[fragile]{The client, in the shape you already know}
+  \begin{pycodes}
+self.ac = ActionClient(self, Fibonacci, 'fibonacci')
+self.ac.wait_for_server()
+
+goal = Fibonacci.Goal()
+goal.order = 10
+future = self.ac.send_goal_async(goal, feedback_callback=self.on_fb)
+future.add_done_callback(self.on_accepted)
+
+def on_fb(self, fb):
+    self.get_logger().info(f'progress: {fb.feedback.partial_sequence}')
+  \end{pycodes}
+
+  \vspace{0.3em}
+  \footnotesize
+  \texttt{send\_goal\_async}, a future, a done callback --- the same shape as the service
+  client. One extra piece: a feedback callback, fired repeatedly while the server works.
+
+  \vspace{0.2em}
+  \centering
+  \begin{beamercolorbox}[sep=5pt,center,rounded=true]{palette primary}
+    \footnotesize \textbf{Checkpoint 6.} Everyone has seen feedback arrive from a running goal.
+  \end{beamercolorbox}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{What you can now do that you could not last week}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{4.6cm}p{6.4cm}@{}}
+    \toprule
+    \textbf{You built} & \textbf{Which means} \\
+    \midrule
+    Your own message type & Data travels as named typed fields, inspectable by tools you did not write \\[0.3em]
+    A service, both halves & A command you can confirm was received and succeeded \\[0.3em]
+    An async client & Callbacks that never block --- the habit that prevents the hang \\[0.3em]
+    Parameters & Behaviour you can tune without editing or rebuilding \\[0.3em]
+    An action client & Long jobs you can watch and cancel \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.5em}
+  \centering
+  Together with Week 2, that is the whole of ROS 2's communication surface. \textbf{Everything
+  from here is robotics.}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Before you leave}
+  \small
+  \textbf{Leaving this room:} an interfaces package that builds, a custom message published and
+  echoed, a service called from both the terminal and a client, a deadlock you caused and
+  fixed, a parameter changed live, and feedback from a running action.
+
+  \vspace{0.7em}
+  \begin{beamercolorbox}[sep=6pt,center,rounded=true]{palette danger}
+    \small \textbf{Assignment 1 is due at the end of this week.} Commit and push it.
+  \end{beamercolorbox}
+
+  \vspace{0.7em}
+  \begin{underhood}[Next week the robot moves]
+    \footnotesize
+    Week 4 spends its theory hour on differential-drive kinematics, and its second hour driving
+    a TurtleBot3 in Gazebo with \texttt{/cmd\_vel}. \textbf{Make sure Gazebo launches on your
+    machine before then} --- the setup guide has the command. Finding out in the session that
+    it does not is an expensive way to spend ninety minutes.
+  \end{underhood}
+\end{frame}
+
+\end{document}

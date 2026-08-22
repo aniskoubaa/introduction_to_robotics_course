@@ -129,7 +129,7 @@ approval** — treat it as a draft. No teaching material has been authored yet.
 |---|---|
 | 01 Course specification | ✅ Drafted, pending approval |
 | 02 Syllabus | ❌ Blocked on approval |
-| 04 Teaching material | ⚠️ Weeks 1–2 decks authored and built; weeks 3–15 are briefs |
+| 04 Teaching material | ⚠️ Weeks 1–3 decks authored and built; weeks 4–15 are briefs |
 | `setup/`, `code/`, `project/` | ❌ Briefs written, artifacts not authored |
 | 03, 05–09 | ❌ Filled during and after delivery |
 
@@ -138,9 +138,8 @@ approval** — treat it as a draft. No teaching material has been authored yet.
 1. **`setup/` guide + `check_ros2_setup.py`**, tested on all three routes. Both Week 1 decks
    send students to it and the Week 2B session cannot run without it. This is now the only
    thing blocking a deliverable week.
-2. `code/src/ee414_w02_first_node/` — the Week 2 starter package, plus its expected-output
-   transcript.
-3. Week 3 decks (services, parameters, custom messages) and Assignment 1.
+2. `code/src/` starter packages for Weeks 2 and 3, plus their expected-output transcripts.
+3. Week 4 decks — differential-drive kinematics, and the first Gazebo session.
 4. Confirm the computer-equipped classroom and decide the Week 12 advanced topic.
 
 ---

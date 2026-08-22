@@ -1,0 +1,99 @@
+# Week 3 — Lecture B lab sheet
+
+The deck (`../slides/EE414_W03B_interfaces_services_params.pdf`) is the walkthrough. This sheet
+holds the boilerplate students should **copy rather than retype**, and the checkpoint list.
+
+## Checkpoints
+
+| # | After | Everyone must see | If not |
+|---|---|---|---|
+| 1 | Interfaces build | `ros2 interface show` prints their own fields | The generator did not run — check `CMakeLists.txt` and build type |
+| 2 | Custom message | `ros2 topic echo` shows named fields | Wrong import path, or workspace not re-sourced after build |
+| 3 | Service | `ros2 service call` returns `success: True` | Callback did not `return response` |
+| 4 | **The deadlock** | Their node **hangs**, prints nothing, does not crash | They used `add_done_callback` too early — have them write the blocking version first |
+| 5 | Parameters | `ros2 param set` changes a running node's output | The parameter is read in `__init__`, not in the callback |
+| 6 | Action | Feedback lines arrive during a goal | `action_tutorials_py` not installed |
+
+**Checkpoint 4 is the one to protect.** Every student should see their own node freeze.
+
+## Boilerplate to copy
+
+### `ee414_w03_interfaces/CMakeLists.txt` — add before `ament_package()`
+
+```cmake
+find_package(rosidl_default_generators REQUIRED)
+find_package(std_msgs REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/WheelState.msg"
+  "srv/ResetOdom.srv"
+  DEPENDENCIES std_msgs
+)
+```
+
+### `ee414_w03_interfaces/package.xml` — add
+
+```xml
+<buildtool_depend>rosidl_default_generators</buildtool_depend>
+<exec_depend>rosidl_default_runtime</exec_depend>
+<depend>std_msgs</depend>
+<member_of_group>rosidl_interface_packages</member_of_group>
+```
+
+### `ee414_w03_nodes/package.xml` — add
+
+```xml
+<depend>ee414_w03_interfaces</depend>
+```
+
+Without this last line the nodes package builds before the interfaces package and the import
+fails intermittently — which is worse than failing every time.
+
+## Sequence
+
+1. Two packages: `ament_cmake` for interfaces, `ament_python` for nodes
+2. Write `msg/WheelState.msg` and `srv/ResetOdom.srv`
+3. Add the CMake and manifest lines above
+4. `colcon build --packages-select ee414_w03_interfaces` · source · `ros2 interface show` → **CP 1**
+5. Publish `WheelState` from a node; `ros2 topic echo` → **CP 2**
+6. Service server; `ros2 service call` from the terminal → **CP 3**
+7. **Write the blocking client inside a subscriber callback. Watch it hang.** → **CP 4**
+8. Fix it with `call_async` + `add_done_callback`
+9. Parameters: declare, read *in the callback*, `ros2 param set` live → **CP 5**
+10. `ros2 run action_tutorials_py fibonacci_action_server`, then `send_goal --feedback` → **CP 6**
+11. Write the action client with `send_goal_async` and a feedback callback
+
+## The rule this session teaches
+
+> **A callback never waits.** It does its work and returns. Anything that takes time becomes a
+> second callback.
+
+This is relied on again in Week 6 (scan processing), Week 9 (estimation) and Week 11 (Nav2
+goals). If a student takes one sentence away from Week 3, this is it.
+
+## Diagnostic additions to the Week 2 list
+
+```
+ros2 interface show <type>       # does the type exist, and what are its fields?
+ros2 service list                # is the server up?
+ros2 service type /reset_odom    # which type does it expect?
+ros2 param list /node            # were the parameters declared?
+ros2 action list                 # is the action server up?
+```
+
+| Symptom | Likely cause |
+|---|---|
+| `ModuleNotFoundError` on your own message | Interfaces package not built, or workspace not re-sourced |
+| Unknown interface in `interface show` | Wrong build type, or the file is not listed in `rosidl_generate_interfaces` |
+| Service call never returns | Callback did not `return response` |
+| Node hangs silently | A callback is waiting — see the rule above |
+| `param set` has no effect | The value is read once in `__init__` |
+
+## To be produced
+
+| Item | Status |
+|---|---|
+| `code/src/ee414_w03_interfaces/` — complete, buildable, with the lines above already in place | ❌ |
+| `code/src/ee414_w03_nodes/` — starter nodes, one `TODO` per concept | ❌ |
+| `expected_output.txt` — transcript from a real run on the pinned distribution | ❌ |
+| A pre-written hung node, for students who cannot reproduce checkpoint 4 | ❌ |
