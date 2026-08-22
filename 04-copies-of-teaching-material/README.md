@@ -61,7 +61,9 @@ is. Everything cut goes into `\note{}` and compiles to a separate notes PDF.
 **5. Code is revealed one line per slide**, the new line highlighted (`\codestep`).
 
 **6. Real screenshots, not typeset listings**, wherever a student will compare against their
-own screen. A screenshot is the artifact of having run it — rule 2, discharged.
+own screen. A screenshot is the artifact of having run it — rule 2, discharged. Illustrations
+may be generated (`shared/gen_figure.py`) and each keeps its prompt beside it; **but nothing
+generated may make a factual claim about a real person, place or piece of work.**
 
 **7. The ROS 2 distribution is named in exactly one place** — `../setup/README.md` — and
 reached everywhere else through `\rosver`.

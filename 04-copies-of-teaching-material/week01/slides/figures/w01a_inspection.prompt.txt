@@ -1,0 +1,6 @@
+A single four-wheeled inspection robot with a visible spinning LiDAR sensor on a
+mast, standing on a metal walkway inside an industrial process plant. Large
+pipes, valves and pressure vessels surround it, painted in industrial greys and
+blues. The lighting is harsh and directional, suggesting an environment that is
+hot, loud and unpleasant for people. Absolutely no humans anywhere in the frame.
+Low camera angle looking slightly up at the robot, emphasising isolation.

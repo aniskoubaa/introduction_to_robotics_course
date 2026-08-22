@@ -34,23 +34,48 @@ Below the visual threshold; left alone rather than chased.
 
 ## ⚠️ Before delivering — two things to fill in
 
-### 1. The four video clips
+### 1. The opening images — one still to add
 
-The deck has four `\videoslide` slots opening section 1, ~2.5 minutes total, before any
-technical claim. **The URLs live here, never on the slide** — a dead link on a projected slide
-is worse than no slide. Download the clips to `slides/video/` if the room's network is
-unreliable.
+A PDF shows video as a still, so section 1 opens with **three images**, each carrying one
+sentence that names what the student is looking at in the course's own vocabulary.
 
-| # | Slot | Length | What to find | URL / file |
-|---|---|---|---|---|
-| 1 | Warehouse robots, at scale | 45 s | An AMR fleet moving stock in a live warehouse (Amazon Robotics, Locus, Geek+) | ❌ |
-| 2 | Where people should not go | 45 s | A legged or wheeled robot inspecting an industrial plant (ANYbotics, Spot at a refinery) | ❌ |
-| 3 | A robot changing its mind | 30 s | A mobile robot re-planning around a person who steps into its path — **a Nav2 demo, so it is literally Week 11** | ❌ |
-| 4 | Built here | 45 s | RIOTU Lab robots and drones — your own footage | ❌ |
+| # | Slide | Figure | Status |
+|---|---|---|---|
+| 1 | Warehouse robots, at scale | `figures/w01a_warehouse.png` | ✅ generated |
+| 2 | Where people should not go | `figures/w01a_inspection.png` | ✅ generated |
+| 3 | A robot changing its mind | `figures/w01a_replanning.png` | ✅ generated |
+| 4 | **Built here** | `figures/w01a_riotu.jpg` | ❌ **needs a real photo from you** |
 
-**Each clip is followed by exactly one sentence**, already on the slide, naming what they just
-saw in the course's vocabulary. A clip with no naming sentence is entertainment. Do not add a
-fifth clip; four is already the limit of what an opening will carry.
+> ⚠️ **Slot 4 is commented out in the `.tex` on purpose.** It is a claim about your own lab's
+> work, and an AI-generated image presented as RIOTU research would be a fabrication shown to
+> students. Drop a real photograph into `figures/w01a_riotu.jpg` and uncomment the block at the
+> end of section 1.
+
+**Optional:** if the room's network is reliable you can also play a clip from a browser between
+slides. Keep the URLs here, never on a slide — a dead link projected in front of a class is
+worse than no link.
+
+| # | Clip to find | URL |
+|---|---|---|
+| 1 | An AMR fleet moving stock in a live warehouse | ❌ |
+| 2 | A robot inspecting an industrial plant | ❌ |
+| 3 | A Nav2 robot re-planning around a person — **literally Week 11** | ❌ |
+| 4 | RIOTU Lab robots and drones | ❌ |
+
+#### Regenerating a figure
+
+Figures 1–3 were generated with Gemini 3 Pro Image. Each keeps its prompt beside it, so the
+whole set can be restyled consistently:
+
+```bash
+cd ../shared
+python3 gen_figure.py ../week01/slides/figures/w01a_warehouse.png \
+                      ../week01/slides/figures/w01a_warehouse.prompt.txt
+```
+
+`gen_figure.py` appends the house style (palette, no text, no logos, no identifiable people,
+16:9) to every prompt, which is what keeps fifteen weeks of illustrations looking like one
+course. Needs `GEMINI_API_KEY`.
 
 ### 2. The instructor slide
 

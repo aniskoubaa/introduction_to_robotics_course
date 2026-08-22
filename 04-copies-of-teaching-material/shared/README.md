@@ -6,6 +6,21 @@
 | `ee414-exercise-style.tex` | Exercise/solution preamble with the `\ifsolutions` switch | ❌ |
 | `ee414-infographic-style.prompt.txt` | Fixed prompt for generated figures, so illustrations across 15 weeks look like one course | ❌ |
 | `alfaisal_logo.png` | Title-slide logo | ❌ |
+| `gen_figure.py` | Generates a lecture figure with Gemini 3 Pro Image, appending the house style to the prompt | ✅ |
+
+## Generated figures
+
+`gen_figure.py <out.png> <prompt.txt>` renders an illustration and **appends the house style** —
+navy/indigo/cyan palette, no text, no logos, no identifiable people, 16:9 — to whatever prompt
+it is given. That appended block is what keeps fifteen weeks of illustrations looking like one
+course rather than fifteen.
+
+**Every generated figure keeps its prompt beside it** as `<name>.prompt.txt`, so any figure can
+be regenerated, restyled or corrected later. Same standing rule as the SE 100 decks.
+
+⚠️ **Never generate an image that makes a factual claim about a real person, place or piece of
+work.** A photograph of the RIOTU Lab must be a photograph of the RIOTU Lab. Generated imagery
+is for generic illustration only — a warehouse, a plant, a corridor.
 
 ## The one macro that matters
 

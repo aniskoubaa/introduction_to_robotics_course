@@ -246,31 +246,27 @@
 }{\end{tcolorbox}}
 
 % ---------------------------------------------------------------
-% \videoslide{title}{what the clip is}{the one sentence to say after it}
+% \imageslide{title}{figure file}{the one sentence to say about it}
 %
-% A video slot. The deck cannot embed video, and should not: the clip lives in
-% a folder beside the deck (or in a browser tab), and this slide is the cue.
-% The URL for each clip is recorded in the week README, never on the slide --
-% links rot, and a dead link on a projected slide is worse than no slide.
+% A PDF shows video as a still, so the deck uses images. The clip, if there is
+% one, is opened from a browser -- its URL lives in the week README, never on a
+% slide, because a dead link projected in front of a class is worse than no link.
 %
-% RULE: a video slot is followed by ONE sentence, and that sentence names what
-% the students just saw in the course's own vocabulary. A clip with no naming
-% sentence is entertainment.
-\newcommand{\videoslide}[3]{%
+% RULE: an image slot carries ONE sentence, and that sentence names what the
+% students are looking at in the course's own vocabulary. A picture with no
+% naming sentence is decoration.
+%
+% Generated figures are made with ../shared/gen_figure.py and each keeps its
+% prompt beside it as <name>.prompt.txt, so any figure in this course can be
+% regenerated or restyled consistently.
+\newcommand{\imageslide}[3]{%
   \begin{frame}{#1}
-    \vfill
+    \vspace{-0.2em}
     \begin{center}
-      \begin{tcolorbox}[enhanced, colback=primary!8, colframe=primary!45,
-                        boxrule=0.8pt, arc=6pt, width=0.82\textwidth,
-                        left=14pt, right=14pt, top=12pt, bottom=12pt]
-        \centering
-        {\Huge\color{primary!70}$\blacktriangleright$}\\[0.7em]
-        {\small #2}
-      \end{tcolorbox}
+      \includegraphics[width=0.93\textwidth,height=0.63\textheight,keepaspectratio]{#2}
     \end{center}
-    \vfill
+    \vspace{0.3em}
     \centering{\small #3}
-    \vfill
   \end{frame}%
 }
 

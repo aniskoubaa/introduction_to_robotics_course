@@ -1,0 +1,7 @@
+A small two-wheeled indoor service robot, roughly knee height, with a spinning
+LiDAR puck on top, in a clean modern building corridor. A stylised glowing cyan
+line shows its intended straight path forward; a second glowing indigo line
+curves smoothly around a simplified anonymous person who has just stepped into
+the corridor, then rejoins the original path. Faint translucent cyan rings
+radiate from the LiDAR to suggest sensing. The person is a plain neutral
+silhouette figure with no identifiable features. Eye-level camera.
