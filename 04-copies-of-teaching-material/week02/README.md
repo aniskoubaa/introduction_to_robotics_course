@@ -13,9 +13,9 @@
 
 | Artifact | Path | Status |
 |---|---|---|
-| Lecture A deck | `slides/EE414_W02A_computation_graph.tex` / `.pdf` | ✅ 35 slides, builds clean |
+| Lecture A deck | `slides/EE414_W02A_computation_graph.tex` / `.pdf` | ✅ 36 slides, builds clean |
 | Lecture B deck | `slides/EE414_W02B_first_nodes.tex` / `.pdf` | ✅ 42 slides, builds clean |
-| Legacy figures | `slides/figures/w02_*.png` | ✅ 5, each credited on its slide |
+| Legacy figures | `slides/figures/w02_*.png` | ✅ 6, each credited on its slide |
 | Lab checklist | `ros2_lab/README.md` | ✅ |
 | Starter package | `../../code/src/ee414_w02_first_node/` | ❌ **not authored** |
 | Expected-output transcript | `ros2_lab/expected_output.txt` | ❌ — standing rule 2 |
@@ -27,7 +27,7 @@
 
 | File | Duration | Contents |
 |---|---|---|
-| `slides/EE414_W02A_computation_graph.tex` | 1.5 h · 35 slides | Recap of Week 1's five failures mapped to their answers; **the whole lecture in one figure**; the node as one process doing one job; topics as anonymous many-to-many; a real TurtleBot3 graph; **the four mechanisms one figure at a time** (topic / service / action / parameter) before the comparison table; **four questions that choose between them**; messages as typed contracts; the five message types of the semester; `Header`, stamps and frames; **the `roscore` that no longer exists**; discovery without a master; `ROS_DOMAIN_ID`; QoS — reliability, durability, history; choosing a profile; the incompatible-QoS silent failure; **`ros2 topic info --verbose` one token per slide**; the silent-topic diagnostic order |
+| `slides/EE414_W02A_computation_graph.tex` | 1.5 h · 36 slides | Recap of Week 1's five failures mapped to their answers; **the whole lecture in one figure**; the node as one process doing one job; topics as anonymous many-to-many; a real TurtleBot3 graph; **the four mechanisms one figure at a time** (topic / service / action / parameter) before the comparison table; **four questions that choose between them**; messages as typed contracts; the five message types of the semester; `Header`, stamps and frames; **the `roscore` that no longer exists**; **the ROS 1 commands you will hit online, and their ROS 2 equivalents**; discovery without a master; `ROS_DOMAIN_ID`; QoS — reliability, durability, history; choosing a profile; the incompatible-QoS silent failure; **`ros2 topic info --verbose` one token per slide**; the silent-topic diagnostic order |
 | `slides/EE414_W02B_first_nodes.tex` | 1.5 h · 42 slides | Environment check; **turtlesim — a robot you did not write**; `ros2 run` one token per slide; teleop; `node list` / `topic list` / `node info` / `interface show` / `topic echo` / `topic pub`; **what you learned with no source code**; workspace anatomy; `colcon build`; underlay and overlay; `ros2 pkg create` one token per slide; generated layout; `talker.py`; `main` and `spin`; entry points in `setup.py`; build and run; inspecting your own node the same way; `listener.py`; `rqt_graph`; what the pair proves; launch files; `ros2 launch`; five deliberate failures; the diagnostic order |
 
 Build: `pdflatex <file>.tex` **three times**. Two passes is not enough — the section divider
@@ -73,10 +73,19 @@ deleted — rather than as prose.
 | `w02_service.png` | same | A — "Two: a service" |
 | `w02_action.png` | same | A — "Three: an action" |
 | `w02_roscore.png` | Instructor's own ROS 1 course (2020), ROS Noetic | A — "This process does not exist any more" |
+| `w02_ros1_cli.png` | same, `rosnode list` + `rostopic list` panes recomposed | A — "Half of what you will find online looks like this" |
 
 > **Attribution is on the slide, every time, in small type.** Not a courtesy: the students are
 > being taught to attribute, and a deck that quietly reuses a book's artwork teaches the
 > opposite of what the Week 1 AI-tool policy asks of them.
+
+**The course is ROS 2 only, but it says so out loud.** Two slides in A are deliberately ROS 1:
+`roscore` as the process that was deleted, and a `rosnode list` / `rostopic list` capture beside
+a seven-row translation table. Neither teaches a ROS 1 command as something to use. They exist
+because students will search for help and the top result will be ROS 1 with no year on it —
+better they meet the old commands here, labelled, than at midnight in an answer from 2016. The
+one-second test on that slide (*starts with `ros` and no space after it → ROS 1*) is the part
+worth making them repeat back.
 
 > ⚠️ **The four book figures say ROS, not ROS 2, and one shows a ROS Master.** That is correct
 > for what they illustrate — the *shapes* of the four mechanisms, which did not change — but say

@@ -370,6 +370,48 @@ Vector3  angular     # x, y, z   radians / second
   {Screenshot: the instructor's ROS 1 course (2020), ROS Noetic. Shown as history, not as something you will run.}
 
 % ---------------------------------------------------------------
+% The half of the internet that is still ROS 1. This slide exists because
+% students WILL search for answers, and the top result will be ROS 1 -- with
+% no year on it and no warning. Better they meet the old commands here, from
+% me, labelled, than at midnight in a Stack Overflow answer from 2016.
+\begin{frame}{Half of what you will find online looks like this}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.46\textwidth}
+    \begin{center}
+      \includegraphics[width=\textwidth]{w02_ros1_cli}
+    \end{center}
+    {\tiny\color{primary!45} Screenshot: the instructor's ROS 1 course (2020), ROS Noetic.}
+
+    \column{0.51\textwidth}
+    \footnotesize
+    \begin{tabular}{@{}p{2.3cm}p{3.3cm}@{}}
+      \toprule
+      \textbf{ROS 1} & \textbf{\rosver} \\
+      \midrule
+      \texttt{roscore} & --- gone \\[0.2em]
+      \texttt{rosnode list} & \texttt{ros2 node list} \\[0.2em]
+      \texttt{rostopic list} & \texttt{ros2 topic list} \\[0.2em]
+      \texttt{rosrun} & \texttt{ros2 run} \\[0.2em]
+      \texttt{roslaunch} & \texttt{ros2 launch} \\[0.2em]
+      \texttt{rosmsg show} & \texttt{ros2 interface show} \\[0.2em]
+      \texttt{catkin\_make} & \texttt{colcon build} \\
+      \bottomrule
+    \end{tabular}
+  \end{columns}
+
+  \vspace{0.5em}
+  \small
+  One tool, \texttt{ros2}, with the noun second. \textbf{This course is \rosver{} only} --- but
+  ROS 1 ran for fifteen years, and most of the tutorials, forum answers and GitHub code you
+  will find were written for it.
+
+  \vspace{0.3em}
+  \footnotesize
+  \textbf{How to tell in one second:} if it starts with \texttt{ros} and has no space after
+  it, it is ROS 1.
+\end{frame}
+
+% ---------------------------------------------------------------
 \begin{frame}{There is no central process}
   \small
   When a node starts, it announces itself on the network and listens for others doing the
