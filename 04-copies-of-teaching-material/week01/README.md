@@ -13,8 +13,8 @@
 
 | Artifact | Path | Status |
 |---|---|---|
-| Lecture A deck | `slides/EE414_W01A_course_overview.tex` / `.pdf` | ✅ 36 slides, builds clean |
-| Lecture B deck | `slides/EE414_W01B_what_is_a_robot.tex` / `.pdf` | ✅ 30 slides, builds clean |
+| Lecture A deck | `slides/EE414_W01A_course_overview.tex` / `.pdf` | ✅ 35 slides, builds clean |
+| Lecture B deck | `slides/EE414_W01B_what_is_a_robot.tex` / `.pdf` | ✅ 35 slides, builds clean |
 | Shared preamble | `../shared/ee414-beamer-preamble.tex` | ✅ |
 | Exercise set + key | `exercises/EE414_W01_exercises.pdf` / `_solutions.pdf` | ❌ not authored |
 | Setup guide (M1) | `../../setup/README.md` + `check_ros2_setup.py` | ❌ **critical path** |
@@ -26,7 +26,7 @@
 | `slides/EE414_W01A_course_overview.tex` | 1.5 h · 36 slides | **Who is teaching this**; **four video slots**; what the course is for; the theory-course/this-course contrast; where you end up by Week 11; three reasons robotics is hard; the four CLOs; the weekly A/B shape; the 11+4 calendar; the pipeline-to-weeks map; logistics; the pinned stack; books; **what this course does not cover**; assessment and the exam blueprint; assignments and project; policies; AI-tool policy; setup and `ROS_DOMAIN_ID`; the week's checklist |
 | `slides/EE414_W01B_what_is_a_robot.tex` | 1.5 h · 30 slides | Which of these is a robot; sense–plan–act definition; the loop; automation vs autonomy; robot families; why mobile robots; anatomy; the sensor table; the differential drive; the five-block pipeline; "go to the door" traced; three hard truths; the naive `while` loop and its five failures; the computation graph as the answer; ROS 2 honestly; the ecosystem; a first node; `ros2 topic echo` |
 
-Build: `pdflatex <file>.tex` twice. `logo.png` must sit beside the `.tex`.
+Build: `pdflatex <file>.tex` **three times**. `logo.png` must sit beside the `.tex`.
 
 **Known cosmetic issue:** W01B reports one 0.51 pt overfull `\hbox` (0.18 mm) on the
 "go to the door" frame. It does not resize with the column widths, so it is not the table.
@@ -77,14 +77,49 @@ python3 gen_figure.py ../week01/slides/figures/w01a_warehouse.png \
 16:9) to every prompt, which is what keeps fifteen weeks of illustrations looking like one
 course. Needs `GEMINI_API_KEY`.
 
-### 2. The instructor slide
+### 2. The instructor slide — two instructors, one of them incomplete
 
-Slide 2 states: Professor of Computer Science at Alfaisal University; Director of the RIOTU Lab;
-research in mobile robots, drones, deep learning and IoT; author of best-selling online ROS
-courses and of the Springer *Robot Operating System* series.
+The course is taught by **Prof. Anis Koubaa and Asem Ibrahim Alalwan**, and both names now
+appear on every deck's title page and in every footline.
 
-**Verify the affiliation and title lines before first delivery** — they were written from the
-legacy PSU-era decks and the current wording has not been confirmed.
+> ⚠️ **Slide 2 carries a `VERIFY BEFORE DELIVERY` line and the "Practical information" slide
+> carries `email: VERIFY`.** Asem Ibrahim Alalwan's title, department, email and one line of
+> subject expertise were **not** supplied and have deliberately not been invented — writing a
+> colleague's credentials from guesswork and projecting them to a class is not a defensible
+> thing to do. Fill both in, or cut the placeholder bullets, before first delivery.
+
+Anis Koubaa's lines were written from the legacy PSU-era decks: Professor of Computer Science
+at Alfaisal University; Director of the RIOTU Lab; research in mobile robots, drones, deep
+learning and IoT; author of best-selling online ROS courses and of the Springer *Robot
+Operating System* series. **Confirm the current wording** before first delivery.
+
+## What changed in the August 2026 revision (W01B)
+
+Five concepts were re-sequenced so the concrete case comes before the structure. Nothing was
+cut; five slides were added. The pattern, which is the reusable part:
+
+> **1.** a situation they can picture · **2.** a question they attempt · **3.** the number that
+> proves their answer fails · **4.** the name of the thing that fixes it
+
+Beat 3 was what the deck was missing everywhere — it asserted that robotics is hard instead of
+quantifying it.
+
+| Was | Now |
+|---|---|
+| Five pipeline boxes, then "go to the door" traced through them | **"You are the robot. Go to the door."** → five questions the room answers → the same five boxes, as their answer → the traced version with real numbers |
+| Truth 1 opened on `x = 4.2 ± 0.3` | Opens on **walk ten steps with your eyes shut**, then 2 % wheel slip over 50 m = 1 m of error |
+| Truth 2 showed a delay chain and never added it up | **175 ms → 4 cm of travel after deciding to stop**, and ×10 for a warehouse AMR |
+| The naive loop, then five reasons it fails | **A stopwatch on the loop first**: 320 ms → 3 Hz → 7 cm blind between control decisions, half the robot's length |
+| $v, \omega$ introduced in a display equation between bullets | **A wheelchair is a differential drive** — hands on rims, three motions — then the symbols |
+
+The pipeline diagram now carries **week numbers** (Perception W6, Estimation W9, Localization
+W10, Planning W11, Control W4–5). It and W01A's "Where you end up" are the same object, and the
+labels are what turn it from a taxonomy into the map the semester hangs off.
+
+**Numbers used, and where they must stay consistent:** 0.22 m/s is the course's driving speed
+and also `max_speed` in W02A. The controller is designed for **20 Hz** — the value in Truth 3's
+rate table — and the naive loop drops it to 3 Hz. `plan()` is 200 ms in both the code listing
+and the stopwatch table. If any of these change, they change in all of those places.
 
 ## Teaching notes
 
@@ -120,6 +155,21 @@ hands, take two disagreements, and let the argument run for three or four minute
 advancing. The definition on the next slide only lands if the students have already discovered
 that they disagree about the elevator and the LLM. If time is short, take just the CNC machine
 and the robot vacuum — that pair alone produces the argument.
+
+**W01B, "You are the robot. Go to the door."** Do not answer it. Let the room shout, write
+their answers on the board in the order they arrive, and only then advance. The five questions
+on the next slide should read as *their* list tidied up, not as yours revealed. If the room is
+silent, prompt with the narrowest possible question — *the LiDAR just gave you 360 numbers; is
+that where you are?* — and the rest follows.
+
+**W01B, "Do this now, with your eyes shut."** Actually make them stand up and do it. Ten
+seconds of a room walking into each other buys you the entire probabilistic half of the course,
+because from then on "the robot does not know where it is" is something they have felt rather
+than something you claimed.
+
+**W01B, "Put a stopwatch on it."** Compute it in front of them; do not present the total. Ask
+for the sum, then ask what 3 Hz means at 0.22 m/s, and let somebody in the room produce the
+7 cm. A number the class derived is worth five they were shown.
 
 **W01B, the three hard truths.** These are the load-bearing slides of the lecture. Everything
 in Weeks 9–11 exists because of truth 1, and the entire ROS 2 section exists because of truth

@@ -15,7 +15,7 @@
 
 \title[EE 414 --- Week 1B]{What Is a Robot?}
 \subtitle{And why robot software needs a framework}
-\author[A. Koubaa]{Prof.\ Anis Koubaa}
+\author[Koubaa \and Alalwan]{Prof.\ Anis Koubaa \and Asem Ibrahim Alalwan}
 \institute[Alfaisal University]{
     EE 414 --- Introduction to Robotics\\
     College of Engineering\\
@@ -252,6 +252,37 @@
 \end{frame}
 
 % ---------------------------------------------------------------
+% ANALOGY BEFORE FORMALISM (standing rule 9). v and omega are the first
+% notation in the course. A wheelchair is the one differential drive every
+% student in the room has already watched somebody operate.
+\begin{frame}{You already know how this works}
+  \keyline{A wheelchair is a differential drive.}
+
+  \vspace{1.0em}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{5.4cm}p{5.4cm}@{}}
+    \toprule
+    \textbf{What the hands do} & \textbf{What the chair does} \\
+    \midrule
+    Push both rims equally     & Straight line \\[0.3em]
+    Push one, hold the other   & Turns on the spot \\[0.3em]
+    Push one harder than the other & Curves --- an arc \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{1.0em}
+  Two wheels, driven separately, and no steering mechanism anywhere. Every motion the chair
+  can make comes out of the \emph{difference} between the two --- which is where the name
+  comes from.
+
+  \vspace{0.5em}
+  \centering\small
+  \textbf{Now: how would you tell a computer to do that?}
+\end{frame}
+
+% ---------------------------------------------------------------
 \begin{frame}{The actuator you will spend the semester commanding}
   \small
   The differential drive: two independently driven wheels, one passive caster.
@@ -287,7 +318,51 @@
 \end{frame}
 
 % ---------------------------------------------------------------
-\begin{frame}{From a sensor reading to a wheel command}
+% ANNOUNCED -> DERIVED. The five-box pipeline is the map of the whole
+% semester, and it used to arrive as five boxes to memorise. It now arrives as
+% the answer to five questions the students are asked first. Same diagram at
+% the end; completely different standing.
+\begin{frame}{You are the robot. Go to the door.}
+  \small
+  A corridor. The door is nine metres away. Someone has left a bag on the floor that is not
+  on any map. You have a LiDAR and two wheel encoders, and nothing else.
+
+  \vspace{1.0em}
+  \keyline{What do you have to work out, and in what order?}
+
+  \vspace{1.0em}
+  \centering
+  \small Shout them at me. Every answer you give is one week of this course.
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{Five questions, and none of them can be skipped}
+  \footnotesize
+  \begin{center}
+  \begin{tabular}{@{}p{7.6cm}p{3.0cm}@{}}
+    \toprule
+    \textbf{The question} & \textbf{What answers it} \\
+    \midrule
+    ``The LiDAR just gave me 360 distances. Is that a map of anything?''
+      & \textbf{Perception} \\[0.35em]
+    ``Something solid is 2.1\,m ahead of me. Fine --- but where am \emph{I}?''
+      & \textbf{Estimation} \\[0.35em]
+    ``I have a guess about my own motion. Where does it put me \emph{on the map}?''
+      & \textbf{Localization} \\[0.35em]
+    ``I am here, the door is there, the bag is between us. Which way?''
+      & \textbf{Planning} \\[0.35em]
+    ``The path says go that way. What do the two wheels do in the next 100\,ms?''
+      & \textbf{Control} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.7em}
+  \keyline{Each one exists because the one before it did not answer the question.}
+\end{frame}
+
+% ---------------------------------------------------------------
+\begin{frame}{The same five, and they are the course}
   \begin{center}
   \begin{tikzpicture}[node distance=0.45cm and 0.6cm]
     \node[sense] (per) {Perception};
@@ -301,6 +376,12 @@
     \node[below=0.1cm of loc, font=\tiny, align=center] {where am I\\on the map?};
     \node[below=0.1cm of pln, font=\tiny, align=center] {which way\\to the goal?};
     \node[below=0.1cm of ctl, font=\tiny, align=center] {what $v,\omega$\\right now?};
+
+    \node[above=0.12cm of per, font=\tiny\bfseries, text=primary!70] {Week 6};
+    \node[above=0.12cm of est, font=\tiny\bfseries, text=primary!70] {Week 9};
+    \node[above=0.12cm of loc, font=\tiny\bfseries, text=primary!70] {Week 10};
+    \node[above=0.12cm of pln, font=\tiny\bfseries, text=primary!70] {Week 11};
+    \node[above=0.12cm of ctl, font=\tiny\bfseries, text=primary!70] {Weeks 4--5};
 
     \draw[dataflow] (per) -- (est);
     \draw[dataflow] (est) -- (loc);
@@ -317,7 +398,7 @@
 \end{frame}
 
 % ---------------------------------------------------------------
-\begin{frame}{``Go to the door'', traced through the pipeline}
+\begin{frame}{``Go to the door'', with real numbers in it}
   \small
   \begin{table}
   \begin{tabular}{@{}p{1.9cm}p{8.9cm}@{}}
@@ -344,6 +425,29 @@
 \section{Three hard truths}
 % ===============================================================
 
+% PAIN BEFORE NOTATION. "x = 4.2 +/- 0.3" is a notation; nobody believes a
+% notation. Everybody has already done this experiment with their own legs.
+\begin{frame}{Do this now, with your eyes shut}
+  \small
+  Stand up. Close your eyes. Walk ten steps forward, turn around, walk ten steps back.
+
+  \vspace{0.9em}
+  \keyline{You are not where you started.}
+
+  \vspace{0.9em}
+  You knew how many steps you took. You knew you turned around. You were still wrong by half
+  a metre --- because you were \textbf{counting your own motion} instead of looking at the room.
+
+  \vspace{0.9em}
+  \begin{underhood}[This is exactly what a wheel encoder does]
+    \footnotesize
+    It counts rotations. If a wheel slips 2\,\% of the time --- carpet, dust, a cable --- then
+    after 50\,m of driving the robot is \textbf{a metre} from where it believes it is. And
+    nothing in that calculation ever tells it so. The error only grows.
+  \end{underhood}
+\end{frame}
+
+% ---------------------------------------------------------------
 \begin{frame}{Truth 1 --- every measurement is wrong}
   \small
   A robot never knows where it is. It has a \textbf{belief}, and a measure of how much to
@@ -391,15 +495,21 @@
   \end{tikzpicture}
   \end{center}
 
-  \vspace{0.6em}
-  By the time the robot reacts to what it saw, that thing has moved --- and so has the robot.
-  \textbf{You are always steering by a slightly old picture of the world.}
+  \vspace{0.5em}
+  \small
+  \textbf{Add them up: about 175\,ms.} At the 0.22\,m/s this course drives at, the robot
+  travels \textbf{4\,cm after it has already decided to stop} --- and the thing it saw has
+  moved too.
 
   \vspace{0.5em}
+  \centering\small You are always steering by a slightly old picture of the world.
+
+  \vspace{0.4em}
   \begin{inthefield}
     \footnotesize
-    This is why a controller that works perfectly in a simulator with no delay can oscillate
-    on real hardware. It is also why we tune in simulation \emph{with} realistic rates.
+    Four centimetres sounds survivable. Multiply the speed by ten, as a warehouse AMR does, and
+    it is 40\,cm. This is why a controller that is perfect in a simulator with no delay
+    oscillates on real hardware, and why we tune in simulation \emph{with} realistic rates.
   \end{inthefield}
 \end{frame}
 
@@ -443,7 +553,7 @@ while True:
     scan  = read_lidar()          # blocks 100 ms
     odom  = read_encoders()
     pose  = estimate(odom, scan)
-    path  = plan(pose, goal)      # slow, and not needed every cycle
+    path  = plan(pose, goal)      # 200 ms, and not needed every cycle
     v, w  = control(path, pose)
     send_to_motors(v, w)
   \end{pycodes}
@@ -454,11 +564,41 @@ while True:
 \end{frame}
 
 % ---------------------------------------------------------------
+% One computed number, before the list of five. A list of five structural
+% objections is easy to nod along to and impossible to remember; 7 cm of blind
+% travel is neither.
+\begin{frame}{Put a stopwatch on it}
+  \small
+  \begin{center}
+  \begin{tabular}{@{}p{5.2cm}r@{}}
+    \toprule
+    \texttt{read\_lidar()} --- one full sweep & 100\,ms \\
+    \texttt{plan()} --- searching the map     & 200\,ms \\
+    everything else                            & \phantom{0}20\,ms \\
+    \midrule
+    \textbf{one trip round the loop}           & \textbf{320\,ms} \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vspace{0.7em}
+  So the controller runs at \textbf{3\,Hz}. You designed it for 20\,Hz.
+
+  \vspace{0.5em}
+  \keyline{At 0.22\,m/s that is 7\,cm of travel between decisions --- half the robot's length,
+  with its eyes shut.}
+
+  \vspace{0.5em}
+  \centering\footnotesize
+  And planning did not need to run this cycle at all. Nor the one before it.
+\end{frame}
+
+% ---------------------------------------------------------------
 \begin{frame}{Five reasons that loop fails}
   \small
   \begin{enumerate}
     \item \textbf{One rate for everything.} The whole loop runs at the speed of its slowest
-          line. Your 50\,Hz controller now runs at 3\,Hz because planning is slow.
+          line --- the 320\,ms you just measured. Your 20\,Hz controller runs at 3\,Hz.
     \item \textbf{One crash kills everything.} A malformed camera frame takes down the motor
           commands, and the robot keeps rolling with the last velocity it was given.
     \item \textbf{One machine.} You cannot move the heavy vision work to a second computer
