@@ -45,3 +45,16 @@ Thumbs.db
 .idea/
 .vscode/
 ~$*
+
+# ---------------------------------------------------------------
+# LaTeX SOURCE IS NOT PUBLISHED.
+# The repository distributes the built PDFs only. Students clone it to read
+# slides and pull starter code; they have no reason to build the decks, and
+# the source stays with the instructors.
+#
+# CONSEQUENCE, and it is a real one: a clone of this repository CANNOT rebuild
+# the decks. The only copy of every .tex -- including the shared preamble that
+# defines the whole visual system -- is the working Dropbox folder. If that is
+# lost, the PDFs survive and nothing else does. Back it up somewhere that is
+# not Dropbox, or keep the source in a second, private repository.
+*.tex

@@ -45,7 +45,7 @@ given node and writing one on paper are 40% of every exam blueprint.
 | **Prerequisite** | EE 306 Control and Feedback Systems Design · Python and Linux assumed |
 | **Stack** | ROS 2 Jazzy · Ubuntu 24.04 · Gazebo Harmonic · Python 3.12 |
 | **Hardware** | Gazebo throughout; 2–4 TurtleBot3 units are an enhancement, not a dependency |
-| **Instructor** | Prof. Anis Koubaa — `akoubaa@alfaisal.edu` |
+| **Instructors** | Prof. Anis Koubaa — `akoubaa@alfaisal.edu`<br>Dr. Asem Ibrahim Alalwan |
 
 ### The four CLOs
 
@@ -101,7 +101,7 @@ is absorbed without dropping a topic. Contact hours still total 45.
 ```
 introduction_to_robotics_course/
 ├── 01-course-specification/   ← the approved spec: CLOs, content, assessment design
-├── 02-course-syllabus/            institutional syllabus (blocked on approval)
+├── 02-course-syllabus/            institutional syllabus (drafted, AU template)
 ├── 03-combined-course-report/     TP-154, filed after delivery
 ├── 04-copies-of-teaching-material/ ← THE MAIN BODY OF WORK. week01…week15 + shared/
 ├── 05…09                          portfolio sections filled during and after delivery
@@ -128,7 +128,7 @@ approval** — treat it as a draft. No teaching material has been authored yet.
 | Section | Status |
 |---|---|
 | 01 Course specification | ✅ Drafted, pending approval |
-| 02 Syllabus | ❌ Blocked on approval |
+| 02 Syllabus | ✅ Drafted on the AU template; provisional until the spec is approved |
 | 04 Teaching material | ⚠️ Weeks 1–3 and 7 decks authored and built; the rest are briefs |
 | `setup/`, `code/`, `project/` | ❌ Briefs written, artifacts not authored |
 | 03, 05–09 | ❌ Filled during and after delivery |
@@ -160,4 +160,5 @@ advanced slot in Week 12.
 
 No licence set — default copyright applies. To reuse or adapt this material, please get in touch.
 
-**Anis Koubaa** — Alfaisal University, College of Engineering.
+**Prof. Anis Koubaa** and **Dr. Asem Ibrahim Alalwan** — Alfaisal University,
+College of Engineering.

@@ -79,11 +79,11 @@ course. Needs `GEMINI_API_KEY`.
 
 ### 2. The instructor slide — two instructors, one of them incomplete
 
-The course is taught by **Prof. Anis Koubaa and Asem Ibrahim Alalwan**, and both names now
+The course is taught by **Prof. Anis Koubaa and Dr. Asem Ibrahim Alalwan**, and both names now
 appear on every deck's title page and in every footline.
 
 > ⚠️ **Slide 2 carries a `VERIFY BEFORE DELIVERY` line and the "Practical information" slide
-> carries `email: VERIFY`.** Asem Ibrahim Alalwan's title, department, email and one line of
+> carries `email: VERIFY`.** Dr. Asem Ibrahim Alalwan's title, department, email and one line of
 > subject expertise were **not** supplied and have deliberately not been invented — writing a
 > colleague's credentials from guesswork and projecting them to a class is not a defensible
 > thing to do. Fill both in, or cut the placeholder bullets, before first delivery.
