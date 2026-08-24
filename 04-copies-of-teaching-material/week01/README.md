@@ -17,7 +17,7 @@
 | Lecture B deck | `slides/EE414_W01B_what_is_a_robot.tex` / `.pdf` | ✅ 35 slides, builds clean |
 | Shared preamble | `../shared/ee414-beamer-preamble.tex` | ✅ |
 | Exercise set + key | `exercises/EE414_W01_exercises.pdf` / `_solutions.pdf` | ❌ not authored |
-| Setup guide (M1) | `../../setup/README.md` + `check_ros2_setup.py` | ❌ **critical path** |
+| Setup guide (M1) | `../../setup/README.md` + `check_ros2_setup.py` | ✅ written; **not yet run on a clean machine** |
 
 ## Lectures
 
@@ -204,7 +204,7 @@ prevent and half a session to diagnose.
 
 | Item | Status |
 |---|---|
-| Setup guide + `check_ros2_setup.py`, tested on native / WSL2 / Docker | ❌ **blocks Week 2** |
+| Setup guide + `check_ros2_setup.py` | ✅ written · ❌ **still untested on a clean machine** |
 | Exercise set (no computer): the robot/not-a-robot argument written up, pipeline tracing, the five failures of the naive loop | ❌ |
 | `ROS_DOMAIN_ID` assignment list | ❌ |
 | Figures for `slides/figures/`, each with the prompt that produced it | ❌ |

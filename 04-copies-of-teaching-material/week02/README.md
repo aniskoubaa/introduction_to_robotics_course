@@ -21,7 +21,7 @@
 | Expected-output transcript | `ros2_lab/expected_output.txt` | ❌ — standing rule 2 |
 | Quiz 1 + key | `../../07-exams-answer-keys-or-assessment-rubrics/` | ❌ |
 | Assignment 1 + rubric | `../../07-exams-answer-keys-or-assessment-rubrics/` | ❌ |
-| Setup guide (M1) | `../../setup/README.md` + `check_ros2_setup.py` | ❌ **blocks this week** |
+| Setup guide (M1) | `../../setup/README.md` + `check_ros2_setup.py` | ✅ written; **not yet run on a clean machine** |
 
 ## Lectures
 
@@ -172,7 +172,7 @@ every term defined at first use.
 
 | Item | Status |
 |---|---|
-| Setup guide + `check_ros2_setup.py` | ❌ **blocks the session** |
+| Setup guide + `check_ros2_setup.py` | ✅ written · ❌ **still untested on a clean machine** |
 | `code/src/ee414_w02_first_node/` — starter package with `TODO`s, plus the solution in the instructor archive | ❌ |
 | `ros2_lab/expected_output.txt` — a real transcript from a real run | ❌ |
 | Quiz 1 (10 min): nodes, the four mechanisms, one QoS question | ❌ |
