@@ -51,6 +51,17 @@ sets `\solutionstrue`. A question and its answer can never drift apart.
 **2. Every ROS 2 command in the material has been run.** Not read, not adapted from a
 tutorial — executed on the pinned distribution, with the output pasted from the terminal.
 
+**2a. The theme is the department's, not this course's.** Palette, block colours, block
+spacing, the suppressed headline and the section-outline slide all come from MAI 580's
+`common/preamble.tex`, whose own lineage is SE 446 → CS 489 → SE 444 → MAI 580. A student
+taking two of these courses should see one department, not two. **Do not diverge the theme
+without changing it in MAI 580 too** — the point is that they match.
+
+What this course keeps that MAI 580 does not have: the terminal-window code boxes, the
+`underhood`/`inthefield` asides, `\cmdanatomy` and `\figslide`. Those are teaching devices
+rather than theme. A ROS course depends on a student telling *this runs on your machine* from
+*this is a type definition* at a glance, and `frame=single` listings cannot say that.
+
 **3. Code always wears the terminal window bar.** Enforced in the preamble, not by convention.
 Mathematics and pseudocode use the light box instead.
 
