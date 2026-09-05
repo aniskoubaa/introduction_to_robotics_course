@@ -1,0 +1,116 @@
+# EE 414 Week 3 --- expected output
+#
+# Generated from an actual run, not written by hand.
+#   ROS 2 jazzy  |  Ubuntu 24.04.4 LTS
+#   captured 2026-09-05 13:05 UTC
+#
+# Regenerate:  bash ../../shared/screenshots/make_expected_output.sh
+
+=== colcon build --symlink-install ===
+Starting >>> ee414_w03_interfaces
+Finished <<< ee414_w03_interfaces [6.10s]
+Starting >>> ee414_w03_nodes
+Finished <<< ee414_w03_nodes [1.23s]
+
+Summary: 2 packages finished [7.48s]
+
+=== Checkpoint 1 --- ros2 interface show ===
+$ ros2 interface show ee414_w03_interfaces/msg/WheelState
+std_msgs/Header  header
+	builtin_interfaces/Time stamp
+		int32 sec
+		uint32 nanosec
+	string frame_id
+float64          left_rad_s
+float64          right_rad_s
+bool             estopped
+
+$ ros2 interface show ee414_w03_interfaces/srv/ResetOdom
+bool zero_heading
+---
+bool success
+string message
+
+=== Checkpoint 2 --- your own type on the wire ===
+$ ros2 topic echo /wheel_state --once
+header:
+  stamp:
+    sec: 1788613547
+    nanosec: 75208977
+  frame_id: base_link
+left_rad_s: 2.4
+right_rad_s: 2.4
+estopped: false
+---
+# stamp will differ; every other field must match.
+
+=== Checkpoint 3 --- the service, from the terminal ===
+$ ros2 service call /reset_odom ee414_w03_interfaces/srv/ResetOdom "{zero_heading: true}"
+waiting for service to become available...
+requester: making request: ee414_w03_interfaces.srv.ResetOdom_Request(zero_heading=True)
+
+response:
+ee414_w03_interfaces.srv.ResetOdom_Response(success=True, message='odometry zeroed')
+
+
+=== Checkpoint 4a --- mode:=spin, the loud failure ===
+$ ros2 run ee414_w03_nodes reset_client --ros-args -p mode:=spin
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 370, in spin_until_future_complete
+    self._enter_spin()
+  File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 222, in _enter_spin
+    raise RuntimeError('Executor is already spinning')
+RuntimeError: Executor is already spinning
+[ros2run]: Process exited with failure 1
+
+=== Checkpoint 4b --- mode:=hang, the silent one ===
+$ ros2 run ee414_w03_nodes reset_client --ros-args -p mode:=hang
+[INFO] [1788613552.048389485] [reset_client]: mode=hang - subscribed to /wheel_state
+[INFO] [1788613552.513192689] [reset_client]: callback: calling the service, waiting for the reply ...
+# and then nothing, for as long as you leave it. That is the deadlock.
+
+=== The fix --- mode:=fix ===
+$ ros2 run ee414_w03_nodes reset_client --ros-args -p mode:=fix
+[INFO] [1788613567.725090059] [reset_client]: reply: odometry zeroed
+[INFO] [1788613568.013522769] [reset_client]: reply: odometry zeroed
+[INFO] [1788613568.076309120] [reset_client]: reply: odometry zeroed
+[INFO] [1788613568.225436732] [reset_client]: reply: odometry zeroed
+# one reply per published message, forever.
+
+=== Checkpoint 5 --- a parameter, changed while it runs ===
+$ ros2 param get /driver max_speed
+Double value is: 0.22
+$ ros2 param set /driver max_speed 0.05
+Set parameter successful
+$ ros2 param get /driver max_speed
+Double value is: 0.05
+
+=== Checkpoint 6 --- an action, with feedback ===
+$ ros2 action send_goal /fibonacci action_tutorials_interfaces/action/Fibonacci "{order: 3}" --feedback
+Waiting for an action server to become available...
+Sending goal:
+     order: 3
+
+Goal accepted with ID: e372ae4b0cc046fcb05356ca49546688
+
+Feedback:
+    partial_sequence:
+- 0
+- 1
+- 1
+
+Feedback:
+    partial_sequence:
+- 0
+- 1
+- 1
+- 2
+
+Result:
+    sequence:
+- 0
+- 1
+- 1
+- 2
+
+Goal finished with status: SUCCEEDED
+# the goal ID differs every run; the sequence does not.

@@ -1,6 +1,6 @@
 # Week 3 — Lecture B lab sheet
 
-The deck (`../slides/EE414_W03B_interfaces_services_params.pdf`) is the walkthrough. This sheet
+The deck (`../slides/EE414_W03B_packages_and_interfaces.pdf`) is the walkthrough. This sheet
 holds the boilerplate students should **copy rather than retype**, and the checkpoint list.
 
 ## Checkpoints
