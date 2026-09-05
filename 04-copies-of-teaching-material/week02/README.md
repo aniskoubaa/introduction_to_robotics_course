@@ -13,9 +13,9 @@
 
 | Artifact | Path | Status |
 |---|---|---|
-| Lecture A deck | `slides/EE414_W02A_computation_graph.tex` / `.pdf` | ✅ 36 slides, builds clean |
-| Lecture B deck | `slides/EE414_W02B_first_nodes.tex` / `.pdf` | ✅ 42 slides, builds clean |
-| Legacy figures | `slides/figures/w02_*.png` | ✅ 6, each credited on its slide |
+| Lecture A deck | `slides/EE414_W02A_computation_graph.tex` / `.pdf` | ✅ 37 slides, builds clean |
+| Lecture B deck | `slides/EE414_W02B_first_nodes.tex` / `.pdf` | ✅ 43 slides, builds clean |
+| Generated figures | `slides/figures/gpt-image-2/` | ✅ 11, prompt sets preserved beside the assets |
 | Lab checklist | `ros2_lab/README.md` | ✅ |
 | Starter package | `../../code/src/ee414_w02_first_node/` | ❌ **not authored** |
 | Expected-output transcript | `ros2_lab/expected_output.txt` | ❌ — standing rule 2 |
@@ -27,8 +27,8 @@
 
 | File | Duration | Contents |
 |---|---|---|
-| `slides/EE414_W02A_computation_graph.tex` | 1.5 h · 36 slides | Recap of Week 1's five failures mapped to their answers; **the whole lecture in one figure**; the node as one process doing one job; topics as anonymous many-to-many; a real TurtleBot3 graph; **the four mechanisms one figure at a time** (topic / service / action / parameter) before the comparison table; **four questions that choose between them**; messages as typed contracts; the five message types of the semester; `Header`, stamps and frames; **the `roscore` that no longer exists**; **the ROS 1 commands you will hit online, and their ROS 2 equivalents**; discovery without a master; `ROS_DOMAIN_ID`; QoS — reliability, durability, history; choosing a profile; the incompatible-QoS silent failure; **`ros2 topic info --verbose` one token per slide**; the silent-topic diagnostic order |
-| `slides/EE414_W02B_first_nodes.tex` | 1.5 h · 42 slides | Environment check; **turtlesim — a robot you did not write**; `ros2 run` one token per slide; teleop; `node list` / `topic list` / `node info` / `interface show` / `topic echo` / `topic pub`; **what you learned with no source code**; workspace anatomy; `colcon build`; underlay and overlay; `ros2 pkg create` one token per slide; generated layout; `talker.py`; `main` and `spin`; entry points in `setup.py`; build and run; inspecting your own node the same way; `listener.py`; `rqt_graph`; what the pair proves; launch files; `ros2 launch`; five deliberate failures; the diagnostic order |
+| `slides/EE414_W02A_computation_graph.tex` | 1.5 h · 37 slides | Recap of Week 1's five failures mapped to their answers; **the whole lecture in one figure**; the node as one process doing one job; topics as anonymous many-to-many; a real TurtleBot3 graph; **the four mechanisms one figure at a time** (topic / service / action / parameter) before the visual comparison; **four questions that choose between them**; messages as typed contracts; the five message types of the semester; `Header`, stamps and frames; **the `roscore` that no longer exists**; **the ROS 1 commands you will hit online, and their ROS 2 equivalents**; discovery without a master; `ROS_DOMAIN_ID`; QoS — reliability, durability, history; choosing a profile; the incompatible-QoS silent failure; **`ros2 topic info --verbose` one token per slide**; the silent-topic diagnostic order |
+| `slides/EE414_W02B_first_nodes.tex` | 1.5 h · 43 slides | Environment check; **turtlesim — a robot you did not write**; `ros2 run` one token per slide; teleop; `node list` / `topic list` / `node info` / `interface show` / `topic echo` / `topic pub`; **graph-inspection cheat sheet**; workspace anatomy; `colcon build`; underlay and overlay; `ros2 pkg create` one token per slide; generated layout; `talker.py`; `main` and `spin`; entry points in `setup.py`; build and run; **workspace-loop cheat sheet**; inspecting your own node the same way; `listener.py`; `rqt_graph`; what the pair proves; launch files; `ros2 launch`; five deliberate failures; the diagnostic order |
 
 Build: `pdflatex <file>.tex` **three times**. Two passes is not enough — the section divider
 positions with `remember picture,overlay` and its page anchors come from the `.aux`, so on pass
@@ -62,35 +62,37 @@ one thing. A beginner cannot tell which of those words is ROS, which is the pack
 is the program — they are all lowercase, all underscored, all unfamiliar. Fading the other
 three is what makes the question answerable.
 
-**4. Real figures for the four mechanisms.** Topic, service and action now get a picture each
-before the comparison table, and the `roscore` terminal appears as history — the process ROS 2
-deleted — rather than as prose.
+**4. Purpose-built ROS 2 figures.** Topic, service and action now get a picture each before the
+comparison visual. Discovery, domain isolation, QoS compatibility, graph inspection and the
+workspace loop each have a dedicated infographic in the same visual language.
 
 | Figure | Source | Used on |
 |---|---|---|
-| `w02_graph.png` | *ROS Robot Programming*, Pyo/Cho/Jung/Lim (ROBOTIS, 2017) | A — "The whole lecture, in one picture" |
-| `w02_pubsub.png` | same | A — "One: a topic" |
-| `w02_service.png` | same | A — "Two: a service" |
-| `w02_action.png` | same | A — "Three: an action" |
-| `w02_roscore.png` | Instructor's own ROS 1 course (2020), ROS Noetic | A — "This process does not exist any more" |
-| `w02_ros1_cli.png` | same, `rosnode list` + `rostopic list` panes recomposed | A — "Half of what you will find online looks like this" |
+| `01-ros2-computation-graph.png` | GPT Image 2; prompt preserved | A — computation-graph overview |
+| `02-ros2-four-communication-models.png` | GPT Image 2; prompt preserved | A — four mechanisms compared |
+| `03-ros2-discovery-domain-id.png` | GPT Image 2; prompt preserved | A — discovery and domain isolation |
+| `04-ros2-qos-compatibility.png` | GPT Image 2; prompt preserved | A — compatible and incompatible QoS |
+| `05-ros2-cli-inspection-cheatsheet.png` | GPT Image 2; prompt preserved | B — graph-inspection workflow |
+| `06-ros2-workspace-build-source-cheatsheet.png` | GPT Image 2; prompt preserved | B — edit/build/source/run loop |
+| `07-ros2-topic-publish-subscribe.png` | GPT Image 2; prompt preserved | A — topic |
+| `08-ros2-service-request-reply.png` | GPT Image 2; prompt preserved | A — service |
+| `09-ros2-action-goal-feedback-result.png` | GPT Image 2; prompt preserved | A — action |
+| `10-ros1-master-vs-ros2-discovery.png` | GPT Image 2; prompt preserved | A — ROS 1 master versus ROS 2 discovery |
+| `11-ros1-to-ros2-cli-translation.png` | GPT Image 2; prompt preserved | A — ROS 1 command recognition and translation |
 
-> **Attribution is on the slide, every time, in small type.** Not a courtesy: the students are
-> being taught to attribute, and a deck that quietly reuses a book's artwork teaches the
-> opposite of what the Week 1 AI-tool policy asks of them.
+The six earlier `w02_*.png` files remain in `slides/figures/` as an archive, but neither Week 2
+deck references them.
 
 **The course is ROS 2 only, but it says so out loud.** Two slides in A are deliberately ROS 1:
-`roscore` as the process that was deleted, and a `rosnode list` / `rostopic list` capture beside
-a seven-row translation table. Neither teaches a ROS 1 command as something to use. They exist
+`roscore` as the process that was deleted, and a seven-row ROS 1-to-ROS 2 command translation.
+Neither teaches a ROS 1 command as something to use. They exist
 because students will search for help and the top result will be ROS 1 with no year on it —
 better they meet the old commands here, labelled, than at midnight in an answer from 2016. The
 one-second test on that slide (*starts with `ros` and no space after it → ROS 1*) is the part
 worth making them repeat back.
 
-> ⚠️ **The four book figures say ROS, not ROS 2, and one shows a ROS Master.** That is correct
-> for what they illustrate — the *shapes* of the four mechanisms, which did not change — but say
-> so when the parameter-server box appears in `w02_graph.png`. In ROS 2 parameters live in the
-> node, not in a central server. It is a thirty-second correction and students will spot it.
+The generated figures use ROS 2 terminology directly and do not show a central parameter server.
+The ROS 1 master appears only inside the explicitly historical comparison visual.
 
 ## Teaching notes
 

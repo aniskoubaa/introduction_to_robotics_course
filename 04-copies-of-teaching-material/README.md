@@ -6,18 +6,19 @@ Per-week folders `week01` … `week15`, plus `shared/`. Each week folder carries
 `README.md` with the lecture topic, the practice-hour goal, the CLO served, an artifact
 status table, teaching notes and consistency checks.
 
-Two decks per week, **30 slides maximum each**. A deck that runs past 30 slides is two
-lectures pretending to be one.
+Two decks per week, **30-35 slides each** (standing rule 6b). Over 35 and the session does
+not fit the hour; under 30 and the week is thinner than the syllabus claims. Slide counts
+below are the built page counts, not estimates.
 
 | Week | Topic | Lecture A | Lecture B | Exercises |
 |---|---|---|---|---|
-| 01 | Introduction to Robotics and the ROS 2 Ecosystem | ✅ Course Overview (30 sl.) | ✅ What Is a Robot? (30 sl.) | ❌ |
-| 02 | ROS 2 Architecture and the Computation Graph | ✅ Computation Graph (24 sl.) | ✅ Your First Nodes (26 sl.) | ❌ |
-| 03 | Communication Models in ROS 2 | ✅ Communication Models (25 sl.) | ✅ Your Own Interfaces (25 sl.) | ❌ |
+| 01 | Introduction to Robotics and the ROS 2 Ecosystem | ✅ Course Overview (35 sl.) | ✅ What Is a Robot? (35 sl.) | ❌ |
+| 02 | ROS 2 Architecture and the Computation Graph | ⚠️ Computation Graph (37 sl.) | ⚠️ Your First Nodes (43 sl.) | ❌ |
+| 03 | Communication Models in ROS 2 | ✅ Communication Models (35 sl.) | ✅ Your Own Packages and Interfaces (33 sl.) | ❌ |
 | 04 | Differential-Drive Kinematics | ❌ | ❌ | ❌ |
 | 05 | Feedback Control for Robot Motion | ❌ | ❌ | ❌ |
 | 06 | Sensors, Actuators and LiDAR Perception | ❌ | ❌ | ❌ |
-| 07 | Rigid-Body Transformations and TF2 | ✅ Transformations (21 sl.) | ✅ TF2 in Practice (21 sl.) | ❌ |
+| 07 | Rigid-Body Transformations and TF2 | ⚠️ Transformations (21 sl.) | ⚠️ TF2 in Practice (21 sl.) | ❌ |
 | 08 | Robot Modelling: URDF and Simulation | ❌ | ❌ | ❌ |
 | 09 | Probabilistic State Estimation | ❌ | ❌ | ❌ |
 | 10 | Localization and Mapping | ❌ | ❌ | ❌ |
@@ -80,6 +81,37 @@ own screen. A screenshot is the artifact of having run it — rule 2, discharged
 may be generated (`shared/gen_figure.py`) and each keeps its prompt beside it; **but nothing
 generated may make a factual claim about a real person, place or piece of work.**
 
+Screenshots are produced by `shared/screenshots/`, one capture script per week, so the whole
+set is **regenerable** when the distribution moves — ROS 2 output is the fastest-rotting
+material in this course. Slide macros: `\shotslide`, `\shotslideplain`, `\shotpair`,
+`\shotframe`. Read `shared/screenshots/README.md` before adding one; the rules about fitting
+the prompt line into the capture are there and they are not obvious.
+
+**6a. Every topic gets a separator, and every paradigm gets a definition.** `\AtBeginSection`
+in the shared preamble emits one slide per section: a navy banner naming the topic — the
+visual break, readable from the back — above the contents list with the current section
+highlighted, which is what a student who looked up mid-lecture reads to find their place. It
+does both jobs because an earlier full-bleed divider did only the first one. Formal
+definitions of recurring concepts use `\paradigmdef{name}{definition}{pattern}{synchrony}
+{definition file}{inspect with}{keyline}`: prose in the block, facts in a fixed four-row
+table. The rows never change order, so comparing two paradigms means reading the same four
+rows twice rather than two essays.
+
+**6b. A lecture deck is 30–35 slides, and presents every concept it owns.** Both halves of
+that matter. Over 35 and the session does not fit the hour; under 30 and the week is thinner
+than the syllabus claims. The budget is met by *merging*, never by dropping a concept — paired
+captures go two-up, a table that only interprets a capture moves into its caption, and a run of
+one-idea slides becomes one table whose rows can be compared. Section dividers count toward the
+budget: seven sections spend seven slides, which is why a deck with many sections has to be
+denser inside them.
+
+| Deck | Slides | |
+|---|---|---|
+| W01A / W01B | 35 / 35 | ✅ |
+| W02A / W02B | 37 / 43 | ❌ over — not yet compressed |
+| W03A / W03B | 35 / 33 | ✅ |
+| W07A / W07B | 21 / 21 | ❌ under — both are drafts, not yet complete |
+
 **7. The ROS 2 distribution is named in exactly one place** — `../setup/README.md` — and
 reached everywhere else through `\rosver`.
 
@@ -112,6 +144,13 @@ every B session ends with something that **runs** — never a half-typed file.
 student has felt the problem X solves. You cannot want quaternions until Euler angles have hurt
 you.
 
+> ✅ **Week 3 was rebuilt against rules 6 and 11 on 5 September 2026** — 30 screenshots from a
+> live \rosver{} system, W03A restructured around `turtlesim` as the single node that carries
+> all four communication mechanisms, and the week's two starter packages authored and built.
+> Executing the deck rather than typesetting it found **three factual errors** in it, listed in
+> `week03/README.md`. Slide counts went 25 → 48 (A) and 25 → 31 (B), which moves both toward
+> rule 4's 40–60 rather than away from it.
+
 > ✅ **Week 2 was rebuilt against these rules on 22 August 2026** — workspaces moved from A to
 > B, B restructured demo-first on turtlesim, `\cmdanatomy` introduced, and the four
 > communication mechanisms given a figure each. It is the worked example of rules 5, 7b and 11.
@@ -132,6 +171,6 @@ Superseded by `../../docs/2026-08-22-2230-deck-redesign-plan.md`. In short:
 | Horizon | Work |
 |---|---|
 | **Tonight** | `setup/` guide + `check_ros2_setup.py`; `ROS_DOMAIN_ID` assignment; three video slots + an out-of-scope slide + an instructor slide inserted into W01A |
-| **This week** | `\note{}` + notes-PDF target; the five macros (`\bigq`, `\codestep`, `\triptych`, `\pathmap`, `\procedure`); **rewrite W01B as the format pilot**; screenshot pipeline |
+| **This week** | `\note{}` + notes-PDF target; the five macros (`\bigq`, `\codestep`, `\triptych`, `\pathmap`, `\procedure`); **rewrite W01B as the format pilot**. ~~screenshot pipeline~~ ✅ done, `shared/screenshots/` |
 | **Rolling** | Two weeks ahead, natively in the new format, ~18 h per week of material |
-| **Deferred** | Retrofit W02, W03, W01 — **except W07A, which is resequenced before Week 7 delivers** |
+| **Deferred** | Retrofit W02, W01 — **except W07A, which is resequenced before Week 7 delivers**. W03 done |
