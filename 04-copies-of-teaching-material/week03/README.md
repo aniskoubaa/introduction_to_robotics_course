@@ -20,6 +20,7 @@
 | Lab sheet | `ros2_lab/README.md` | ✅ |
 | Starter packages | `../../code/src/ee414_w03_interfaces/`, `ee414_w03_nodes/` | ✅ both build clean |
 | Expected-output transcript | `ros2_lab/expected_output.txt` | ✅ generated from a real run |
+| Live-demo runbook | `ros2_lab/EE414_W03_demo_cue_sheet.html` | ✅ both decks, self-contained |
 | Assignment 1 collection + rubric | `../../07-exams-answer-keys-or-assessment-rubrics/` | ❌ |
 
 ### Three errors the screenshots found
@@ -224,6 +225,16 @@ every term defined at first use.
   it is a separate package on some installations.
 - Warn students at the end of B to **launch Gazebo once before Week 4**. Week 4B is the first
   simulation session and finding out then that Gazebo does not start costs the whole hour.
+
+### Two more the cue sheet found
+
+Writing the runbook meant running every Deck A command again, one at a time, and pasting what
+came back. Two claims did not survive that.
+
+| Was | Is |
+|---|---|
+| `ros2 service list -t \| grep -v parameter` lists **seven** services | It lists **eight**. `/turtlesim/get_type_description` is not a parameter service, so the `grep` does not remove it. The count appeared only in the cue sheet, never on a slide, so no deck changed. |
+| `ros2 topic info` reports `Publisher count: 1` whether or not anything is being sent | With nothing publishing it reports **0**; while `topic pub` runs it reports **1**. The teaching point survives — the number counts *connections*, not traffic, so a connected-but-silent publisher still counts — but it has to be shown with both states, which is what the runbook now does. |
 
 ## To be produced for this week
 
