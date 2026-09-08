@@ -1,0 +1,777 @@
+[
+ {
+  "deck": "",
+  "pg": "",
+  "h2": "Start turtlesim",
+  "title": "Start turtlesim",
+  "kind": "",
+  "steps": [
+   {
+    "cmd": "ros2 run turtlesim turtlesim_node",
+    "does": "T1 Starts the turtle program. A blue window opens with one turtle in the middle. Leave this running.",
+    "where": "T1"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "",
+  "pg": "",
+  "h2": "Go back to the starting state",
+  "title": "Go back to the starting state",
+  "kind": "",
+  "steps": [
+   {
+    "cmd": "ros2 service call /reset std_srvs/srv/Empty '{}'",
+    "does": "Clears the drawing and moves the turtle back to the middle.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 service call /kill turtlesim/srv/Kill \"{name: 'scout'}\"",
+    "does": "Removes the second turtle called scout . Only needed if you already ran the spawn demo on slide 20.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param set /turtlesim background_r 69",
+    "does": "Sets the red part of the background back to 69.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param set /turtlesim background_g 86",
+    "does": "Sets the green part back to 86.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param set /turtlesim background_b 255",
+    "does": "Sets the blue part back to 255. Together, 69 / 86 / 255 is turtlesim's normal blue.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "6",
+  "h2": "Three things that break the demo",
+  "title": "Interaction Models",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 2.0}, angular: {z: 1.8}}'",
+    "does": "T2 Sends a speed command 10 times per second. linear.x is forward speed. angular.z is turning speed. Forward and turning at the same time draws a circle.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "7",
+  "h2": "Three things that break the demo",
+  "title": "Interaction Models",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 node info /turtlesim",
+    "does": "T2 Asks one node to describe itself. It answers with everything it listens to, everything it sends, and everything it offers to others.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 topic list",
+    "does": "Lists the channels that exist right now.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 service list -t | grep -v parameter",
+    "does": "Lists the services and their types. -t adds the type in square brackets. grep -v parameter hides the parameter services so the list stays short.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 action list -t",
+    "does": "Lists the long jobs this node can be asked to do.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param list /turtlesim",
+    "does": "Lists the settings inside the node.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "9",
+  "h2": "Three things that break the demo",
+  "title": "Interface Definitions",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 interface show geometry_msgs/msg/Twist",
+    "does": "T2 Prints the fields of the Twist message. Twist is the message every ROS 2 robot uses for speed commands.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 interface proto geometry_msgs/msg/Twist",
+    "does": "Prints the same message as an empty example, ready to fill in. Copy it into the ros2 topic pub command from slide 6 and change one number.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "10",
+  "h2": "Three things that break the demo",
+  "title": "Interface Definitions",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 interface show sensor_msgs/msg/LaserScan",
+    "does": "T2 Prints the message a laser scanner sends. This is the message you will use in Week 6 and Week 11.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "11",
+  "h2": "Three things that break the demo",
+  "title": "Interface Definitions",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 interface show std_msgs/msg/Header",
+    "does": "T2 Prints the small message that sits at the top of almost every sensor message.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 topic echo /scan --once --field header",
+    "does": "T2 Prints the header of one real laser message. --once means one message then stop. --field header means print only that part. Gazebo must be running (T3) for this line.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "12",
+  "h2": "Three things that break the demo",
+  "title": "Interface Definitions",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 interface show turtlesim/srv/Spawn",
+    "does": "T2 Prints a service definition. srv in the name means service.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 interface show turtlesim/action/RotateAbsolute",
+    "does": "Prints an action definition. action in the name means action.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "15",
+  "h2": "Three things that break the demo",
+  "title": "Topics",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 topic echo /turtle1/pose",
+    "does": "T2 Prints every message the turtle sends about its own position. It never stops. Leave it running while you talk, then press Ctrl-C .",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "16",
+  "h2": "Three things that break the demo",
+  "title": "Topics",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 topic echo /turtle1/pose --once",
+    "does": "T2 Prints one message and exits. Use this instead of Ctrl-C when you only need to see the structure.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 topic info /turtle1/cmd_vel",
+    "does": "Prints the message type of a channel, and how many nodes are connected to each end.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 2.0}, angular: {z: 1.8}}'",
+    "does": "Starts sending again, in a second terminal, so you can compare the counts. Leave it running for the next line.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 topic info /turtle1/cmd_vel",
+    "does": "The same question again, while data is flowing. Then press Ctrl-C on the publisher and run it a third time \u2014 the count goes back to 0.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "18",
+  "h2": "Three things that break the demo",
+  "title": "Services",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 service list -t | grep -v parameter",
+    "does": "T2 Lists the services turtlesim offers, with their types.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 service type /spawn",
+    "does": "Asks for the type of one service on its own. You need this type to call the service on slide 20.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 service list -t",
+    "does": "The same list without the filter. Six more services appear, all with parameter in the name. Point at them and say: those are Part 6.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "20",
+  "h2": "Three things that break the demo",
+  "title": "Services",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 service list -t | grep -v parameter",
+    "does": "T2 Finds the name /spawn and its type turtlesim/srv/Spawn .",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 service call /spawn turtlesim/srv/Spawn '{x: 2.0, y: 8.0, theta: 0.0, name: \"scout\"}'",
+    "does": "Asks turtlesim to add a second turtle. The three parts are: the name of the service, its type, and the request in curly brackets. x and y are the position, theta the heading.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "21",
+  "h2": "Three things that break the demo",
+  "title": "Services",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 service call /kill turtlesim/srv/Kill \"{name: 'scout'}\"",
+    "does": "T2 Removes the second turtle again.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "23",
+  "h2": "Three things that break the demo",
+  "title": "Actions",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 action list -t",
+    "does": "T2 Lists the actions and their types. turtlesim has exactly one.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 action info /turtle1/rotate_absolute",
+    "does": "Shows which nodes offer this action and which nodes are using it.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "24",
+  "h2": "Three things that break the demo",
+  "title": "Actions",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 interface show turtlesim/action/RotateAbsolute",
+    "does": "T2 Prints the three parts of the action.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "25",
+  "h2": "Three things that break the demo",
+  "title": "Actions",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute '{theta: 0.12}' --feedback",
+    "does": "T2 Asks the turtle to turn to heading 0.12 radians. --feedback means \"show me the progress while it runs\". Without that word you only see the final result.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute '{theta: 0.0}'",
+    "does": "The same job with no --feedback . You get the goal, then silence, then the result. The difference between these two runs is the whole reason actions exist.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "27",
+  "h2": "Three things that break the demo",
+  "title": "Parameters",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 param list /turtlesim",
+    "does": "T2 Lists every setting inside the running node.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "28",
+  "h2": "Three things that break the demo",
+  "title": "Parameters",
+  "kind": "talk",
+  "steps": [
+   {
+    "cmd": "ros2 param describe /turtlesim background_r",
+    "does": "T2 Shows what the node said when it declared this parameter \u2014 its type, its description, and its allowed range. Optional, but it makes the code slide concrete.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "29",
+  "h2": "Three things that break the demo",
+  "title": "Parameters",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 param get /turtlesim background_r",
+    "does": "T2 Reads one setting out of the running node.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 param set /turtlesim background_r 200",
+    "does": "Changes the red channel to 200. Watch the T1 window as you press Enter.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param set /turtlesim background_g 60",
+    "does": "Lowers the green channel to 60.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param set /turtlesim background_b 60",
+    "does": "Lowers the blue channel to 60. The window is now red.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "32",
+  "h2": "Three things that break the demo",
+  "title": "Application to a Mobile Robot",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "export TURTLEBOT3_MODEL=burger",
+    "does": "T3 Tells the TurtleBot 3 packages which robot model to load. burger is the small one with a laser scanner.",
+    "where": "T3"
+   },
+   {
+    "cmd": "ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py",
+    "does": "Starts the simulator with a robot in a small world. A launch file starts many nodes at once. Wait 20 to 30 seconds.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 topic list",
+    "does": "T2 The same command as slide 7, on a different robot. The list is longer, but the command did not change.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 topic echo /scan --once --field range_max",
+    "does": "Prints how far this laser can see, in metres.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 topic echo /odom --once --field pose.pose.position",
+    "does": "Prints where the robot thinks it is. The dots mean \"go inside this field, then inside that one\".",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck A \u2014 Communication Models",
+  "pg": "33",
+  "h2": "Three things that break the demo",
+  "title": "Application to a Mobile Robot",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 topic hz /scan",
+    "does": "T2 Measures how many messages arrive per second. This is the command that answers \"is data really arriving?\". Press Ctrl-C after about 8 seconds.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 topic info /scan --verbose",
+    "does": "Prints the delivery rules of the channel \u2014 the QoS , or quality of service. These are the promises the connection makes.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "4",
+  "h2": "Three things that break the demo",
+  "title": "Custom Interface Packages",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 pkg list | wc -l",
+    "does": "T2 Counts the packages installed on this computer. wc -l counts lines.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 pkg prefix turtlesim",
+    "does": "Prints the folder where one package was installed.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "5",
+  "h2": "Three things that break the demo",
+  "title": "Custom Interface Packages",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "cd ~/ee414_ws/src",
+    "does": "T2 Moves into the src folder of the workspace you made in Week 2. New packages always go here.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 pkg create ee414_w03_interfaces --build-type ament_cmake",
+    "does": "Creates the package that will hold your message and service definitions. It uses ament_cmake because turning a .msg file into a class you can import is a CMake job.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 pkg create ee414_w03_nodes --build-type ament_python --dependencies rclpy std_msgs",
+    "does": "Creates the package that will hold your Python nodes, the same way as last week. --dependencies writes the two names into package.xml for you.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "7",
+  "h2": "Three things that break the demo",
+  "title": "Custom Interface Packages",
+  "kind": "fail",
+  "steps": [
+   {
+    "cmd": "ros2 pkg create --build-type ament_python --dependencies rclpy std_msgs ee414_w03_nodes",
+    "does": "T2 Nothing. It fails. The only change from slide 5 is that the package name is now at the end .",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "8",
+  "h2": "Three things that break the demo",
+  "title": "Custom Interface Packages",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "cd ~/ee414_ws/src/ee414_w03_interfaces",
+    "does": "T2 Moves into the interfaces package you just created.",
+    "where": "T2"
+   },
+   {
+    "cmd": "mkdir msg srv",
+    "does": "Creates the two folders. The names must be exactly msg and srv \u2014 the generator looks for those names.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "10",
+  "h2": "Three things that break the demo",
+  "title": "Custom Interface Packages",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "cd ~/ee414_ws",
+    "does": "T2 Moves to the top of the workspace. Always build from here , never from inside a package.",
+    "where": "T2"
+   },
+   {
+    "cmd": "colcon build --symlink-install",
+    "does": "Builds every package in the workspace. --symlink-install links your Python files instead of copying them, so small edits do not need a rebuild.",
+    "where": ""
+   },
+   {
+    "cmd": "source install/setup.bash",
+    "does": "Tells this terminal where the new packages are. Without this line, the next command cannot find your message. Every new terminal needs it again.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "11",
+  "h2": "Three things that break the demo",
+  "title": "Custom Interface Packages",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 interface show ee414_w03_interfaces/msg/WheelState",
+    "does": "T2 Asks ROS 2 to print your message. The same command as slide 12 of Deck A, now pointed at something you wrote.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 interface show ee414_w03_interfaces/srv/ResetOdom",
+    "does": "Prints your service. One separator, as expected.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "14",
+  "h2": "Three things that break the demo",
+  "title": "Publishing on a Topic",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 run ee414_w03_nodes wheel_publisher",
+    "does": "T4 Starts the node that sends WheelState messages. Leave it running for the rest of the session.",
+    "where": "T4"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "15",
+  "h2": "Three things that break the demo",
+  "title": "Publishing on a Topic",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 topic echo /wheel_state --once",
+    "does": "T2 Reads one message off the channel and prints it.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "17",
+  "h2": "Three things that break the demo",
+  "title": "Service Server and Client",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 run ee414_w03_nodes odom_node",
+    "does": "T4 Starts the node that offers the /reset_odom service. Open a second tab for this \u2014 the wheel publisher must keep running.",
+    "where": "T4"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "18",
+  "h2": "Three things that break the demo",
+  "title": "Service Server and Client",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 service list | grep reset",
+    "does": "T2 Finds your service in the list. grep reset keeps only the lines containing that word.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 service call /reset_odom ee414_w03_interfaces/srv/ResetOdom \"{zero_heading: true}\"",
+    "does": "Calls your service and waits for the reply. Same three parts as Deck A slide 20: name, type, request.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "20",
+  "h2": "Three things that break the demo",
+  "title": "Executor Deadlock",
+  "kind": "fail",
+  "steps": [
+   {
+    "cmd": "ros2 run ee414_w03_nodes reset_client --ros-args -p mode:=spin",
+    "does": "T2 Runs the client in the first wrong way. --ros-args -p name:=value is how you set a parameter when starting a node. This is meant to fail.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "21",
+  "h2": "Three things that break the demo",
+  "title": "Executor Deadlock",
+  "kind": "fail",
+  "steps": [
+   {
+    "cmd": "ros2 run ee414_w03_nodes reset_client --ros-args -p mode:=hang",
+    "does": "T2 Runs the client in the second wrong way. It prints two lines and then freezes forever. Press Ctrl-C when you are ready.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "24",
+  "h2": "Three things that break the demo",
+  "title": "Executor Deadlock",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 run ee414_w03_nodes reset_client --ros-args -p mode:=fix",
+    "does": "T2 Runs the same program the correct way. Press Ctrl-C when the class has seen it.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "26",
+  "h2": "Three things that break the demo",
+  "title": "Parameters",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 run ee414_w03_nodes driver",
+    "does": "T4 Starts a node that prints its two settings every 2 seconds. Leave it running and keep it visible.",
+    "where": "T4"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "27",
+  "h2": "Three things that break the demo",
+  "title": "Parameters",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 param list /driver",
+    "does": "T2 Lists the settings of your own node, the same way as turtlesim's.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 param get /driver max_speed",
+    "does": "Reads the current speed limit.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param set /driver max_speed 0.05",
+    "does": "Lowers the limit while the node runs. Watch T4.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param get /driver max_speed",
+    "does": "Reads it back, to prove the change was kept.",
+    "where": ""
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "28",
+  "h2": "Three things that break the demo",
+  "title": "Parameters",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 run ee414_w03_nodes driver",
+    "does": "Starts it again. The value you set is gone.",
+    "where": ""
+   },
+   {
+    "cmd": "ros2 param dump /driver",
+    "does": "T2 Prints all current values as YAML. A fast way to save what you tuned before you type it into the launch file.",
+    "where": "T2"
+   }
+  ],
+  "out": []
+ },
+ {
+  "deck": "Deck B \u2014 Your Own Packages and Interfaces",
+  "pg": "30",
+  "h2": "Three things that break the demo",
+  "title": "Action Clients",
+  "kind": "live",
+  "steps": [
+   {
+    "cmd": "ros2 run action_tutorials_py fibonacci_action_server",
+    "does": "T4 Starts a ready-made action server that computes Fibonacci numbers slowly, on purpose. Open a third tab . It comes with ROS 2; you do not have to write it.",
+    "where": "T4"
+   },
+   {
+    "cmd": "ros2 action send_goal /fibonacci action_tutorials_interfaces/action/Fibonacci \"{order: 3}\" --feedback",
+    "does": "T2 Asks for the first 3 numbers and shows the progress. Watch the sequence grow by one number per update.",
+    "where": "T2"
+   },
+   {
+    "cmd": "ros2 action send_goal /fibonacci action_tutorials_interfaces/action/Fibonacci \"{order: 3}\"",
+    "does": "The same goal with no --feedback . You wait in silence, then get the answer. The difference between these two runs is the entire reason actions exist.",
+    "where": ""
+   }
+  ],
+  "out": []
+ }
+]

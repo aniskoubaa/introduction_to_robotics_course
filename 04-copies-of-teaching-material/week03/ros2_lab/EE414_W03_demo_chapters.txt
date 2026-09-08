@@ -1,0 +1,18 @@
+0:00  Week 3 — Live Demo
+0:17  Start turtlesim
+0:54  Interaction Models
+2:01  Interface Definitions
+3:12  Topics
+5:05  Services
+6:24  Actions
+7:18  Parameters
+8:20  Back to the starting state
+9:13  The same commands on a real robot
+11:13  Where packages live
+11:42  Creating the two packages
+12:40  Writing the interfaces
+15:31  Publishing on a topic
+16:05  Service server and client
+16:57  The deadlock
+18:14  Parameters on your own node
+19:52  Action clients

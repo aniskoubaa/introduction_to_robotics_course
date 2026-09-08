@@ -1,0 +1,730 @@
+[
+ {
+  "id": "open",
+  "kind": "card",
+  "text": "E E four one four, Introduction to Robotics. Week three, live demo. Every command you will see comes from the week three cue sheet, and every one of them is run for real on ROS 2 Jazzy."
+ },
+ {
+  "id": "card:a0",
+  "kind": "card",
+  "chapter": "a0",
+  "text": "Start turtlesim. One node that offers a topic, a service, an action and parameters."
+ },
+ {
+  "id": "a0:0",
+  "kind": "step",
+  "text": "Starts the turtle program. A blue window opens with one turtle in the middle. Leave this running.",
+  "source": "Starts the turtle program. A blue window opens with one turtle in the middle. Leave this running.",
+  "chapter": "a0"
+ },
+ {
+  "id": "card:a1",
+  "kind": "card",
+  "chapter": "a1",
+  "text": "Interaction Models. Four ways to talk to a node, and the one command that lists all of them."
+ },
+ {
+  "id": "a1:0",
+  "kind": "step",
+  "text": "Sends a speed command 10 times per second. linear.x is forward speed. angular.z is turning speed. Forward and turning at the same time draws a circle.",
+  "source": "Sends a speed command 10 times per second. linear.x is forward speed. angular.z is turning speed. Forward and turning at the same time draws a circle.",
+  "chapter": "a1"
+ },
+ {
+  "id": "a1:1",
+  "kind": "step",
+  "text": "Asks one node to describe itself. It answers with everything it listens to, everything it sends, and everything it offers to others.",
+  "source": "Asks one node to describe itself. It answers with everything it listens to, everything it sends, and everything it offers to others.",
+  "chapter": "a1"
+ },
+ {
+  "id": "a1:2",
+  "kind": "step",
+  "text": "Lists the channels that exist right now.",
+  "source": "Lists the channels that exist right now.",
+  "chapter": "a1"
+ },
+ {
+  "id": "a1:3",
+  "kind": "step",
+  "text": "Lists the services and their types. dash t adds the type in square brackets. grep -v parameter hides the parameter services so the list stays short.",
+  "source": "Lists the services and their types. -t adds the type in square brackets. grep -v parameter hides the parameter services so the list stays short.",
+  "chapter": "a1"
+ },
+ {
+  "id": "a1:4",
+  "kind": "step",
+  "text": "Lists the long jobs this node can be asked to do.",
+  "source": "Lists the long jobs this node can be asked to do.",
+  "chapter": "a1"
+ },
+ {
+  "id": "a1:5",
+  "kind": "step",
+  "text": "Lists the settings inside the node.",
+  "source": "Lists the settings inside the node.",
+  "chapter": "a1"
+ },
+ {
+  "id": "card:a2",
+  "kind": "card",
+  "chapter": "a2",
+  "text": "Interface Definitions. Every message, service and action is a file you can print."
+ },
+ {
+  "id": "a2:0",
+  "kind": "step",
+  "text": "Prints the fields of the Twist message. Twist is the message every ROS two robot uses for speed commands.",
+  "source": "Prints the fields of the Twist message. Twist is the message every ROS 2 robot uses for speed commands.",
+  "chapter": "a2"
+ },
+ {
+  "id": "a2:1",
+  "kind": "step",
+  "text": "Prints the same message as an empty example, ready to fill in. Copy it into the ros2 topic pub command from slide 6 and change one number.",
+  "source": "Prints the same message as an empty example, ready to fill in. Copy it into the ros2 topic pub command from slide 6 and change one number.",
+  "chapter": "a2"
+ },
+ {
+  "id": "a2:2",
+  "kind": "step",
+  "text": "Prints the message a laser scanner sends. This is the message you will use in Week 6 and Week 11.",
+  "source": "Prints the message a laser scanner sends. This is the message you will use in Week 6 and Week 11.",
+  "chapter": "a2"
+ },
+ {
+  "id": "a2:3",
+  "kind": "step",
+  "text": "Prints the small message that sits at the top of almost every sensor message.",
+  "source": "Prints the small message that sits at the top of almost every sensor message.",
+  "chapter": "a2"
+ },
+ {
+  "id": "a2:4",
+  "kind": "step",
+  "text": "Prints a service definition. srv in the name means service.",
+  "source": "Prints a service definition. srv in the name means service.",
+  "chapter": "a2"
+ },
+ {
+  "id": "a2:5",
+  "kind": "step",
+  "text": "Prints an action definition. action in the name means action.",
+  "source": "Prints an action definition. action in the name means action.",
+  "chapter": "a2"
+ },
+ {
+  "id": "card:a3",
+  "kind": "card",
+  "chapter": "a3",
+  "text": "Topics. A stream with no memory: when the sending stops, the movement stops."
+ },
+ {
+  "id": "a3:0",
+  "kind": "step",
+  "text": "Prints every message the turtle sends about its own position. It never stops. Leave it running while you talk, then press Ctrl-C .",
+  "source": "Prints every message the turtle sends about its own position. It never stops. Leave it running while you talk, then press Ctrl-C .",
+  "chapter": "a3"
+ },
+ {
+  "id": "a3:1",
+  "kind": "step",
+  "text": "Prints one message and exits. Use this instead of Ctrl-C when you only need to see the structure.",
+  "source": "Prints one message and exits. Use this instead of Ctrl-C when you only need to see the structure.",
+  "chapter": "a3"
+ },
+ {
+  "id": "a3:2",
+  "kind": "step",
+  "text": "Prints the message type of a channel, and how many nodes are connected to each end.",
+  "source": "Prints the message type of a channel, and how many nodes are connected to each end.",
+  "chapter": "a3"
+ },
+ {
+  "id": "a3:3",
+  "kind": "step",
+  "text": "Starts sending again, in a second terminal, so you can compare the counts. Leave it running for the next line.",
+  "source": "Starts sending again, in a second terminal, so you can compare the counts. Leave it running for the next line.",
+  "chapter": "a3"
+ },
+ {
+  "id": "a3:4",
+  "kind": "step",
+  "text": "The same question again, while data is flowing. Then press Ctrl-C on the publisher and run it a third time \u2014 the count goes back to 0.",
+  "source": "The same question again, while data is flowing. Then press Ctrl-C on the publisher and run it a third time \u2014 the count goes back to 0.",
+  "chapter": "a3"
+ },
+ {
+  "id": "card:a4",
+  "kind": "card",
+  "chapter": "a4",
+  "text": "Services. A question asked once and answered once \u2014 and the answer is visible."
+ },
+ {
+  "id": "a4:0",
+  "kind": "step",
+  "text": "Lists the services turtlesim offers, with their types.",
+  "source": "Lists the services turtlesim offers, with their types.",
+  "chapter": "a4"
+ },
+ {
+  "id": "a4:1",
+  "kind": "step",
+  "text": "Asks for the type of one service on its own. You need this type to call the service on slide 20.",
+  "source": "Asks for the type of one service on its own. You need this type to call the service on slide 20.",
+  "chapter": "a4"
+ },
+ {
+  "id": "a4:2",
+  "kind": "step",
+  "text": "The same list without the filter. Six more services appear, all with parameter in the name. Point at them and say: those are Part 6.",
+  "source": "The same list without the filter. Six more services appear, all with parameter in the name. Point at them and say: those are Part 6.",
+  "chapter": "a4"
+ },
+ {
+  "id": "a4:3",
+  "kind": "step",
+  "text": "Finds the name /spawn and its type turtlesim/srv/Spawn .",
+  "source": "Finds the name /spawn and its type turtlesim/srv/Spawn .",
+  "chapter": "a4"
+ },
+ {
+  "id": "a4:4",
+  "kind": "step",
+  "text": "Asks turtlesim to add a second turtle. The three parts are: the name of the service, its type, and the request in curly brackets. x and y are the position, theta the heading.",
+  "source": "Asks turtlesim to add a second turtle. The three parts are: the name of the service, its type, and the request in curly brackets. x and y are the position, theta the heading.",
+  "chapter": "a4"
+ },
+ {
+  "id": "a4:5",
+  "kind": "step",
+  "text": "Removes the second turtle again.",
+  "source": "Removes the second turtle again.",
+  "chapter": "a4"
+ },
+ {
+  "id": "card:a5",
+  "kind": "card",
+  "chapter": "a5",
+  "text": "Actions. A long job that reports progress while it runs."
+ },
+ {
+  "id": "a5:0",
+  "kind": "step",
+  "text": "Lists the actions and their types. turtlesim has exactly one.",
+  "source": "Lists the actions and their types. turtlesim has exactly one.",
+  "chapter": "a5"
+ },
+ {
+  "id": "a5:1",
+  "kind": "step",
+  "text": "Shows which nodes offer this action and which nodes are using it.",
+  "source": "Shows which nodes offer this action and which nodes are using it.",
+  "chapter": "a5"
+ },
+ {
+  "id": "a5:2",
+  "kind": "step",
+  "text": "Prints the three parts of the action.",
+  "source": "Prints the three parts of the action.",
+  "chapter": "a5"
+ },
+ {
+  "id": "a5:3",
+  "kind": "step",
+  "text": "Asks the turtle to turn to heading 0.12 radians. dash dash feedback means \"show me the progress while it runs\". Without that word you only see the final result.",
+  "source": "Asks the turtle to turn to heading 0.12 radians. --feedback means \"show me the progress while it runs\". Without that word you only see the final result.",
+  "chapter": "a5"
+ },
+ {
+  "id": "a5:4",
+  "kind": "step",
+  "text": "The same job with no dash dash feedback . You get the goal, then silence, then the result. The difference between these two runs is the whole reason actions exist.",
+  "source": "The same job with no --feedback . You get the goal, then silence, then the result. The difference between these two runs is the whole reason actions exist.",
+  "chapter": "a5"
+ },
+ {
+  "id": "card:a6",
+  "kind": "card",
+  "chapter": "a6",
+  "text": "Parameters. Settings you can read and change while the node keeps running."
+ },
+ {
+  "id": "a6:0",
+  "kind": "step",
+  "text": "Lists every setting inside the running node.",
+  "source": "Lists every setting inside the running node.",
+  "chapter": "a6"
+ },
+ {
+  "id": "a6:1",
+  "kind": "step",
+  "text": "Shows what the node said when it declared this parameter \u2014 its type, its description, and its allowed range. Optional, but it makes the code slide concrete.",
+  "source": "Shows what the node said when it declared this parameter \u2014 its type, its description, and its allowed range. Optional, but it makes the code slide concrete.",
+  "chapter": "a6"
+ },
+ {
+  "id": "a6:2",
+  "kind": "step",
+  "text": "Reads one setting out of the running node.",
+  "source": "Reads one setting out of the running node.",
+  "chapter": "a6"
+ },
+ {
+  "id": "a6:3",
+  "kind": "step",
+  "text": "Changes the red channel to 200. Watch the terminal 1 window as you press Enter.",
+  "source": "Changes the red channel to 200. Watch the T1 window as you press Enter.",
+  "chapter": "a6"
+ },
+ {
+  "id": "a6:4",
+  "kind": "step",
+  "text": "Lowers the green channel to 60.",
+  "source": "Lowers the green channel to 60.",
+  "chapter": "a6"
+ },
+ {
+  "id": "a6:5",
+  "kind": "step",
+  "text": "Lowers the blue channel to 60. The window is now red.",
+  "source": "Lowers the blue channel to 60. The window is now red.",
+  "chapter": "a6"
+ },
+ {
+  "id": "card:a7",
+  "kind": "card",
+  "chapter": "a7",
+  "text": "Back to the starting state. Four lines that undo everything the demo changed."
+ },
+ {
+  "id": "a7:0",
+  "kind": "step",
+  "text": "Clears the drawing and moves the turtle back to the middle.",
+  "source": "Clears the drawing and moves the turtle back to the middle.",
+  "chapter": "a7"
+ },
+ {
+  "id": "a7:1",
+  "kind": "step",
+  "text": "Removes the second turtle called scout . Only needed if you already ran the spawn demo on slide 20.",
+  "source": "Removes the second turtle called scout . Only needed if you already ran the spawn demo on slide 20.",
+  "chapter": "a7"
+ },
+ {
+  "id": "a7:2",
+  "kind": "step",
+  "text": "Sets the red part of the background back to 69.",
+  "source": "Sets the red part of the background back to 69.",
+  "chapter": "a7"
+ },
+ {
+  "id": "a7:3",
+  "kind": "step",
+  "text": "Sets the green part back to 86.",
+  "source": "Sets the green part back to 86.",
+  "chapter": "a7"
+ },
+ {
+  "id": "a7:4",
+  "kind": "step",
+  "text": "Sets the blue part back to 255. Together, 69 / 86 / 255 is turtlesim's normal blue.",
+  "source": "Sets the blue part back to 255. Together, 69 / 86 / 255 is turtlesim's normal blue.",
+  "chapter": "a7"
+ },
+ {
+  "id": "card:a8",
+  "kind": "card",
+  "chapter": "a8",
+  "text": "The same commands on a real robot. TurtleBot 3 in Gazebo. The robot changed; the commands did not."
+ },
+ {
+  "id": "a8:0",
+  "kind": "step",
+  "text": "Tells the TurtleBot 3 packages which robot model to load. burger is the small one with a laser scanner.",
+  "source": "Tells the TurtleBot 3 packages which robot model to load. burger is the small one with a laser scanner.",
+  "chapter": "a8"
+ },
+ {
+  "id": "a8:1",
+  "kind": "step",
+  "text": "Starts the simulator with a robot in a small world. A launch file starts many nodes at once. Wait 20 to 30 seconds.",
+  "source": "Starts the simulator with a robot in a small world. A launch file starts many nodes at once. Wait 20 to 30 seconds.",
+  "chapter": "a8"
+ },
+ {
+  "id": "a8:2",
+  "kind": "step",
+  "text": "The same command as slide 7, on a different robot. The list is longer, but the command did not change.",
+  "source": "The same command as slide 7, on a different robot. The list is longer, but the command did not change.",
+  "chapter": "a8"
+ },
+ {
+  "id": "a8:3",
+  "kind": "step",
+  "text": "Prints how far this laser can see, in metres.",
+  "source": "Prints how far this laser can see, in metres.",
+  "chapter": "a8"
+ },
+ {
+  "id": "a8:4",
+  "kind": "step",
+  "text": "Prints where the robot thinks it is. The dots mean \"go inside this field, then inside that one\".",
+  "source": "Prints where the robot thinks it is. The dots mean \"go inside this field, then inside that one\".",
+  "chapter": "a8"
+ },
+ {
+  "id": "a8:5",
+  "kind": "step",
+  "text": "Prints the header of one real laser message. dash dash once means one message then stop. --field header means print only that part. Gazebo must be running (terminal 3) for this line.",
+  "source": "Prints the header of one real laser message. --once means one message then stop. --field header means print only that part. Gazebo must be running (T3) for this line.",
+  "chapter": "a8"
+ },
+ {
+  "id": "a8:6",
+  "kind": "step",
+  "text": "Measures how many messages arrive per second. This is the command that answers \"is data really arriving?\". Press Ctrl-C after about 8 seconds.",
+  "source": "Measures how many messages arrive per second. This is the command that answers \"is data really arriving?\". Press Ctrl-C after about 8 seconds.",
+  "chapter": "a8"
+ },
+ {
+  "id": "a8:7",
+  "kind": "step",
+  "text": "Prints the delivery rules of the channel \u2014 the QoS , or quality of service. These are the promises the connection makes.",
+  "source": "Prints the delivery rules of the channel \u2014 the QoS , or quality of service. These are the promises the connection makes.",
+  "chapter": "a8"
+ },
+ {
+  "id": "card:b1",
+  "kind": "card",
+  "chapter": "b1",
+  "text": "Where packages live. Everything installed is a package. Yours will be too."
+ },
+ {
+  "id": "b1:0",
+  "kind": "step",
+  "text": "Counts the packages installed on this computer. wc -l counts lines.",
+  "source": "Counts the packages installed on this computer. wc -l counts lines.",
+  "chapter": "b1"
+ },
+ {
+  "id": "b1:1",
+  "kind": "step",
+  "text": "Prints the folder where one package was installed.",
+  "source": "Prints the folder where one package was installed.",
+  "chapter": "b1"
+ },
+ {
+  "id": "card:b2",
+  "kind": "card",
+  "chapter": "b2",
+  "text": "Creating the two packages. One package for the interfaces, one for the nodes."
+ },
+ {
+  "id": "b2:0",
+  "kind": "step",
+  "text": "Moves into the src folder of the workspace you made in Week 2. New packages always go here.",
+  "source": "Moves into the src folder of the workspace you made in Week 2. New packages always go here.",
+  "chapter": "b2"
+ },
+ {
+  "id": "b2:1",
+  "kind": "step",
+  "text": "Creates the package that will hold your message and service definitions. It uses ament_cmake because turning a .msg file into a class you can import is a CMake job.",
+  "source": "Creates the package that will hold your message and service definitions. It uses ament_cmake because turning a .msg file into a class you can import is a CMake job.",
+  "chapter": "b2"
+ },
+ {
+  "id": "b2:2",
+  "kind": "step",
+  "text": "Creates the package that will hold your Python nodes, the same way as last week. --dependencies writes the two names into package.xml for you.",
+  "source": "Creates the package that will hold your Python nodes, the same way as last week. --dependencies writes the two names into package.xml for you.",
+  "chapter": "b2"
+ },
+ {
+  "id": "b2:3",
+  "kind": "step",
+  "text": "Nothing. It fails. The only change from slide 5 is that the package name is now at the end .",
+  "source": "Nothing. It fails. The only change from slide 5 is that the package name is now at the end .",
+  "chapter": "b2"
+ },
+ {
+  "id": "card:b3",
+  "kind": "card",
+  "chapter": "b3",
+  "text": "Writing the interfaces. Two definition files, four lines of CMake, and the build that turns them into code."
+ },
+ {
+  "id": "b3:0",
+  "kind": "step",
+  "text": "Moves into the interfaces package you just created.",
+  "source": "Moves into the interfaces package you just created.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:1",
+  "kind": "step",
+  "text": "Creates the two folders. The names must be exactly msg and srv \u2014 the generator looks for those names.",
+  "source": "Creates the two folders. The names must be exactly msg and srv \u2014 the generator looks for those names.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:2",
+  "kind": "step",
+  "text": "The two definition files and the two manifest files are added to the package. They are shown on the left.",
+  "source": "The two definition files and the two manifest files are added to the package. They are shown on the left.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:3",
+  "kind": "step",
+  "text": "Moves to the top of the workspace. Always build from here , never from inside a package.",
+  "source": "Moves to the top of the workspace. Always build from here , never from inside a package.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:4",
+  "kind": "step",
+  "text": "Builds every package in the workspace. --symlink-install links your Python files instead of copying them, so small edits do not need a rebuild.",
+  "source": "Builds every package in the workspace. --symlink-install links your Python files instead of copying them, so small edits do not need a rebuild.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:5",
+  "kind": "step",
+  "text": "Tells this terminal where the new packages are. Without this line, the next command cannot find your message. Every new terminal needs it again.",
+  "source": "Tells this terminal where the new packages are. Without this line, the next command cannot find your message. Every new terminal needs it again.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:6",
+  "kind": "step",
+  "text": "Asks ROS two to print your message. The same command as slide 12 of Deck A, now pointed at something you wrote.",
+  "source": "Asks ROS 2 to print your message. The same command as slide 12 of Deck A, now pointed at something you wrote.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:7",
+  "kind": "step",
+  "text": "Prints your service. One separator, as expected.",
+  "source": "Prints your service. One separator, as expected.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:8",
+  "kind": "step",
+  "text": "The message. One field per line: a type, then a name. Header carries the time stamp and the frame the numbers belong to.",
+  "source": "The message. One field per line: a type, then a name. Header carries the time stamp and the frame the numbers belong to.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:9",
+  "kind": "step",
+  "text": "The service. The three dashes split the request above from the reply below. A message has no dashes; a service has one line of them.",
+  "source": "The service. The three dashes split the request above from the reply below. A message has no dashes; a service has one line of them.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:10",
+  "kind": "step",
+  "text": "rosidl_generate_interfaces turns the two files into Python and C++ code. Every .msg and .srv file must be listed here by name.",
+  "source": "rosidl_generate_interfaces turns the two files into Python and C++ code. Every .msg and .srv file must be listed here by name.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:11",
+  "kind": "step",
+  "text": "The manifest. member_of_group tells colcon this package generates interfaces, so it is built before anything that uses them.",
+  "source": "The manifest. member_of_group tells colcon this package generates interfaces, so it is built before anything that uses them.",
+  "chapter": "b3"
+ },
+ {
+  "id": "b3:12",
+  "kind": "step",
+  "text": "The node that will send the message. It is in the second package, which depends on the first one.",
+  "source": "The node that will send the message. It is in the second package, which depends on the first one.",
+  "chapter": "b3"
+ },
+ {
+  "id": "card:b4",
+  "kind": "card",
+  "chapter": "b4",
+  "text": "Publishing on a topic. Your own message type, on a channel of your own."
+ },
+ {
+  "id": "b4:0",
+  "kind": "step",
+  "text": "Starts the node that sends WheelState messages. Leave it running for the rest of the session.",
+  "source": "Starts the node that sends WheelState messages. Leave it running for the rest of the session.",
+  "chapter": "b4"
+ },
+ {
+  "id": "b4:1",
+  "kind": "step",
+  "text": "Reads one message off the channel and prints it.",
+  "source": "Reads one message off the channel and prints it.",
+  "chapter": "b4"
+ },
+ {
+  "id": "card:b5",
+  "kind": "card",
+  "chapter": "b5",
+  "text": "Service server and client. A service of your own, called from the command line."
+ },
+ {
+  "id": "b5:0",
+  "kind": "step",
+  "text": "Starts the node that offers the /reset_odom service. Open a second tab for this \u2014 the wheel publisher must keep running.",
+  "source": "Starts the node that offers the /reset_odom service. Open a second tab for this \u2014 the wheel publisher must keep running.",
+  "chapter": "b5"
+ },
+ {
+  "id": "b5:1",
+  "kind": "step",
+  "text": "Finds your service in the list. grep reset keeps only the lines containing that word.",
+  "source": "Finds your service in the list. grep reset keeps only the lines containing that word.",
+  "chapter": "b5"
+ },
+ {
+  "id": "b5:2",
+  "kind": "step",
+  "text": "Calls your service and waits for the reply. Same three parts as Deck A slide 20: name, type, request.",
+  "source": "Calls your service and waits for the reply. Same three parts as Deck A slide 20: name, type, request.",
+  "chapter": "b5"
+ },
+ {
+  "id": "card:b6",
+  "kind": "card",
+  "chapter": "b6",
+  "text": "The deadlock. A callback that waits is a callback that never returns."
+ },
+ {
+  "id": "b6:0",
+  "kind": "step",
+  "text": "The service server from the last chapter, started again. The client needs something to call.",
+  "source": "The service server from the last chapter, started again. The client needs something to call.",
+  "chapter": "b6"
+ },
+ {
+  "id": "b6:1",
+  "kind": "step",
+  "text": "Runs the client in the first wrong way. --ros-args -p name:=value is how you set a parameter when starting a node. This is meant to fail.",
+  "source": "Runs the client in the first wrong way. --ros-args -p name:=value is how you set a parameter when starting a node. This is meant to fail.",
+  "chapter": "b6"
+ },
+ {
+  "id": "b6:2",
+  "kind": "step",
+  "text": "The next run prints two lines and then freezes. Nothing crashes, nothing exits \u2014 watch the clock.",
+  "source": "The next run prints two lines and then freezes. Nothing crashes, nothing exits \u2014 watch the clock.",
+  "chapter": "b6"
+ },
+ {
+  "id": "b6:3",
+  "kind": "step",
+  "text": "Runs the client in the second wrong way. It prints two lines and then freezes forever. Press Ctrl-C when you are ready.",
+  "source": "Runs the client in the second wrong way. It prints two lines and then freezes forever. Press Ctrl-C when you are ready.",
+  "chapter": "b6"
+ },
+ {
+  "id": "b6:4",
+  "kind": "step",
+  "text": "Runs the same program the correct way. Press Ctrl-C when the class has seen it.",
+  "source": "Runs the same program the correct way. Press Ctrl-C when the class has seen it.",
+  "chapter": "b6"
+ },
+ {
+  "id": "b6:5",
+  "kind": "step",
+  "text": "One file, three modes. spin calls the service from inside a callback, hang waits for the reply there, and fix uses call_async with a done callback.",
+  "source": "One file, three modes. spin calls the service from inside a callback, hang waits for the reply there, and fix uses call_async with a done callback.",
+  "chapter": "b6"
+ },
+ {
+  "id": "card:b7",
+  "kind": "card",
+  "chapter": "b7",
+  "text": "Parameters on your own node. Change a setting while the node runs \u2014 and watch it forget on restart."
+ },
+ {
+  "id": "b7:0",
+  "kind": "step",
+  "text": "Starts a node that prints its two settings every 2 seconds. Leave it running and keep it visible.",
+  "source": "Starts a node that prints its two settings every 2 seconds. Leave it running and keep it visible.",
+  "chapter": "b7"
+ },
+ {
+  "id": "b7:1",
+  "kind": "step",
+  "text": "Lists the settings of your own node, the same way as turtlesim's.",
+  "source": "Lists the settings of your own node, the same way as turtlesim's.",
+  "chapter": "b7"
+ },
+ {
+  "id": "b7:2",
+  "kind": "step",
+  "text": "Reads the current speed limit.",
+  "source": "Reads the current speed limit.",
+  "chapter": "b7"
+ },
+ {
+  "id": "b7:3",
+  "kind": "step",
+  "text": "Lowers the limit while the node runs. Watch terminal 4.",
+  "source": "Lowers the limit while the node runs. Watch T4.",
+  "chapter": "b7"
+ },
+ {
+  "id": "b7:4",
+  "kind": "step",
+  "text": "Reads it back, to prove the change was kept.",
+  "source": "Reads it back, to prove the change was kept.",
+  "chapter": "b7"
+ },
+ {
+  "id": "b7:5",
+  "kind": "step",
+  "text": "Starts it again. The value you set is gone.",
+  "source": "Starts it again. The value you set is gone.",
+  "chapter": "b7"
+ },
+ {
+  "id": "b7:6",
+  "kind": "step",
+  "text": "Prints all current values as YAML. A fast way to save what you tuned before you type it into the launch file.",
+  "source": "Prints all current values as YAML. A fast way to save what you tuned before you type it into the launch file.",
+  "chapter": "b7"
+ },
+ {
+  "id": "card:b8",
+  "kind": "card",
+  "chapter": "b8",
+  "text": "Action clients. Feedback while the job runs, or silence until it ends."
+ },
+ {
+  "id": "b8:0",
+  "kind": "step",
+  "text": "Starts a ready-made action server that computes Fibonacci numbers slowly, on purpose. Open a third tab . It comes with ROS two; you do not have to write it.",
+  "source": "Starts a ready-made action server that computes Fibonacci numbers slowly, on purpose. Open a third tab . It comes with ROS 2; you do not have to write it.",
+  "chapter": "b8"
+ },
+ {
+  "id": "b8:1",
+  "kind": "step",
+  "text": "Asks for the first 3 numbers and shows the progress. Watch the sequence grow by one number per update.",
+  "source": "Asks for the first 3 numbers and shows the progress. Watch the sequence grow by one number per update.",
+  "chapter": "b8"
+ },
+ {
+  "id": "b8:2",
+  "kind": "step",
+  "text": "The same goal with no dash dash feedback . You wait in silence, then get the answer. The difference between these two runs is the entire reason actions exist.",
+  "source": "The same goal with no --feedback . You wait in silence, then get the answer. The difference between these two runs is the entire reason actions exist.",
+  "chapter": "b8"
+ },
+ {
+  "id": "close",
+  "kind": "card",
+  "text": "That is the end of the week three demo. You should now be able to ask any node what it offers with one command; tell a topic, a service and an action apart, and say why each one exists; write a message file and a service file, build them, and use them from a node; recognise the deadlock, where a callback that waits never returns; and read and change a parameter while the node keeps running. The runbook for every command in this video is the week three demo cue sheet."
+ }
+]
