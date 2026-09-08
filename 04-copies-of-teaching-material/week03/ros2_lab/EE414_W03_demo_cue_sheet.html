@@ -561,6 +561,14 @@ figure.shot figcaption b { color: var(--ink-soft); font-weight: 600; }
     </div>
   </div>
 
+  <p class="aside">
+    <b>One package to check.</b> Slides 16 and 34 draw the computation graph with
+    <code>rqt_graph</code>. It is not part of <code>ros-jazzy-ros-base</code>. Run
+    <code>ros2 run rqt_graph rqt_graph</code> once before the lecture; if the window does not
+    open, install it with <code>sudo apt install ros-jazzy-rqt-graph</code> and try again. Do
+    not find this out in front of the class.
+  </p>
+
   <h2 style="margin-top:34px">Start turtlesim</h2>
   <ol class="steps">
     <li class="step"><div>
@@ -1060,14 +1068,32 @@ Subscription count: 1</pre></div>
 Publisher count: 1
 Subscription count: 1</pre></div>
         </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run rqt_graph rqt_graph</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Draws the whole system as
+            a picture. A window opens: every running node is an oval, every topic is an arrow
+            from the node that sends to the node that listens. This is the
+            <b>computation graph</b> — the same thing <code>ros2 node info</code> and
+            <code>ros2 topic info</code> printed, seen all at once. Leave the window open beside
+            turtlesim.</p>
+        </div></li>
       </ol>
       <div class="notice"><span class="lbl">Careful</span><p>The count is the number of
       <b>connections</b>, not the amount of data. A publisher that is connected but sends nothing
       still counts as 1. To ask "is data really arriving?" you need <code>ros2 topic hz</code>, which
       is on slide 33.</p></div>
-      <p class="aside"><b>If you have one extra minute:</b> <code>rqt_graph</code> draws the same
-      information as a picture. Show it once. Students who rely on it stop learning the command
-      line.</p>
+      <div class="notice"><span class="lbl">On screen</span><p>Three controls, and nothing
+      else. <b>The refresh button</b> (top left) — the graph is a photograph, not a live view,
+      so press it every time you start or stop a node. <b>The drop-down</b> — set it to
+      <em>Nodes/Topics (all)</em>, otherwise a topic with nobody listening is not drawn.
+      <b>The Debug checkbox</b> — leave it off, or <code>/rosout</code> connects to everything
+      and hides the shape you want them to see.</p></div>
+      <p class="aside"><b>Do this once, in front of them.</b> Start the publisher from the line
+      above, press refresh, and let them watch the arrow appear between
+      <code>/_ros2cli_pub</code> and <code>/turtlesim</code>. Then stop it, refresh again, and the
+      arrow is gone. That is the whole lesson: the graph is made of connections, and connections
+      come and go while the system runs. Do not leave the window open for the rest of the
+      lecture — students who rely on the picture stop learning the command line.</p>
     </div>
   </div>
 
@@ -1527,14 +1553,25 @@ Subscription count: 0</pre></details>
     </div>
   </div>
 
-  <div class="cue" data-demo="0">
-    <div class="rail"><span class="pg">34</span><span class="kind talk">Talk</span></div>
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">34</span><span class="kind live">Live</span></div>
     <div>
       <h4>Comparison of the Four Mechanisms</h4>
       <p class="say">The summary table. Go back one part at a time and name the command that
       produced each row. The class has now watched all four run against the same node.</p>
-      <p class="aside"><b>Optional ending:</b> <code>rqt_graph</code> with turtlesim and the
-      TurtleBot both running. Two robots, one graph, the same four mechanisms.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run rqt_graph rqt_graph</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> The closing picture. Both
+            turtlesim (T1) and the TurtleBot in Gazebo (T3) are still running, so both appear in
+            one graph. Press refresh. Two robots, one computation graph, and every arrow on it
+            was produced by one of the four mechanisms in the table.</p>
+        </div></li>
+      </ol>
+      <div class="notice"><span class="lbl">Ask</span><p>Point at one arrow and ask which row of
+      the table made it. Then point at the turtlesim ovals and the TurtleBot ovals and ask what
+      connects them. <b>Nothing.</b> Same graph, same commands, two systems that have never heard
+      of each other — which is the reason the four mechanisms are worth learning once.</p></div>
     </div>
   </div>
 
