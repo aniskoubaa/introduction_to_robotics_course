@@ -6,7 +6,9 @@ a plain-English explanation of each line, and the exact output to expect. It is 
 self-contained file: no images, no sibling folders, works offline.
 
 Each concept also carries a **collapsed code snapshot** — a blue `Code ·` row that opens the
-handful of lines in the source that the demonstration is about. They are closed by default, so
+handful of lines in the source that the demonstration is about. Seven of them are preceded by a
+green `Simple ·` row holding the same idea from the beginner scripts, so the room reads the
+forty-line version first and the production version second. They are closed by default, so
 the room reads the command and its output first, and the source is there for the question from
 the third row. They are *generated from the files on disk* by
 `../../shared/screenshots/snippets.py`, so the handout cannot drift from the code that just ran.
@@ -147,7 +149,7 @@ stay out of their hands until they have written their own.
 | `~/ros2_ws/src/ee414_course/` — student scripts, built and run | ✅ 7 programs |
 | `expected_output.txt` — from a real run | ✅ |
 | `command_check.txt` — every cue-sheet command, pass/fail | ✅ |
-| Code snapshots in the cue sheet, generated from source | ✅ 13 |
+| Code snapshots in the cue sheet, generated from source | ✅ 13 full + 7 beginner |
 | Beginner versions of the seven student scripts | ✅ 7, checked |
 | `Ctrl-C` clean on every node, robot stopped first | ✅ |
 | Common-failure list | ✅ in the cue sheet, and above |

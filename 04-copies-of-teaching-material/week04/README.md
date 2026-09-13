@@ -14,6 +14,7 @@
 |---|---|---|
 | Lecture deck | `slides/EE414_W04A_differential_drive.tex` / `.pdf` | ✅ 40 slides |
 | Lecture deck | `slides/EE414_W04B_open_loop_motion.tex` / `.pdf` | ✅ 35 slides |
+| Light deck | `slides/EE414_W04A_light.tex` / `.pdf` | ✅ 15 slides |
 | Exercise set + key | `exercises/EE414_W04_exercises.pdf` / `_solutions.pdf` | ❌ not authored |
 | Demo runbook (Lecture A) | `ros2_lab/EE414_W04_demo_cue_sheet.html` | ✅ 40 commands, all run · 13 code snapshots |
 | ROS 2 demo package | `../../code/src/ee414_w04_demo/` | ✅ 6 programs · URDF · SDF world · launch |
@@ -32,6 +33,7 @@ kinematic constants to the robot description._
 | File | Duration | Contents |
 |---|---|---|
 | `slides/EE414_W04A_differential_drive.tex` / `.pdf` | 1.5 h · 40 slides | Pose in the plane · why a quaternion, and what gimbal lock looks like · velocity in the body frame · the differential-drive model, forward and inverse · the ICC and the arc · where `r` and `L` live: a minimal URDF and the Gazebo diff-drive plugin · integrating to a position · wheel odometry and its six error sources · open loop defined |
+| `slides/EE414_W04A_light.tex` / `.pdf` | ~30 min · 15 slides | **The fast pass before the hands-on session.** Every concept in Deck A, one slide each: pose · the two orientation representations · the Twist message · the nonholonomic constraint · `r` and `L` · forward and inverse kinematics · the ICC · integration · odometry error · angle normalisation · open loop · the square that does not close · closed loop as a preview of Week 5 · the lab command list. It is **not** a subset of Deck A's frames — each concept is reduced to one claim and one piece of evidence. Code boxes quote the beginner scripts the students run. |
 | `slides/EE414_W04B_open_loop_motion.tex` / `.pdf` | 1.5 h · 35 slides | The two topics · motion from the terminal · the four `Twist` primitives · an rclpy motion node on a timer · `move_straight`, `rotate_in_place`, the square, the spiral · measuring the error from `/turtle1/pose` · the same node on TurtleBot 3 with `/cmd_vel` and `/odom` |
 
 Build: `pdflatex <file>.tex` **three times** (the section dividers position from the `.aux`). Shared preamble at `../shared/ee414-beamer-preamble.tex`.

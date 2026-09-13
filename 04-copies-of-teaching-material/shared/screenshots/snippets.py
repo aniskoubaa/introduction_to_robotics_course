@@ -143,6 +143,75 @@ def render(key):
             f'        <p class="cnote">{note}</p>\n'
             f'      </details>\n')
 
+# ---------------------------------------------------------------------------
+# The BEGINNER versions of the same ideas.
+#
+# Each one sits directly above the full snapshot of the same concept, so the
+# room reads the forty-line version first and the production version second.
+# Same generation rule: quoted from the files on disk, never retyped.
+# ---------------------------------------------------------------------------
+BEG = os.path.join(CRS, "ee414_course/beginner_student_freindly")
+
+# id of the full snapshot it goes above -> (file, spans, summary, note)
+SIMPLE = {
+ "wrap": ("simple_angle_wrap.py", (13, 15),
+   "the same fix, on its own",
+   "No class, no node, and no import except <code>math</code>. It prints 8&nbsp;degrees "
+   "where the plain subtraction gives &minus;352."),
+
+ "fk": ("simple_kinematics.py", (10, 18),
+   "forward kinematics, and nothing else",
+   "The two constants and the two equations, in nine lines. The <em>sum</em> of the wheel "
+   "speeds produces forward motion; the <em>difference</em> produces rotation."),
+
+ "ik": ("simple_kinematics.py", (21, 25),
+   "inverse kinematics, and nothing else",
+   "The same two equations solved the other way round, in the same file."),
+
+ "sixfields": ("simple_nonholonomic.py", (43, 54),
+   "publishing the field that does nothing",
+   "Four lines produce the demonstration. <code>msg.linear.y</code> is a valid field of a "
+   "valid message, published to a valid topic, and the turtle does not move."),
+
+ "odomread": ("simple_pose_reader.py", (20, 33),
+   "the smallest node that reads a pose",
+   "A node, a subscription, a callback. Every subscriber follows these three steps in "
+   "this order."),
+
+ "openloop": ("simple_move.py", (43, 57),
+   "open loop, in fifteen lines",
+   "<code>seconds = DISTANCE / SPEED</code> is the whole control law. No line below it reads "
+   "the pose. That is the definition of open loop."),
+
+ "closedloop": ("simple_go_to_goal.py", (52, 75),
+   "closed loop, in the same shape",
+   "Four lines compute the error from the most recent pose; the next two convert it into a "
+   "velocity. That is the only difference from the program below."),
+}
+
+
+def render_simple(key):
+    """The beginner snapshot for `key`, or '' if there is no beginner version."""
+    if key not in SIMPLE:
+        return ""
+    rel, spans, summary, note = SIMPLE[key]
+    if isinstance(spans[0], int):
+        spans = [tuple(spans)]
+    path = os.path.join(BEG, rel)
+    a, b = spans[0][0], spans[-1][1]
+    flat = [l for lo, hi in spans
+            for l in open(path).read().splitlines()[lo - 1:hi] if l.strip()]
+    shared = min((len(l) - len(l.lstrip()) for l in flat), default=0)
+    code = html.escape("\n\n".join(grab(path, lo, hi, dedent=shared) for lo, hi in spans))
+    return (f'      <details class="code simple">\n'
+            f'        <summary>Simple · {summary}</summary>\n'
+            f'        <p class="path">beginner_student_freindly/{rel}'
+            f'<span class="ln">lines {a}–{b}</span></p>\n'
+            f'        <pre><code>{code}</code></pre>\n'
+            f'        <p class="cnote">{note}</p>\n'
+            f'      </details>\n')
+
+
 if __name__ == "__main__":
     for k in SNIPS:
         print(render(k))

@@ -411,6 +411,14 @@ details.code .cnote {
 }
 details.code .cnote b { color: var(--ink); font-weight: 600; }
 
+/* The beginner snapshot: same component, green rather than indigo, and it sits
+   directly above the full version of the same idea. The colour is the whole
+   signal -- green is the one you read out loud, indigo is the one that ships. */
+details.code.simple {
+  border-left-color: var(--ok); background: var(--ok-wash);
+}
+details.code.simple > summary { color: var(--ok); }
+
 /* ---------- what to notice ---------- */
 .notice {
   margin: 9px 0 0; padding: 0 0 0 11px; border-left: 3px solid var(--accent);
@@ -815,6 +823,14 @@ wrapped 8.000000000000025</pre></div>
     1.4s     -148.0        318.0 deg          42.0 deg   &lt;-- correct stops here</pre></div>
         </div></li>
       </ol>
+      <details class="code simple">
+        <summary>Simple · the same fix, on its own</summary>
+        <p class="path">beginner_student_freindly/simple_angle_wrap.py<span class="ln">lines 13–15</span></p>
+        <pre><code>def normalize(angle):
+    &quot;&quot;&quot;Fold any angle back into -180 .. +180 degrees. THE FIX.&quot;&quot;&quot;
+    return math.atan2(math.sin(angle), math.cos(angle))</code></pre>
+        <p class="cnote">No class, no node, and no import except <code>math</code>. It prints 8&nbsp;degrees where the plain subtraction gives &minus;352.</p>
+      </details>
       <details class="code">
         <summary>Code · normalize_angle — the whole of slide 13</summary>
         <p class="path">ee414_course/robot_pose.py<span class="ln">lines 22–35</span></p>
@@ -928,6 +944,23 @@ theta: 0.14881469309329987</pre></div>
   result : moved 0.0000 m, turned 1.4720 rad</pre></div>
         </div></li>
       </ol>
+      <details class="code simple">
+        <summary>Simple · publishing the field that does nothing</summary>
+        <p class="path">beginner_student_freindly/simple_nonholonomic.py<span class="ln">lines 43–54</span></p>
+        <pre><code>msg = Twist()
+msg.linear.y = 2.0                    # SIDEWAYS. The field exists.
+
+print(&quot;\n  publishing linear.y = 2.0 for 3 seconds ...&quot;)
+try:
+    for _ in range(30):
+        pub.publish(msg)
+        time.sleep(0.1)
+except KeyboardInterrupt:
+    pass
+finally:
+    stop(pub)                         # always send a stop</code></pre>
+        <p class="cnote">Four lines produce the demonstration. <code>msg.linear.y</code> is a valid field of a valid message, published to a valid topic, and the turtle does not move.</p>
+      </details>
       <details class="code">
         <summary>Code · setting any of the six Twist fields by name</summary>
         <p class="path">ee414_course/nonholonomic.py<span class="ln">lines 48–61</span></p>
@@ -977,6 +1010,20 @@ Equal and opposite
   path     a spin in place (the ICC is the robot's own centre)</pre></div>
         </div></li>
       </ol>
+      <details class="code simple">
+        <summary>Simple · forward kinematics, and nothing else</summary>
+        <p class="path">beginner_student_freindly/simple_kinematics.py<span class="ln">lines 10–18</span></p>
+        <pre><code>r = 0.033      # wheel radius, in metres        (TurtleBot 3 Burger)
+L = 0.160      # distance between wheels, metres
+
+
+def forward(wL, wR):
+    &quot;&quot;&quot;Wheel speeds in (rad/s)  -&gt;  how the BODY moves.&quot;&quot;&quot;
+    v = r * (wR + wL) / 2      # forward speed, m/s
+    w = r * (wR - wL) / L      # turn rate, rad/s
+    return v, w</code></pre>
+        <p class="cnote">The two constants and the two equations, in nine lines. The <em>sum</em> of the wheel speeds produces forward motion; the <em>difference</em> produces rotation.</p>
+      </details>
       <details class="code">
         <summary>Code · forward kinematics — wheels to body</summary>
         <p class="path">ee414_w04_demo/wheels_to_body.py<span class="ln">lines 25–29</span></p>
@@ -1024,6 +1071,16 @@ Equal and opposite
   check: feed those wheels back into the forward model -&gt; v = +0.2000, w = +1.0000</pre></div>
         </div></li>
       </ol>
+      <details class="code simple">
+        <summary>Simple · inverse kinematics, and nothing else</summary>
+        <p class="path">beginner_student_freindly/simple_kinematics.py<span class="ln">lines 21–25</span></p>
+        <pre><code>def inverse(v, w):
+    &quot;&quot;&quot;How the body should move  -&gt;  the wheel speeds that do it.&quot;&quot;&quot;
+    wL = (v - w * L / 2) / r
+    wR = (v + w * L / 2) / r
+    return wL, wR</code></pre>
+        <p class="cnote">The same two equations solved the other way round, in the same file.</p>
+      </details>
       <details class="code">
         <summary>Code · inverse kinematics — body to wheels</summary>
         <p class="path">ee414_w04_demo/body_to_wheels.py<span class="ln">lines 28–32</span></p>
@@ -1312,6 +1369,25 @@ def step_exact_arc(x, y, theta, v, omega, dt):
       w: 1.0</pre></div>
         </div></li>
       </ol>
+      <details class="code simple">
+        <summary>Simple · the smallest node that reads a pose</summary>
+        <p class="path">beginner_student_freindly/simple_pose_reader.py<span class="ln">lines 20–33</span></p>
+        <pre><code>class PoseReader(Node):
+
+    def __init__(self):
+        super().__init__(&quot;simple_pose_reader&quot;)                 # 1. the node
+        self.count = 0
+        self.create_subscription(                              # 2. subscribe
+            Pose, &quot;/turtle1/pose&quot;, self.on_pose, 10)
+
+    def on_pose(self, msg):                                    # 3. one message
+        self.count += 1
+        if self.count % 20:            # turtlesim sends 62 a second: show a few
+            return
+        print(f&quot;  x={msg.x:6.3f}   y={msg.y:6.3f}   &quot;
+              f&quot;theta={msg.theta:+.3f} rad = {math.degrees(msg.theta):+7.1f} deg&quot;)</code></pre>
+        <p class="cnote">A node, a subscription, a callback. Every subscriber follows these three steps in this order.</p>
+      </details>
       <details class="code">
         <summary>Code · what you actually get out of /odom</summary>
         <p class="path">ee414_w04_demo/pose_watch.py<span class="ln">lines 58–65</span></p>
@@ -1441,6 +1517,26 @@ publishing #1: geometry_msgs.msg.Twist(linear=..., angular=...)
       definition.</b></p>
       <p class="say">Then the closing question, which is Week 5's opening one: <em>the node already
       knows where it is. Why did it not use that?</em></p>
+      <details class="code simple">
+        <summary>Simple · open loop, in fifteen lines</summary>
+        <p class="path">beginner_student_freindly/simple_move.py<span class="ln">lines 43–57</span></p>
+        <pre><code>seconds = DISTANCE / SPEED            # &lt;-- THE ENTIRE CONTROL LAW
+print(f&quot;\n  {DISTANCE} m at {SPEED} m/s  -&gt;  hold for {seconds:.2f} s\n&quot;)
+
+msg = Twist()
+msg.linear.x = SPEED
+
+try:
+    deadline = time.time() + seconds
+    while time.time() &lt; deadline:
+        pub.publish(msg)              # a topic does not latch: keep sending
+        time.sleep(0.05)
+except KeyboardInterrupt:
+    pass
+finally:
+    stop(pub)</code></pre>
+        <p class="cnote"><code>seconds = DISTANCE / SPEED</code> is the whole control law. No line below it reads the pose. That is the definition of open loop.</p>
+      </details>
       <details class="code">
         <summary>Code · the whole of open loop</summary>
         <p class="path">ee414_w04_demo/drive.py<span class="ln">lines 64–78</span></p>
@@ -1482,6 +1578,35 @@ publishing #1: geometry_msgs.msg.Twist(linear=..., angular=...)
             short way, because the heading error is wrapped. The 2023 version was not.</p>
         </div></li>
       </ol>
+      <details class="code simple">
+        <summary>Simple · closed loop, in the same shape</summary>
+        <p class="path">beginner_student_freindly/simple_go_to_goal.py<span class="ln">lines 52–75</span></p>
+        <pre><code>def control(self):
+    if self.pose is None or self.arrived:
+        return
+
+    # ---- THE CLOSED LOOP: three lines, and all of them LOOK ----------
+    dx = GOAL_X - self.pose.x
+    dy = GOAL_Y - self.pose.y
+    distance = math.hypot(dx, dy)
+    heading_error = normalize(math.atan2(dy, dx) - self.pose.theta)
+    # ------------------------------------------------------------------
+
+    if distance &lt; TOLERANCE:
+        self.pub.publish(Twist())
+        print(f&quot;\n  Arrived. {distance:.3f} m from the goal.&quot;)
+        print(&quot;  It got here by looking, not by timing.\n&quot;)
+        self.arrived = True
+        return
+
+    msg = Twist()
+    msg.angular.z = clamp(K_ANGULAR * heading_error, MAX_W)   # P controller
+    # Turn first if badly aimed, otherwise the two errors fight.
+    if abs(heading_error) &lt; math.radians(20):
+        msg.linear.x = clamp(K_LINEAR * distance, MAX_V)
+    self.pub.publish(msg)</code></pre>
+        <p class="cnote">Four lines compute the error from the most recent pose; the next two convert it into a velocity. That is the only difference from the program below.</p>
+      </details>
       <details class="code">
         <summary>Code · the same problem, closed loop</summary>
         <p class="path">ee414_course/go_to_goal.py<span class="ln">lines 91–119</span></p>
