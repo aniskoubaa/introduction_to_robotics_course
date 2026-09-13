@@ -1,0 +1,45 @@
+# EE 414 Week 4A --- cue sheet command check
+#
+# Every command in EE414_W04_demo_cue_sheet.html, run in lecture order.
+#   ROS 2 jazzy  |  Ubuntu 24.04.4 LTS
+#   captured 2026-09-13 06:16 UTC
+#
+# Regenerate:  bash ../../shared/screenshots/verify_w04_commands.sh
+#   add WITH_GAZEBO=1 to include the TurtleBot 3 rows.
+
+  PASS   colcon build ee414_w04_demo
+  PASS   colcon build ee414_course
+  PASS   quaternion_demo --part 1
+  PASS   quaternion_demo --part 2
+  PASS   quaternion_demo --part 3
+  PASS   quaternion_demo --part 4
+  PASS   the one-liner wrap
+  PASS   interface show Twist
+  PASS   wheels_to_body --table
+  PASS   wheels_to_body 0 10
+  PASS   body_to_wheels 0.2 1.0
+  PASS   body_to_wheels 0.5 3.0
+  PASS   grep the URDF
+  PASS   check_urdf
+  PASS   grep the SDF plugin
+  PASS   dead_reckoning --compare
+  PASS   pose --once
+  PASS   pose_watch   [Ctrl-C]
+  PASS   cmd_vel pub (drive)   [Ctrl-C]
+  PASS   service call /reset
+  PASS   cmd_vel pub (sideways)   [Ctrl-C]
+  PASS   angle_wrap
+  PASS   nonholonomic
+  PASS   reset
+  PASS   drive --shape square
+  PASS   reset
+  PASS   drive --shape spiral
+  PASS   reset
+  PASS   move_rotate --shape square
+  PASS   reset
+  PASS   go_to_goal 9,9
+  PASS   go_to_goal 1.5,2
+  PASS   tf2_echo wheel to wheel   [Ctrl-C]
+  SKIP   TurtleBot 3 rows (re-run with WITH_GAZEBO=1)
+
+33 passed, 0 failed.

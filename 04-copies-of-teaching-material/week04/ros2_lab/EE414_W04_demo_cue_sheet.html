@@ -1,0 +1,1753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html{color-scheme:light dark}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;background:#fff}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Week 4A Demo Cue Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+</head>
+<body>
+<style>
+/* ---------------------------------------------------------------
+   A course handout, not a dashboard. One superfamily does the whole
+   page: IBM Plex Sans for everything that is read, IBM Plex Mono for
+   anything the machine said or the student types. They were drawn
+   together and share their skeletons, so a command sitting inside a
+   sentence does not look like a foreign object. Hierarchy is carried
+   by weight, size and rule thickness -- never by a second typeface.
+
+   The blue is still turtlesim's -- its default background is
+   RGB(69, 86, 255), the literal values the lecture sets on slide 29
+   -- but taken down to an ink-blue that can sit beside black text
+   without competing with it. Everything else is ink on paper and
+   hairline rules.
+   --------------------------------------------------------------- */
+:root {
+  --paper:      #fbfbfc;
+  --panel:      #ffffff;
+  --panel-sunk: #eaecf2;
+  --ink:        #0d1017;   /* headings, commands, output: near-black    */
+  --ink-soft:   #252b38;   /* body prose: dark enough to read as black  */
+  --muted:      #545b6b;   /* captions and asides: 6.5:1 on paper       */
+  --rule:       #c9cfdb;   /* structural rules, visible                 */
+  --rule-soft:  #dee2ea;   /* row separators                            */
+  --accent:     #26348c;
+  --accent-ink: #212d7d;
+  --accent-wash:#e6e9f7;
+  --ok:         #14603f;
+  --ok-wash:    #eef5f1;
+  --warn:       #7a4a0c;
+  --warn-wash:  #f7efe2;
+  --danger:     #8e1f1b;
+  --danger-wash:#faeceb;
+  --cmd-bg:     #edf0f8;
+  --cmd-rule:   #c3cce4;
+  --term-bg:    #12151c;
+  --term-fg:    #d5dbe8;
+  --term-dim:   #7d879e;
+  --term-rule:  #232b3d;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0b0d12;
+    --panel:      #14171f;
+    --panel-sunk: #1b1f2a;
+    --ink:        #f0f2f7;
+    --ink-soft:   #ccd2df;
+    --muted:      #9aa2b5;
+    --rule:       #39404f;
+    --rule-soft:  #262c38;
+    --accent:     #9fabf2;
+    --accent-ink: #b4bcf6;
+    --accent-wash:#1c2239;
+    --ok:         #74d2a8;
+    --ok-wash:    #142a21;
+    --warn:       #e6b676;
+    --warn-wash:  #2a2114;
+    --danger:     #f59991;
+    --danger-wash:#301917;
+    --cmd-bg:     #191d29;
+    --cmd-rule:   #333b52;
+    --term-bg:    #090b11;
+    --term-fg:    #cfd6e5;
+    --term-dim:   #737e97;
+    --term-rule:  #1b2231;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:      #0b0d12;
+  --panel:      #14171f;
+  --panel-sunk: #1b1f2a;
+  --ink:        #f0f2f7;
+  --ink-soft:   #ccd2df;
+  --muted:      #9aa2b5;
+  --rule:       #39404f;
+  --rule-soft:  #262c38;
+  --accent:     #9fabf2;
+  --accent-ink: #b4bcf6;
+  --accent-wash:#1c2239;
+  --ok:         #74d2a8;
+  --ok-wash:    #142a21;
+  --warn:       #e6b676;
+  --warn-wash:  #2a2114;
+  --danger:     #f59991;
+  --danger-wash:#301917;
+  --cmd-bg:     #191d29;
+  --cmd-rule:   #333b52;
+  --term-bg:    #090b11;
+  --term-fg:    #cfd6e5;
+  --term-dim:   #737e97;
+  --term-rule:  #1b2231;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.52;
+  -webkit-font-smoothing: antialiased;
+  counter-reset: fig;
+}
+
+.wrap { max-width: 940px; margin: 0 auto; padding: 0 26px 72px; }
+
+code, kbd, pre { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace; }
+
+/* ---------- masthead ---------- */
+.masthead { padding: 44px 0 20px; border-bottom: 1.5px solid var(--ink); }
+.eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 10px;
+}
+h1 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 700; font-size: clamp(28px, 3.9vw, 38px); line-height: 1.06;
+  letter-spacing: -.024em; margin: 0 0 12px; text-wrap: balance;
+}
+.standfirst {
+  max-width: 58ch; margin: 0; color: var(--ink-soft); font-size: 16px; line-height: 1.55;
+}
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+.meta {
+  display: flex; flex-wrap: wrap; gap: 3px 16px; margin-top: 16px;
+  font-size: 11.5px; color: var(--muted); letter-spacing: .01em;
+}
+.meta span { white-space: nowrap; }
+.meta span + span::before { content: "· "; color: var(--rule); margin-right: 6px; }
+.meta span b { color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- sticky control bar ---------- */
+.bar {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin: 0 -26px; padding: 7px 26px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.bar nav { display: flex; gap: 0; flex-wrap: wrap; }
+.bar a {
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  text-decoration: none; padding: 4px 10px 4px 0;
+}
+.bar a:hover { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+.bar a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.spacer { flex: 1 1 auto; }
+.toggle {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 12px; color: var(--ink-soft);
+  user-select: none; white-space: nowrap;
+}
+.toggle:hover { color: var(--accent-ink); }
+.toggle input { accent-color: var(--accent); margin: 0; }
+
+/* ---------- section furniture ---------- */
+.sec-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--accent-ink); margin: 0 0 4px;
+}
+h2 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 700;
+  font-size: 21px; letter-spacing: -.016em; margin: 0 0 6px; text-wrap: balance;
+  color: var(--ink);
+}
+.lede { max-width: 64ch; color: var(--ink-soft); margin: 0 0 14px; }
+.preflight { margin: 30px 0 6px; padding-top: 11px; border-top: 2px solid var(--ink); }
+
+/* ---------- how to use ---------- */
+.howto {
+  margin: 24px 0 0; padding: 0 0 0 16px; border-left: 2px solid var(--accent);
+}
+.howto h2 { font-size: 17px; margin-bottom: 7px; }
+.howto ol { margin: 0; padding-left: 17px; max-width: 64ch; color: var(--ink-soft); font-size: 14.5px; }
+.howto li { margin-bottom: 3px; }
+.howto li b { color: var(--ink); font-weight: 600; }
+
+/* ---------- glossary ---------- */
+.words {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 0 26px; border-top: 1px solid var(--rule); margin-top: 2px;
+}
+.word { padding: 9px 0; border-bottom: 1px solid var(--rule-soft); }
+.word b {
+  display: inline; font-size: 12px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--accent-ink); margin-right: 7px;
+}
+.word span { font-size: 14px; color: var(--ink-soft); }
+.word { border-bottom: 1px solid var(--rule-soft); }
+
+/* ---------- terminal-layout cards ---------- */
+.terms {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0 22px; border-top: 1px solid var(--rule);
+}
+.tcard { padding: 10px 0 11px; border-bottom: 1px solid var(--rule-soft); }
+.tcard .tag {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .09em; color: var(--accent-ink);
+  margin-right: 8px;
+}
+.tcard h3 {
+  display: inline; font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14.5px; font-weight: 600; margin: 0; letter-spacing: -.008em;
+}
+.tcard p { margin: 3px 0 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+/* ---------- traps ---------- */
+.traps { margin-top: 14px; display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.trap {
+  display: grid; grid-template-columns: 20px 1fr; gap: 0 10px; align-items: start;
+  padding: 11px 0; border-bottom: 1px solid var(--rule-soft);
+}
+.trap .n { font-size: 12px; font-weight: 600; color: var(--warn); padding-top: 2px; }
+.trap p { margin: 0; font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+.trap p + p { margin-top: 4px; }
+.trap b { color: var(--ink); font-weight: 600; }
+
+/* ---------- deck sections ---------- */
+.deck { margin-top: 42px; }
+.deck-head {
+  border-top: 3px solid var(--ink); padding-top: 13px; margin-bottom: 4px;
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+}
+.deck-head h2 { font-size: 25px; margin: 0; font-weight: 700; letter-spacing: -.019em; color: var(--ink); }
+.deck-head .file { font-size: 11.5px; color: var(--muted); }
+.deck > .lede { margin-top: 6px; }
+
+.part {
+  margin-top: 30px; padding: 9px 0 7px;
+  border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule);
+  display: flex; align-items: baseline; gap: 11px;
+}
+.part .pn {
+  font-size: 10px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase;
+  color: var(--accent-ink); background: var(--accent-wash);
+  padding: 2px 6px; border-radius: 2px;
+}
+.part h3 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 17px; font-weight: 700;
+  margin: 0; letter-spacing: -.013em; color: var(--ink);
+}
+
+/* ---------- cue rows ---------- */
+.cue {
+  display: grid; grid-template-columns: 42px 1fr; gap: 0 16px;
+  padding: 14px 0; border-bottom: 1px solid var(--rule-soft);
+}
+.cue:last-child { border-bottom: none; }
+.rail { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.pg {
+  font-variant-numeric: tabular-nums; font-size: 17px; font-weight: 700;
+  color: var(--ink); line-height: 1.1;
+}
+.kind {
+  font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  white-space: nowrap; padding: 1px 4px; border-radius: 2px;
+}
+.kind.live  { color: var(--ok);     background: var(--ok-wash); }
+.kind.talk  { color: var(--muted);  background: var(--panel-sunk); }
+.kind.fail  { color: var(--danger); background: var(--danger-wash); }
+
+.cue h4 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 16.5px; font-weight: 700;
+  margin: 0 0 4px; letter-spacing: -.012em; text-wrap: balance; color: var(--ink);
+}
+.cue h4 code { font-size: .9em; }
+.say { margin: 0 0 9px; color: var(--ink-soft); max-width: 66ch; }
+.say:last-child { margin-bottom: 0; }
+code {
+  font-size: .87em; background: var(--panel-sunk); padding: .08em .3em;
+  border-radius: 2px; color: var(--ink); font-weight: 500;
+}
+
+/* ---------- numbered command steps ----------
+   One command per line, one copy button per line. The command sits in a
+   light panel rather than a black terminal bar: there are 79 of them, and
+   79 black bars make a page that reads as a console log instead of a
+   handout. What the machine printed keeps the dark treatment, in the
+   screenshots. */
+.steps { list-style: none; counter-reset: stp; margin: 0 0 9px; padding: 0; display: grid; gap: 9px; }
+.steps:last-child { margin-bottom: 0; }
+.step { counter-increment: stp; display: grid; grid-template-columns: 17px 1fr; gap: 0 9px; }
+.step::before {
+  content: counter(stp) ".";
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-variant-numeric: tabular-nums;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  text-align: right; margin-top: 5px;
+}
+.step > div { min-width: 0; }
+.step > div > .does:first-child { margin-top: 0; }
+
+.line {
+  display: flex; align-items: flex-start; gap: 9px;
+  background: var(--cmd-bg);
+  border: 1px solid var(--cmd-rule); border-left: 3px solid var(--accent);
+  border-radius: 0 3px 3px 0;
+  padding: 5px 7px 5px 9px; min-width: 0;
+}
+.line .pr {
+  font-size: 12.5px; line-height: 1.5; font-weight: 600; color: var(--accent);
+  user-select: none; flex: 0 0 auto;
+}
+.line code.cmd {
+  /* Long commands WRAP rather than scroll. A clipped line looks like a
+     complete one, and a student following step by step would paste half a
+     command without knowing it. Continuation lines carry a hanging indent so
+     a wrapped command still reads as one command. Copy takes the whole
+     textContent either way. */
+  display: block; flex: 1 1 auto; min-width: 0;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  padding: 0 0 0 1.5em; text-indent: -1.5em;
+  background: none; border-radius: 0; color: var(--ink);
+  font-size: 12.8px; line-height: 1.5; font-weight: 500;
+}
+.copy {
+  flex: 0 0 auto; align-self: flex-start; margin-top: 1px;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--accent-ink);
+  background: transparent; border: 0; padding: 2px 3px; cursor: pointer;
+  transition: color .12s;
+}
+.copy:hover { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+.copy.done { color: var(--ok); }
+
+.does { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); max-width: 66ch; line-height: 1.45; }
+.does b { color: var(--ink); font-weight: 600; }
+.where {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--accent-ink); margin-right: 3px;
+}
+
+/* ---------- expected output ---------- */
+.out {
+  margin-top: 6px; background: var(--ok-wash);
+  border-left: 3px solid var(--ok); border-radius: 0 2px 2px 0;
+  padding: 0 10px;
+}
+.out .olbl {
+  display: block; padding-top: 4px;
+  font-size: 9.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ok);
+}
+.out pre {
+  margin: 1px 0 0; padding: 0 0 7px; overflow-x: auto; tab-size: 4;
+  font-size: 12px; line-height: 1.45; color: var(--ink);
+}
+details.out > summary {
+  cursor: pointer; padding: 5px 0; list-style: none;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 9.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ok);
+}
+details.out > summary::-webkit-details-marker { display: none; }
+details.out > summary::before { content: "▸ "; }
+details.out[open] > summary::before { content: "▾ "; }
+details.out > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+details.out[open] > pre { padding-bottom: 6px; }
+.out.bad { border-left-color: var(--danger); background: var(--danger-wash); }
+.out.bad .olbl, details.out.bad > summary { color: var(--danger); }
+
+/* ---------- code snapshots ----------
+   Collapsed by default: the command and its output are what the room reads,
+   and the source is what one student in the third row will ask about. Blue,
+   so it never reads as expected output (green) or as a failure (red).
+   The text is generated from the files on disk by shared/screenshots/
+   snippets.py, so the handout cannot drift from the code it quotes. */
+details.code {
+  margin-top: 8px; border-left: 3px solid var(--accent);
+  background: var(--accent-wash); border-radius: 0 2px 2px 0; padding: 0 11px;
+}
+details.code > summary {
+  cursor: pointer; padding: 6px 0; list-style: none;
+  font-size: 9.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent-ink);
+}
+details.code > summary::-webkit-details-marker { display: none; }
+details.code > summary::before { content: "\25B8  "; }
+details.code[open] > summary::before { content: "\25BE  "; }
+details.code > summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+details.code > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+details.code .path {
+  margin: 0 0 5px; font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+details.code .path .ln { color: var(--muted); opacity: .75; white-space: nowrap; }
+details.code pre {
+  margin: 0; padding: 0 0 4px; overflow-x: auto; tab-size: 4;
+  font-size: 12px; line-height: 1.5; color: var(--ink);
+}
+details.code pre code { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+details.code .cnote {
+  margin: 7px 0 0; padding: 7px 0 9px; border-top: 1px solid var(--rule-soft);
+  font-size: 13.5px; color: var(--ink-soft); line-height: 1.45; max-width: 66ch;
+}
+details.code .cnote b { color: var(--ink); font-weight: 600; }
+
+/* ---------- what to notice ---------- */
+.notice {
+  margin: 9px 0 0; padding: 0 0 0 11px; border-left: 3px solid var(--accent);
+  font-size: 14px; color: var(--ink-soft); max-width: 66ch;
+}
+.notice .lbl {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent-ink); margin-right: 7px;
+}
+.notice p { margin: 0; display: inline; }
+.notice p + p { display: block; margin-top: 4px; }
+.notice b { color: var(--ink); font-weight: 600; }
+.notice.warnbox { border-left-color: var(--warn); }
+.cue h4 + .notice, .say + .notice { margin-top: 8px; }
+.notice.warnbox .lbl { color: var(--warn); }
+
+.aside {
+  margin: 8px 0 0; font-size: 13px; color: var(--muted); max-width: 66ch;
+  padding-left: 10px; border-left: 1px solid var(--rule); line-height: 1.45;
+}
+.aside b { color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- figures ----------
+   Numbered, because a numbered figure can be pointed at from the lectern
+   and from a student's question. The counter runs over the whole page. */
+figure.shot { margin: 10px 0 0; counter-increment: fig; }
+figure.shot img {
+  display: block; width: 100%; height: auto; border: 1px solid var(--rule);
+  border-radius: 2px; background: var(--term-bg);
+}
+figure.shot figcaption {
+  margin-top: 4px; font-size: 11.5px; color: var(--muted); line-height: 1.4; max-width: 66ch;
+}
+figure.shot figcaption::before {
+  content: "Fig. " counter(fig) " — "; font-weight: 600; color: var(--ink-soft);
+}
+figure.shot figcaption b { color: var(--ink-soft); font-weight: 600; }
+.shotpair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 10px 0 0; }
+.shotpair figure.shot { margin: 0; }
+.shot.win img { max-width: 260px; }
+@media (max-width: 620px) { .shotpair { grid-template-columns: 1fr; } }
+
+/* ---------- closing ---------- */
+.closing { margin-top: 40px; border-top: 1.5px solid var(--ink); padding-top: 16px; }
+.closing ul { margin: 10px 0 0; padding-left: 18px; max-width: 66ch; color: var(--ink-soft); }
+.closing li { margin-bottom: 5px; }
+.closing li b { color: var(--ink); font-weight: 600; }
+.colophon {
+  margin-top: 22px; padding-top: 11px; border-top: 1px solid var(--rule);
+  font-size: 12px; color: var(--muted); max-width: 70ch; line-height: 1.5;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 620px) {
+  .wrap { padding: 0 16px 56px; }
+  .bar { margin: 0 -16px; padding: 7px 16px; }
+  .cue { grid-template-columns: 1fr; gap: 5px; }
+  .rail { flex-direction: row; align-items: baseline; justify-content: flex-start; gap: 8px; }
+}
+@media print {
+  .bar { display: none; }
+  .cue { break-inside: avoid; }
+  figure.shot { break-inside: avoid; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- tab navigation ---------------------------------------
+   The sheet is taught from, not read. One part on screen at a time,
+   tabs sticky at the top, and the hash keeps your place across a
+   reload -- which matters when a lecture machine gets bumped.
+   ------------------------------------------------------------------ */
+.tabs {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin: 0 -26px 0; padding: 0 26px;
+  display: flex; align-items: stretch;
+  overflow-x: auto; scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs [role="tab"] {
+  appearance: none; background: none; border: 0; border-bottom: 2px solid transparent;
+  font-family: inherit; font-size: 12.5px; font-weight: 500; color: var(--muted);
+  padding: 10px 11px 8px; cursor: pointer; white-space: nowrap;
+  display: inline-flex; align-items: baseline; gap: 5px;
+}
+.tabs [role="tab"]:hover { color: var(--accent-ink); }
+.tabs [role="tab"][aria-selected="true"] {
+  color: var(--accent-ink); font-weight: 600; border-bottom-color: var(--accent);
+}
+.tabs [role="tab"]:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.tabs .num { font-variant-numeric: tabular-nums; font-size: 10.5px; opacity: .55; }
+.tabs [role="tab"][aria-selected="true"] .num { opacity: .9; }
+
+.panel { padding-top: 16px; }
+.panel > h2 { font-size: 19px; margin-bottom: 3px; }
+.panel > .lede { font-size: 14px; margin-bottom: 12px; }
+
+.panelbar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin: 10px 0 4px; padding-bottom: 9px; border-bottom: 1px solid var(--rule-soft);
+  font-size: 11.5px; color: var(--muted);
+}
+.panelbar .spacer { flex: 1 1 auto; }
+
+/* prev / next, so a part can be stepped through without the mouse */
+.pager {
+  display: flex; justify-content: space-between; gap: 12px;
+  margin-top: 30px; padding-top: 14px; border-top: 1px solid var(--rule);
+}
+.pager button {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  font-family: inherit; font-size: 12.5px; font-weight: 500; color: var(--accent-ink);
+  padding: 4px 0;
+}
+.pager button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pager button:disabled { color: var(--rule); cursor: default; text-decoration: none; }
+.pager button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* tighter cue spacing now that a panel holds only one part */
+.cue { padding: 12px 0; }
+.cue h4 { margin-bottom: 4px; }
+.say { margin-bottom: 7px; }
+
+/* A grid item will not shrink below its content's min-content width unless it
+   is told to. Without this, a wide <pre> makes the whole page scroll sideways
+   instead of scrolling inside its own box. */
+.cue > div { min-width: 0; }
+.cue > div > * { max-width: 100%; }
+
+@media (max-width: 620px) {
+  .tabs [role="tab"] { padding: 9px 8px 7px; font-size: 12px; }
+  /* One column: the rail becomes a row above the heading, so the LIVE badge
+     stops sitting on top of the title. */
+  .cue { grid-template-columns: 1fr; gap: 5px; }
+  .rail { flex-direction: row; align-items: center; gap: 8px; }
+  .pg { font-size: 15px; }
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .tabs { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
+}
+</style>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">EE 414 · Introduction to Robotics · Fall 2026</p>
+  <h1>Week 4A Demo Cue Sheet</h1>
+  <p class="standfirst">
+    The differential-drive lecture, taught by running it. <strong>One command per line</strong>,
+    each with a copy button and the output it produced on this machine.
+  </p>
+  <div class="meta">
+    <span><b>ROS 2 Jazzy</b> · Gazebo Harmonic</span>
+    <span>Deck A · <b>40 slides</b></span>
+    <span><b>ee414_w04_demo</b> + <b>ee414_course</b></span>
+    <span>Every command was <b>run</b></span>
+  </div>
+</header>
+
+<div class="tabs" role="tablist" aria-label="Lecture parts">
+  <button role="tab" id="t-setup"     aria-controls="p-setup"     data-tab="setup">Setup</button>
+  <button role="tab" id="t-pose"      aria-controls="p-pose"      data-tab="pose"><span class="num">1</span>Pose</button>
+  <button role="tab" id="t-velocity"  aria-controls="p-velocity"  data-tab="velocity"><span class="num">2</span>Velocity</button>
+  <button role="tab" id="t-model"     aria-controls="p-model"     data-tab="model"><span class="num">3</span>The model</button>
+  <button role="tab" id="t-urdf"      aria-controls="p-urdf"      data-tab="urdf"><span class="num">4</span>r and L</button>
+  <button role="tab" id="t-integrate" aria-controls="p-integrate" data-tab="integrate"><span class="num">5</span>Integrating</button>
+  <button role="tab" id="t-odom"      aria-controls="p-odom"      data-tab="odom"><span class="num">6</span>Odometry</button>
+  <button role="tab" id="t-openloop"  aria-controls="p-openloop"  data-tab="openloop"><span class="num">7</span>Open loop</button>
+  <button role="tab" id="t-fixes"     aria-controls="p-fixes"     data-tab="fixes">Fixes</button>
+</div>
+
+<div class="panelbar">
+  <label class="toggle"><input type="checkbox" id="onlyDemo"> Only the lines I run</label>
+  <span class="spacer"></span>
+  <span>T1 simulator · T2 you type · T3 watcher · T4 Gazebo</span>
+</div>
+
+<!-- ============================== SETUP ============================== -->
+<section class="panel" id="p-setup" role="tabpanel" aria-labelledby="t-setup" tabindex="-1" hidden>
+  <h2>Setup</h2>
+  <p class="lede">Ten minutes before the room fills. Source both workspaces in every terminal.</p>
+
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/EE414/introduction_to_robotics_course/code &amp;&amp; colcon build --packages-select ee414_w04_demo &amp;&amp; source install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The lecture package. <code>~/EE414</code> is a symlink to the repository on this machine, so the line runs as written; elsewhere, adjust the path.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_ws &amp;&amp; colcon build --packages-select ee414_course &amp;&amp; source install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The student package. Both can be sourced together — the names do not collide.</p>
+      <div class="out"><span class="olbl">Both should end with</span><pre>Summary: 1 package finished [1.00s]</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">export TURTLEBOT3_MODEL=burger</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Burger is the robot whose numbers the lecture uses: <code>r = 0.033</code>,
+        <code>L = 0.160</code>.</p>
+    </div></li>
+  </ol>
+
+  <div class="notice"><span class="lbl">Two packages</span><p><code>ee414_w04_demo</code> is the
+  <b>lecture</b> package — it exists to make a slide's claim visible. <code>ee414_course</code>
+  is the <b>student</b> package, from
+  <a href="https://github.com/aniskoubaa/ros2_course_packages">ros2_course_packages</a>,
+  corrected. Where the student version makes the point better, this sheet uses it.</p></div>
+
+  <div class="howto" style="margin-top:20px">
+    <h2>Reading a line</h2>
+    <ol>
+      <li><b>One command at a time.</b> Copy, paste, Enter, read the next. The <code>$</code> is
+        not part of it.</li>
+      <li><b>Green box = what you should see.</b> Red box = the command is <em>meant</em> to fail
+        or do nothing. That silence is the lesson.</li>
+      <li><b>Numbers came off this machine.</b> Closing errors are simulator-dependent; yours will
+        be close, not identical.</li>
+      <li><b>Blue <span style="text-transform:uppercase;letter-spacing:.08em;font-size:.85em">Code</span>
+        rows open the source.</b> Collapsed, so the room reads the command and its output first.
+        Each is pulled out of the file on disk, so it cannot drift from what just ran.</li>
+    </ol>
+  </div>
+
+  <div class="pager"><span></span><button type="button" data-go="pose">1 · Pose →</button></div>
+</section>
+
+<!-- ============================== 1 · POSE ============================== -->
+<section class="panel" id="p-pose" role="tabpanel" aria-labelledby="t-pose" tabindex="-1" hidden>
+  <h2>1 · Pose in the plane</h2>
+  <p class="lede">Slides 8–13. Three numbers, two ways of receiving them, one seam to fall into.</p>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">8</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>The Pose, as It Arrives</h4>
+      <p class="say">Start the turtle before you define anything.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run turtlesim turtlesim_node</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T1</span> Leave running all hour.</p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic echo /turtle1/pose --once</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <b>Three numbers are the pose</b>; the two
+            velocities are turtlesim being generous.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>x: 5.544444561004639
+y: 5.544444561004639
+theta: 0.0
+linear_velocity: 0.0
+angular_velocity: 0.0</pre></div>
+        </div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">9</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Two Ways ROS 2 Hands You a Pose</h4>
+      <p class="say">Leave this watcher running — it picks up <code>/odom</code> later without a
+      restart.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo pose_watch</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T3</span> Subscribes to <code>/turtle1/pose</code>
+            and <code>/odom</code> at once.</p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 1.0}, angular: {z: 0.6}}'</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> An arc, so the heading changes.
+            <code>Ctrl-C</code> after a few seconds.</p>
+          <div class="out"><span class="olbl">In T3</span><pre>  turtlesim/msg/Pose   x= 6.002  y= 5.611  theta=+0.2784 rad  (  +16.0 deg)   &lt;- already an angle
+  turtlesim/msg/Pose   x= 6.299  y= 5.729  theta=+0.4704 rad  (  +27.0 deg)   &lt;- already an angle</pre></div>
+        </div></li>
+      </ol>
+      <div class="notice"><span class="lbl">Notice</span><p>It stops because <b>the messages
+      stopped</b>, not because anyone said stop.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">10</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Why Four Numbers? The Case for the Quaternion</h4>
+      <p class="say">Don't let them take quaternions on faith. For a floor robot, two of the four
+      are always zero.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 1</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <code>z</code> is
+            <code>sin(theta/2)</code>, <code>w</code> is <code>cos(theta/2)</code>. Nothing more.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>   heading        quaternion (x, y, z, w)                    back again
+      0 deg      (0.000, 0.000, +0.0000, +1.0000)           +0.0 deg
+     90 deg      (0.000, 0.000, +0.7071, +0.7071)          +90.0 deg
+    180 deg      (0.000, 0.000, +1.0000, +0.0000)         +180.0 deg
+    -90 deg      (0.000, 0.000, -0.7071, +0.7071)          -90.0 deg</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 2</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Four numbers, one constraint, three degrees
+            of freedom.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>   a real heading of 37 deg -&gt; (0.000, 0.000, 0.317305, 0.948324)
+   its norm = 1.000000000000000
+
+   now an invented one       -&gt; (0.0, 0.0, 0.5, 0.5)
+   its norm = 0.707106781186548   &lt;-- not 1, so this is not a rotation</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 3</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Drift over 200,000 compositions, repaired
+            in one line.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>   composings        norm                      error from 1
+        1000        0.999999999999976       2.409e-14
+      200000        0.999999999995151       4.849e-12
+
+   The repair is one line:       q = q / norm(q)</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · heading &#8596; quaternion, both directions</summary>
+        <p class="path">ee414_w04_demo/quaternion_demo.py<span class="ln">lines 24–34</span></p>
+        <pre><code>def quat_from_yaw(theta):
+    &quot;&quot;&quot;A rotation about z only -- the only kind a floor robot ever has.&quot;&quot;&quot;
+    return (0.0, 0.0, math.sin(theta / 2.0), math.cos(theta / 2.0))
+
+
+def yaw_from_quat(x, y, z, w):
+    &quot;&quot;&quot;Pull the heading back out. This is what tf2 does at the edges.&quot;&quot;&quot;
+    siny_cosp = 2.0 * (w * z + x * y)
+    cosy_cosp = 1.0 - 2.0 * (y * y + z * z)
+    return math.atan2(siny_cosp, cosy_cosp)</code></pre>
+        <p class="cnote">A floor robot only ever rotates about <code>z</code>, so two of the four numbers are always zero. <code>yaw_from_quat</code> is what tf2 runs at every edge of the tree.</p>
+      </details>
+      <div class="notice"><span class="lbl">The argument</span><p>A 3×3 matrix drifts too, but its
+      constraint is six conditions — repair means Gram-Schmidt or an SVD. <b>tf2 stores
+      quaternions because the cheap repair is the one you can afford every cycle.</b></p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">11</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>The Same Idea, Drawn: Axis, Angle, and Lock</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 4</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Walks pitch to 90° and prints the divisor
+            going to infinity.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>   pitch        cos(pitch)          1/cos(pitch)
+   89.000      1.745241e-02       5.729796e+01
+   89.999      1.745329e-05       5.729578e+04
+   90.000      6.123234e-17       DIVISION BY ZERO
+
+   The quaternion for that same orientation is ordinary:
+       (x, y, z, w) = (0.0000, 0.7071, 0.0000, 0.7071)</pre></div>
+        </div></li>
+      </ol>
+      <p class="say"><b>Say:</b> a degree of freedom vanished from the <em>representation</em>, not
+      the robot. No rings, nothing to lock.</p>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="0">
+    <div class="rail"><span class="pg">12</span><span class="kind talk">Talk</span></div>
+    <div>
+      <h4>Quaternion to Yaw — the One Formula You Need</h4>
+      <p class="say">They have already watched the <code>atan2</code> line run: it is the second
+      line of every <code>pose_watch</code> reading.</p>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">13</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Angles Wrap, and That Is Where the Bugs Live</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">python3 -c "import math; a=math.radians(176); b=math.radians(-176); print('naive ', math.degrees(b-a)); print('wrapped', math.degrees(math.atan2(math.sin(b-a), math.cos(b-a))))"</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Two headings 8° apart across the ±π seam.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>naive  -352.0
+wrapped 8.000000000000025</pre></div>
+        </div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">13</span><span class="kind fail">Fail</span></div>
+    <div>
+      <h4>The same bug, from the course's own code</h4>
+      <p class="say">Replays <code>rotate()</code> from the 2023 <code>ros2_course_packages</code>,
+      which measured progress as <code>abs(start.theta - now.theta)</code>.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course angle_wrap</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> No simulator. Spinning left at 30 deg/s
+            from +170°, asked to stop after 40°.</p>
+          <div class="out bad"><span class="olbl">You will see</span><pre>    time    heading      buggy measure      correct measure
+    0.2s     +176.0          6.0 deg           6.0 deg
+    0.4s     -178.0        348.0 deg          12.0 deg   &lt;-- buggy stops here
+    1.0s     -160.0        330.0 deg          30.0 deg
+    1.4s     -148.0        318.0 deg          42.0 deg   &lt;-- correct stops here</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · normalize_angle — the whole of slide 13</summary>
+        <p class="path">ee414_course/robot_pose.py<span class="ln">lines 22–35</span></p>
+        <pre><code>def normalize_angle(angle):
+    &quot;&quot;&quot;Fold any angle into (-pi, pi]. ...&quot;&quot;&quot;
+    return math.atan2(math.sin(angle), math.cos(angle))</code></pre>
+        <p class="cnote">One line of arithmetic. <code>sin</code> and <code>cos</code> are already periodic, so <code>atan2</code> of the pair throws the winding away and keeps the direction.</p>
+      </details>
+      <div class="notice"><span class="lbl">Say this</span><p>A <code>rotate(40°)</code> on the
+      buggy measure stops after <b>12 degrees</b>. +178 to −178 is two degrees of turning; the
+      subtraction read 340. <b>Wrap the difference.</b></p></div>
+    </div>
+  </div>
+
+  <div class="pager"><button type="button" data-go="setup">← Setup</button><button type="button" data-go="velocity">2 · Velocity →</button></div>
+</section>
+
+<!-- ============================ 2 · VELOCITY ============================ -->
+<section class="panel" id="p-velocity" role="tabpanel" aria-labelledby="t-velocity" tabindex="-1" hidden>
+  <h2>2 · Velocity, and the law in the missing field</h2>
+  <p class="lede">Slides 16–17. Six numbers in a Twist; a floor robot owns two.</p>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">16</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Twist: Six Numbers, Two That Matter</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 interface show geometry_msgs/msg/Twist</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Ask which two, before you say it.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>Vector3  linear
+	float64 x
+	float64 y
+	float64 z
+Vector3  angular
+	float64 x
+	float64 y
+	float64 z</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · asking the graph which Twist the topic wants</summary>
+        <p class="path">ee414_w04_demo/twist_compat.py<span class="ln">lines 22–42</span></p>
+        <pre><code>def resolve_twist_type(node, topic, timeout=3.0):
+    &quot;&quot;&quot;Return the message class `topic` carries, or Twist if nobody says. ...&quot;&quot;&quot;
+    topic = topic if topic.startswith(&quot;/&quot;) else &quot;/&quot; + topic
+    deadline = time.monotonic() + timeout
+
+    while time.monotonic() &lt; deadline:
+        for name, types in node.get_topic_names_and_types():
+            if name == topic and types:
+                if &quot;geometry_msgs/msg/TwistStamped&quot; in types:
+                    return TwistStamped
+                if &quot;geometry_msgs/msg/Twist&quot; in types:
+                    return Twist
+        time.sleep(0.1)
+
+    # Nothing is bound to the topic yet -- this is the turtlesim case, where
+    # our publisher is the first one there. Twist is the right default.
+    return Twist</code></pre>
+        <p class="cnote">Why every script in both packages runs on turtlesim <em>and</em> TurtleBot 3 without being edited. Subscribing with the wrong type is silent: nothing moves, and nothing complains.</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">17</span><span class="kind fail">Fail</span></div>
+    <div>
+      <h4>Why the Missing Field Is a Law, Not an Oversight</h4>
+      <p class="say"><b>The best thirty seconds in the lecture.</b> Read the pose aloud before and
+      after.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic echo /turtle1/pose --once</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Write the three numbers on the board.</p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {y: 2.0}}'</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Pure sideways, 2 m/s. <b>Watch the window:
+            nothing.</b> <code>Ctrl-C</code>.</p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic echo /turtle1/pose --once</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <b>Identical to the last digit.</b></p>
+          <div class="out"><span class="olbl">Before and after</span><pre>x: 5.699662685394287
+y: 5.404529571533203
+theta: 0.14881469309329987</pre></div>
+        </div></li>
+      </ol>
+      <div class="notice"><span class="lbl">The line</span><p>No error, because nothing is wrong
+      with the <em>message</em> — the field exists, the motion does not.
+      <b>ẋ sin θ − ẏ cos θ = 0</b> is a statement about wheels that cannot slide.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">17</span><span class="kind fail">Fail</span></div>
+    <div>
+      <h4>Or all six fields at once</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course nonholonomic</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> ~25 s. Four fields do nothing, two work.
+            Add <code>--robot tb3</code> to repeat it later.</p>
+          <div class="out"><span class="olbl">One block per field</span><pre>  linear.y = 2.0   (pure sideways: 'strafe left')
+  before : x=5.544445  y=5.544445  theta=0.000000
+  after  : x=5.544445  y=5.544445  theta=0.000000
+  result : NOTHING MOVED. Not approximately -- identically.
+  ...
+  angular.z = 1.0  (turn on the spot)
+  result : moved 0.0000 m, turned 1.4720 rad</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · setting any of the six Twist fields by name</summary>
+        <p class="path">ee414_course/nonholonomic.py<span class="ln">lines 48–61</span></p>
+        <pre><code>def publish_raw(self, **fields):
+    &quot;&quot;&quot;Publish a Twist with arbitrary fields set, including useless ones.&quot;&quot;&quot;
+    if self.msg_type is TwistStamped:
+        msg = TwistStamped()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        twist = msg.twist
+    else:
+        msg = Twist()
+        twist = msg
+
+    for name, value in fields.items():
+        part, axis = name.split(&quot;_&quot;)
+        setattr(getattr(twist, part), axis, float(value))
+    self.raw_pub.publish(msg)</code></pre>
+        <p class="cnote">The message accepts all six. The robot honours two. Nothing in ROS 2 stands between them.</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="pager"><button type="button" data-go="pose">← 1 · Pose</button><button type="button" data-go="model">3 · The model →</button></div>
+</section>
+
+<!-- ============================= 3 · THE MODEL ============================= -->
+<section class="panel" id="p-model" role="tabpanel" aria-labelledby="t-model" tabindex="-1" hidden>
+  <h2>3 · The differential-drive model</h2>
+  <p class="lede">Slides 20–23. <b>No ROS in any of these</b> — the model is arithmetic, and should
+  be seen as arithmetic first.</p>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">20</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Forward Kinematics: Wheels to Body</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo wheels_to_body --table</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Four cases; each prints the path shape that
+            follows from <code>v</code> and <code>ω</code>.</p>
+          <div class="out"><span class="olbl">You will see — trimmed</span><pre>Both wheels equal
+  body     v  =  0.3300 m/s     w  =  0.0000 rad/s
+  path     a straight line
+
+Equal and opposite
+  body     v  =  0.0000 m/s     w  =  4.1250 rad/s
+  path     a spin in place (the ICC is the robot's own centre)</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · forward kinematics — wheels to body</summary>
+        <p class="path">ee414_w04_demo/wheels_to_body.py<span class="ln">lines 25–29</span></p>
+        <pre><code>def forward_kinematics(w_left, w_right, r=WHEEL_RADIUS, L=WHEEL_SEPARATION):
+    &quot;&quot;&quot;Wheel angular speeds (rad/s) -&gt; body (v, omega) in (m/s, rad/s).&quot;&quot;&quot;
+    v = r * (w_right + w_left) / 2.0
+    omega = r * (w_right - w_left) / L
+    return v, omega</code></pre>
+        <p class="cnote">Two lines of arithmetic. The other ninety in the file are printing.</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">23</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>The Instantaneous Centre and the Turning Radius</h4>
+      <p class="say"><b>Ask before you run it:</b> stop the left wheel — where is the centre of the
+      circle?</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo wheels_to_body 0 10</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <code>0.0800</code> is exactly
+            <code>L/2</code> — it pivots about the stopped wheel.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>  wheels   w_L =    0.00 rad/s   w_R =   10.00 rad/s
+  body     v   =  0.1650 m/s     w   =  2.0625 rad/s  ( 118.2 deg/s)
+  path     an arc of radius R = v/w = +0.0800 m (centre is 0.0800 m to the left)</pre></div>
+        </div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">21</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Inverse Kinematics: Body to Wheels</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo body_to_wheels 0.2 1.0</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> The direction the robot works in. Note the
+            round-trip check at the end.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>  wheels must do  w_L =   +3.64 rad/s   w_R =   +8.48 rad/s
+  Within limits: the busiest wheel is at 61% of its 14.0 rad/s maximum.
+
+  check: feed those wheels back into the forward model -&gt; v = +0.2000, w = +1.0000</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · inverse kinematics — body to wheels</summary>
+        <p class="path">ee414_w04_demo/body_to_wheels.py<span class="ln">lines 28–32</span></p>
+        <pre><code>def inverse_kinematics(v, omega, r=WHEEL_RADIUS, L=WHEEL_SEPARATION):
+    &quot;&quot;&quot;Body (v, omega) -&gt; wheel angular speeds (w_left, w_right) in rad/s.&quot;&quot;&quot;
+    w_left = (v - omega * L / 2.0) / r
+    w_right = (v + omega * L / 2.0) / r
+    return w_left, w_right</code></pre>
+        <p class="cnote">The same two equations, solved the other way round. This is the direction a real robot works in: you ask for <code>v</code> and <code>&#969;</code>, the wheels are what it has.</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">22</span><span class="kind fail">Fail</span></div>
+    <div>
+      <h4>The Feasible Region Is a Diamond, Not a Box</h4>
+      <p class="say">Fast drive <em>and</em> fast turn: each is fine alone, together they are
+      outside the diamond.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo body_to_wheels 0.5 3.0</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> A real robot does not refuse — it saturates,
+            and drives something else.</p>
+          <div class="out bad"><span class="olbl">You will see</span><pre>  wheels must do  w_L =   +7.88 rad/s   w_R =  +22.42 rad/s
+
+  *** TOO FAST. The motors stop at 14.0 rad/s. ***
+  Ask instead for   v = +0.3122 m/s   w = +1.8730 rad/s   (both scaled by 0.624)</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · what a real robot does when you ask for too much</summary>
+        <p class="path">ee414_w04_demo/body_to_wheels.py<span class="ln">lines 49–54</span></p>
+        <pre><code>fastest = max(abs(w_left), abs(w_right))
+if fastest &gt; MAX_WHEEL_SPEED:
+    # Saturation does not scale v and omega equally, so the robot turns
+    # differently from the command -- the single most common reason a
+    # square drawn open loop comes out as something else.
+    scale = MAX_WHEEL_SPEED / fastest</code></pre>
+        <p class="cnote">Scale <b>both</b> <code>v</code> and <code>&#969;</code> by the same factor. Clamping them separately changes the shape of the path, which is the other half of why the square comes out crooked.</p>
+      </details>
+      <div class="notice"><span class="lbl">Forward reference</span><p>Scale <b>both</b> or the
+      shape changes. This is why an open-loop square comes out crooked.</p></div>
+    </div>
+  </div>
+
+  <div class="pager"><button type="button" data-go="velocity">← 2 · Velocity</button><button type="button" data-go="urdf">4 · r and L →</button></div>
+</section>
+
+<!-- ============================== 4 · r AND L ============================== -->
+<section class="panel" id="p-urdf" role="tabpanel" aria-labelledby="t-urdf" tabindex="-1" hidden>
+  <h2>4 · Where <code>r</code> and <code>L</code> actually live</h2>
+  <p class="lede">Slides 25–27. Every equation so far contains them; neither is in your node.</p>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">25</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>The Model Needs Two Numbers. Where Do They Live?</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 launch ee414_w04_demo view_model.launch.py</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T1</span> RViz2 plus joint sliders. <b>Drag a wheel
+            slider</b> and watch its frame turn while the body stays put.</p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run tf2_ros tf2_echo wheel_left_link wheel_right_link</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <b>The payoff.</b> <code>Ctrl-C</code> when
+            it lands.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>- Translation: [0.000, -0.160, 0.000]
+- Rotation: in Quaternion (xyzw) [0.000, 0.000, 0.000, 1.000]</pre></div>
+        </div></li>
+      </ol>
+      <div class="notice"><span class="lbl">The line to land</span><p><b><code>L</code> is not a
+      number in the URDF.</b> Search for <code>0.160</code> and you will not find it — it is the
+      distance between two joint origins, and only the transform tree can tell you.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">26</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>A Differential Drive, in Twelve Lines of URDF</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">grep -E '&lt;joint name|&lt;origin xyz|&lt;cylinder radius' $(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <code>radius="0.033"</code> is
+            <code>r</code>; <code>xyz="0 0.080 0"</code> is half of <code>L</code>;
+            <code>type="continuous"</code> makes it a wheel, not a hinge.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>        &lt;cylinder radius="0.033" length="0.018"/&gt;
+  &lt;joint name="wheel_left_joint" type="continuous"&gt;
+    &lt;origin xyz="0 0.080 0"/&gt;
+        &lt;cylinder radius="0.033" length="0.018"/&gt;
+  &lt;joint name="wheel_right_joint" type="continuous"&gt;
+    &lt;origin xyz="0 -0.080 0"/&gt;</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">check_urdf $(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> A URDF is a tree of links joined by joints.</p>
+          <div class="out"><span class="olbl">You will see</span><pre>robot name is: burger_min
+root Link: base_link has 3 child(ren)
+    child(1):  caster_link
+    child(2):  wheel_left_link
+    child(3):  wheel_right_link</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · the wheel, in URDF</summary>
+        <p class="path">ee414_w04_demo/urdf/burger_min.urdf<span class="ln">lines 35–56</span></p>
+        <pre><code>&lt;link name=&quot;wheel_left_link&quot;&gt;
+  &lt;visual&gt;
+    &lt;!-- A cylinder&#x27;s axis in URDF runs along z, so it is rolled a quarter
+         turn about x to stand it up as a wheel. --&gt;
+    &lt;origin rpy=&quot;1.5708 0 0&quot; xyz=&quot;0 0 0&quot;/&gt;
+    &lt;geometry&gt;
+      &lt;cylinder radius=&quot;0.033&quot; length=&quot;0.018&quot;/&gt;
+    &lt;/geometry&gt;
+    &lt;material name=&quot;dark&quot;&gt;
+      &lt;color rgba=&quot;0.15 0.15 0.15 1.0&quot;/&gt;
+    &lt;/material&gt;
+  &lt;/visual&gt;
+&lt;/link&gt;
+
+&lt;joint name=&quot;wheel_left_joint&quot; type=&quot;continuous&quot;&gt;
+  &lt;parent link=&quot;base_link&quot;/&gt;
+  &lt;child link=&quot;wheel_left_link&quot;/&gt;
+  &lt;!-- Half of L, to the left. --&gt;
+  &lt;origin xyz=&quot;0 0.080 0&quot;/&gt;
+  &lt;!-- The wheel spins about the body&#x27;s y axis: the axle. --&gt;
+  &lt;axis xyz=&quot;0 1 0&quot;/&gt;
+&lt;/joint&gt;</code></pre>
+        <p class="cnote"><code>r</code> is written down. <code>L</code> is not: it is the distance between two joint origins, and only the transform tree can work it out.</p>
+      </details>
+      <div class="notice"><span class="lbl">Say the boundary</span><p>No inertia, no collision, no
+      sensors. <b>Deliberately not a good URDF</b> — Week 8 writes the real one.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">27</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>…and the World It Is Dropped Into</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">grep -A7 'systems::DiffDrive' $(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <b>The only thing in the stack that reads
+            both constants at run time.</b></p>
+          <div class="out"><span class="olbl">You will see</span><pre>        &lt;wheel_separation&gt;0.160&lt;/wheel_separation&gt;
+        &lt;wheel_radius&gt;0.033&lt;/wheel_radius&gt;
+        &lt;odom_publish_frequency&gt;20&lt;/odom_publish_frequency&gt;
+        &lt;topic&gt;cmd_vel&lt;/topic&gt;</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">gz sim -r $(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T1</span> <b>Optional</b> — skip if time is short;
+            Part 6 makes the same point with less setup.</p>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · the one place both constants are read at run time</summary>
+        <p class="path">ee414_w04_demo/worlds/diff_drive_demo.sdf<span class="ln">lines 439–451</span></p>
+        <pre><code>     ============================================================ --&gt;
+&lt;plugin filename=&quot;gz-sim-diff-drive-system&quot;
+        name=&quot;gz::sim::systems::DiffDrive&quot;&gt;
+  &lt;left_joint&gt;wheel_left_joint&lt;/left_joint&gt;
+  &lt;right_joint&gt;wheel_right_joint&lt;/right_joint&gt;
+  &lt;wheel_separation&gt;0.160&lt;/wheel_separation&gt;
+  &lt;wheel_radius&gt;0.033&lt;/wheel_radius&gt;
+  &lt;odom_publish_frequency&gt;20&lt;/odom_publish_frequency&gt;
+  &lt;topic&gt;cmd_vel&lt;/topic&gt;
+  &lt;odom_topic&gt;odom&lt;/odom_topic&gt;
+  &lt;frame_id&gt;odom&lt;/frame_id&gt;
+  &lt;child_frame_id&gt;base_link&lt;/child_frame_id&gt;
+&lt;/plugin&gt;</code></pre>
+        <p class="cnote">Change <code>wheel_separation</code> here and the robot still drives perfectly. Only its report of where it went is wrong, by the same factor, for ever.</p>
+      </details>
+      <div class="notice"><span class="lbl">Thought experiment — no need to run it</span><p>Set
+      <code>wheel_separation</code> to <code>0.130</code> while the axle stays 0.160. The robot
+      <b>still drives perfectly</b>; only its report is wrong, by the same factor, forever. A
+      file-editing mistake, not a hardware fault.</p></div>
+    </div>
+  </div>
+
+  <div class="pager"><button type="button" data-go="model">← 3 · The model</button><button type="button" data-go="integrate">5 · Integrating →</button></div>
+</section>
+
+<!-- ============================= 5 · INTEGRATING ============================= -->
+<section class="panel" id="p-integrate" role="tabpanel" aria-labelledby="t-integrate" tabindex="-1" hidden>
+  <h2>5 · Integrating the model</h2>
+  <p class="lede">Slides 29–31. Turning <code>v</code> and <code>ω</code> back into
+  <code>x, y, θ</code>.</p>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">29</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Euler against the exact arc</h4>
+      <p class="say">The slide draws the gap between chord and arc. This measures it, at seven
+      timesteps. No simulator.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo dead_reckoning --compare</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> A 1 m quarter circle; the exact finish is
+            <code>(1, 1)</code>. <b>Read the error columns down, not across.</b></p>
+          <div class="out"><span class="olbl">You will see</span><pre>   timestep      Euler finish            error        arc finish              error
+    1.00 s     ( 1.2140,  0.7311)     3.437e-01    ( 1.0000,  1.0000)     1.110e-16
+    0.50 s     ( 1.1135,  0.8703)     1.723e-01    ( 1.0000,  1.0000)     1.110e-16
+    0.20 s     ( 1.0481,  0.9492)     6.996e-02    ( 1.0000,  1.0000)     1.110e-16
+    0.10 s     ( 1.0245,  0.9748)     3.514e-02    ( 1.0000,  1.0000)     3.331e-16
+    0.05 s     ( 1.0124,  0.9874)     1.765e-02    ( 1.0000,  1.0000)     2.220e-16
+    0.02 s     ( 1.0050,  0.9950)     7.068e-03    ( 1.0000,  1.0000)     4.441e-16
+    0.01 s     ( 1.0025,  0.9975)     3.534e-03    ( 1.0000,  1.0000)     3.331e-16</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · the two integrators, side by side</summary>
+        <p class="path">ee414_w04_demo/dead_reckoning.py<span class="ln">lines 29–45</span></p>
+        <pre><code>def step_euler(x, y, theta, v, omega, dt):
+    &quot;&quot;&quot;Pretend the heading is frozen for the whole timestep, then turn.&quot;&quot;&quot;
+    x += v * math.cos(theta) * dt
+    y += v * math.sin(theta) * dt
+    theta += omega * dt
+    return x, y, theta
+
+
+def step_exact_arc(x, y, theta, v, omega, dt):
+    &quot;&quot;&quot;Follow the arc the robot is actually on. Exact when v and omega are held.&quot;&quot;&quot;
+    if abs(omega) &lt; 1e-9:
+        return step_euler(x, y, theta, v, omega, dt)
+    R = v / omega                       # radius of the arc
+    theta_new = theta + omega * dt
+    x += R * (math.sin(theta_new) - math.sin(theta))
+    y -= R * (math.cos(theta_new) - math.cos(theta))
+    return x, y, theta_new</code></pre>
+        <p class="cnote">Euler freezes the heading for the whole step, then turns. The arc form follows the circle the robot is genuinely on, and is <b>exact</b> whenever <code>v</code> and <code>&#969;</code> are held constant — which, between two <code>/cmd_vel</code> messages, they are.</p>
+      </details>
+      <div class="notice"><span class="lbl">Two things</span><p><b>One:</b> halve the timestep,
+      halve the Euler error — first order, never zero. <b>Two:</b> the arc is <code>1e-16</code> at
+      every timestep, because holding <code>v</code> and <code>ω</code> constant <em>is</em> an
+      arc. At 0.05 s Euler is already 1.8 cm out on one quarter turn.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">31</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>The Trail Is the Integral</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --shape spiral --speed 2.0 --turn-rate 1.2</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <code>ω</code> fixed, <code>v</code> rising.
+            <b>Point at the widening gap</b> — that is <code>R = v/ω</code> growing.</p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 service call /reset std_srvs/srv/Empty '{}'</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Clears the trail. Do this before the square.</p>
+        </div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="pager"><button type="button" data-go="urdf">← 4 · r and L</button><button type="button" data-go="odom">6 · Odometry →</button></div>
+</section>
+
+<!-- ============================== 6 · ODOMETRY ============================== -->
+<section class="panel" id="p-odom" role="tabpanel" aria-labelledby="t-odom" tabindex="-1" hidden>
+  <h2>6 · Wheel odometry, and where the error comes from</h2>
+  <p class="lede">Slides 33–36. <b>Start Gazebo first</b> — it takes about 30 seconds.</p>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">33</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>What Produces <code>/odom</code></h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 launch turtlebot3_gazebo empty_world.launch.py</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T4</span> Needs <code>TURTLEBOT3_MODEL=burger</code>
+            in <em>this</em> terminal.</p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic echo /odom --once</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <b>Now the pose arrives the other way</b> —
+            slide 9's second column, live.</p>
+          <div class="out"><span class="olbl">You will see — trimmed</span><pre>    orientation:
+      x: 0.0
+      y: 0.0
+      z: -2.3025066488465925e-13
+      w: 1.0</pre></div>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · what you actually get out of /odom</summary>
+        <p class="path">ee414_w04_demo/pose_watch.py<span class="ln">lines 58–65</span></p>
+        <pre><code>def on_odom(self, msg):
+
+    # ...
+
+    p = msg.pose.pose.position
+    q = msg.pose.pose.orientation
+    yaw = yaw_from_quaternion(q)
+    n = math.sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w)</code></pre>
+        <p class="cnote"><code>turtlesim/Pose</code> hands you <code>theta</code>. <code>nav_msgs/Odometry</code> hands you four numbers and leaves the trigonometry to you. <code>|q|</code> is printed so the class can watch it stay at 1.000000.</p>
+      </details>
+      <div class="notice"><span class="lbl">Point at it</span><p><code>(0, 0, 0, 1)</code> — "no
+      rotation", the identity from slide 10. It has not moved, and the quaternion says so.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">34</span><span class="kind fail">Fail</span></div>
+    <div>
+      <h4>The silent type trap</h4>
+      <p class="say"><b>Worth two minutes.</b> They will hit this alone, and it prints nothing.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic pub -r 10 /cmd_vel geometry_msgs/msg/Twist '{linear: {x: 0.1}}'</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> The command every tutorial shows. It
+            publishes happily. <b>The robot does not move.</b> <code>Ctrl-C</code>.</p>
+          <div class="out bad"><span class="olbl">What you get</span><pre>publisher: beginning loop
+publishing #1: geometry_msgs.msg.Twist(linear=..., angular=...)
+
+... and a robot that has not moved at all.</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic type /cmd_vel</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <b>There it is.</b></p>
+          <div class="out"><span class="olbl">You will see</span><pre>geometry_msgs/msg/TwistStamped</pre></div>
+        </div></li>
+      </ol>
+      <div class="notice"><span class="lbl">The habit</span><p><b>When nothing happens, ask the
+      graph, don't re-read your code.</b> A publisher of the wrong type never connects, and that
+      is not an error.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">35</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Where the Error Comes From — the same node, both robots</h4>
+      <p class="say"><b>The deliverable.</b> Put the two closing errors side by side on the board.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --shape square --distance 2.0</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> The turtle. Every duration is
+            <code>distance ÷ speed</code>; nothing is measured.</p>
+          <div class="out"><span class="olbl">You will see — trimmed</span><pre>  CLOSING ERROR: 0.2090 m from where it started, 3.9 deg off heading</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> <b>Identical node</b>, slower and smaller —
+            a Burger tops out at 0.22 m/s. Watch Gazebo, not the terminal.</p>
+          <div class="out"><span class="olbl">You will see — trimmed</span><pre>[INFO] [drive]: /cmd_vel carries geometry_msgs/msg/TwistStamped -- publishing that.
+  CLOSING ERROR: 0.0213 m from where it started, 0.6 deg off heading</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course move_rotate --shape square --distance 2.0</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> The student version. <b>Watch the second
+            turn</b> — slide 13's bug, turning up unprompted.</p>
+          <div class="out"><span class="olbl">The four turns</span><pre>         turned 89.8 deg (the naive subtraction would say 89.8 deg)
+         turned 89.8 deg (the naive subtraction would say 270.2 deg)   &lt;-- crossed the seam
+         turned 89.8 deg (the naive subtraction would say 89.8 deg)
+         turned 89.8 deg (the naive subtraction would say 89.8 deg)</pre></div>
+        </div></li>
+      </ol>
+      <div class="notice"><span class="lbl">The two numbers</span><p><b>Turtle ~0.21 m over an 8 m
+      perimeter; robot ~0.02 m over 2 m.</b> Run the turtle square twice and you get two answers —
+      0.209 and 0.221 here. The turtle has no wheels and no friction and <em>still</em> does not
+      close, so this is not a wheel problem.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">36</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Why the Error Has No Ceiling</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo dead_reckoning --robot tb3</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T3</span> Integrates <code>/cmd_vel</code> both ways
+            against Gazebo's truth. <b>It never looks at the robot.</b></p>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --robot tb3 --shape arc --angle 180 --speed 0.15 --turn-rate 0.4</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> A half circle. Watch T3's <code>off</code>
+            columns.</p>
+          <div class="out"><span class="olbl">In T3 — first, middle and last lines</span><pre>  truth ( 0.130, 0.027)   euler ( 0.146, 0.028) off 0.0159   arc ( 0.146, 0.030) off 0.0157
+  truth ( 0.364, 0.380)   euler ( 0.379, 0.382) off 0.0145   arc ( 0.375, 0.386) off 0.0119
+  truth ( 0.120, 0.726)   euler ( 0.133, 0.727) off 0.0129   arc ( 0.126, 0.728) off 0.0060</pre></div>
+        </div></li>
+      </ol>
+      <div class="notice"><span class="lbl">Do not skip this</span><p><b>Both estimates start
+      1.6 cm out and stay there.</b> That centimetre and a half is the <em>robot</em> — the
+      acceleration ramp, slip, mass — and <b>no integrator removes any of it</b>. It is the answer
+      to "why not just integrate more carefully?".</p>
+      <p>The methods do separate, and by less than you would guess: over the half circle Euler
+      holds at about 13 mm while the arc falls to 6 mm. Worth <em>one</em> sentence — at 20 Hz a
+      step turns 0.02 rad, so the method is a millimetre-scale correction on a centimetre-scale
+      error. The recorded numbers came off a robot starting at the origin; start it elsewhere and
+      the shared offset swamps the difference.</p></div>
+    </div>
+  </div>
+
+  <div class="pager"><button type="button" data-go="integrate">← 5 · Integrating</button><button type="button" data-go="openloop">7 · Open loop →</button></div>
+</section>
+
+<!-- ============================== 7 · OPEN LOOP ============================== -->
+<section class="panel" id="p-openloop" role="tabpanel" aria-labelledby="t-openloop" tabindex="-1" hidden>
+  <h2>7 · Open loop, defined</h2>
+  <p class="lede">Slides 38–40.</p>
+
+  <div class="cue" data-demo="0">
+    <div class="rail"><span class="pg">38</span><span class="kind talk">Talk</span></div>
+    <div>
+      <h4>The Whole Idea in One Line</h4>
+      <p class="say">Scroll up to any <code>drive</code> run and point at one line:
+      <code>straight: 2.0 m at 1.0 m/s -&gt; hold for 2.000 s</code>. <b>That division is the
+      definition.</b></p>
+      <p class="say">Then the closing question, which is Week 5's opening one: <em>the node already
+      knows where it is. Why did it not use that?</em></p>
+      <details class="code">
+        <summary>Code · the whole of open loop</summary>
+        <p class="path">ee414_w04_demo/drive.py<span class="ln">lines 64–78</span></p>
+        <pre><code>def send_for(self, v, omega, seconds):
+    &quot;&quot;&quot;Hold one Twist for a fixed time. This is the whole of open loop. ...&quot;&quot;&quot;
+    period = 1.0 / self.rate_hz
+    deadline = time.monotonic() + seconds
+    while time.monotonic() &lt; deadline and not graceful.interrupted():
+        self.pub.publish(v, omega)
+        rclpy.spin_once(self, timeout_sec=0.0)   # drain callbacks, never block
+        time.sleep(period)
+    self.stop()</code></pre>
+        <p class="cnote">Publish, wait, stop. The pose IS subscribed to, but only to report the error at the end — never to decide anything.</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">38</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>What the closed loop looks like, for one minute</h4>
+      <p class="say"><b>Optional, best right after the square fails.</b> Do not teach the
+      controller — Week 5 owns it. Run it so "open loop" has an opposite.</p>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course go_to_goal --x 9.0 --y 9.0</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Watch <code>distance</code> fall and the
+            speed fall with it.</p>
+          <div class="out"><span class="olbl">You will see — trimmed</span><pre>  distance  4.089 m   heading error    -2.4 deg   -&gt; v=2.000  w=-0.169
+  distance  2.073 m   heading error    -0.1 deg   -&gt; v=2.000  w=-0.009
+  distance  0.608 m   heading error    -0.0 deg   -&gt; v=0.608  w=-0.000
+
+  Goal reached after 78 cycles.
+  final distance to goal: 0.1899 m</pre></div>
+        </div></li>
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course go_to_goal --x 1.5 --y 2.0</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> A goal <b>behind</b> the robot. It turns the
+            short way, because the heading error is wrapped. The 2023 version was not.</p>
+        </div></li>
+      </ol>
+      <details class="code">
+        <summary>Code · the same problem, closed loop</summary>
+        <p class="path">ee414_course/go_to_goal.py<span class="ln">lines 91–119</span></p>
+        <pre><code>while time.monotonic() &lt; deadline and not graceful.interrupted():
+    rclpy.spin_once(self, timeout_sec=0.05)
+    pose = self.driver.pose
+
+    # ---- THE CLOSED LOOP: look, then decide ----------------------
+    distance = pose.distance_to(self.goal)
+    heading_to_goal = pose.angle_to(self.goal)
+    heading_error = normalize_angle(heading_to_goal - pose.theta)
+
+    # ...
+
+    omega = self.clamp(self.k_angular * heading_error, self.limits[&quot;w&quot;])
+
+    # Turn first if badly misaligned; otherwise a big heading error and
+    # a big distance error fight, and the robot swings out on a curve.
+    if abs(heading_error) &gt; math.radians(20.0):
+        v = 0.0
+    else:
+        v = self.clamp(self.k_linear * distance, self.limits[&quot;v&quot;])
+
+    self.driver.publish(v, omega)</code></pre>
+        <p class="cnote">Read the pose, work out the error, act on it, repeat. No duration is computed in advance. Put this beside the snapshot above: the difference between them is Week 5.</p>
+      </details>
+      <div class="notice"><span class="lbl">The one-line difference</span><p>Everything else
+      computes <code>duration = distance / speed</code> once and hopes. This computes
+      <code>error = goal − where_I_actually_am</code> fifty times a second.</p></div>
+    </div>
+  </div>
+
+  <div class="cue" data-demo="1">
+    <div class="rail"><span class="pg">40</span><span class="kind live">Live</span></div>
+    <div>
+      <h4>Teardown</h4>
+      <ol class="steps">
+        <li class="step"><div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 service call /reset std_srvs/srv/Empty '{}'</code><button class="copy" type="button">Copy</button></div>
+          <p class="does"><span class="where">T2</span> Back to the starting state.</p>
+        </div></li>
+        <li class="step"><div>
+          <p class="does"><b><code>Ctrl-C</code> each terminal</b> — Gazebo first, it is slowest.
+            <code>ros2 node list</code> shows any stray survivor.</p>
+        </div></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="pager"><button type="button" data-go="odom">← 6 · Odometry</button><button type="button" data-go="fixes">Fixes →</button></div>
+</section>
+
+<!-- ================================ FIXES ================================ -->
+<section class="panel" id="p-fixes" role="tabpanel" aria-labelledby="t-fixes" tabindex="-1" hidden>
+  <h2>Fixes</h2>
+  <p class="lede">Every row was hit while preparing this sheet, on this machine.</p>
+
+  <div class="traps">
+    <div class="trap"><span class="n">A</span><div>
+      <p><b>The robot does not move and there is no error.</b>
+      <code>ros2 topic type /cmd_vel</code>. Jazzy's TurtleBot 3 bridge wants
+      <code>TwistStamped</code>; a <code>Twist</code> publisher connects to nothing, silently.</p>
+    </div></div>
+    <div class="trap"><span class="n">B</span><div>
+      <p><b><code>No module named 'rclpy._rclpy_pybind11'</code>.</b> Anaconda's
+      <code>python3</code> is in front of the system one. <code>conda deactivate</code>, then check
+      <code>which python3</code> says <code>/usr/bin/python3</code>. <code>ros2 run</code> is
+      unaffected — only <code>python3 script.py</code>, which is what a student types.</p>
+    </div></div>
+    <div class="trap"><span class="n">C</span><div>
+      <p><b><code>symbol lookup error … /snap/core20/…</code> starting turtlesim, RViz2 or
+      Gazebo.</b> The culprit is <code>LOCPATH</code> (also <code>GTK_PATH</code>,
+      <code>GTK_EXE_PREFIX</code>) pointing into <code>/snap/code/</code>.</p>
+      <p><b>Already fixed on this machine</b> by a block at the end of <code>~/.bashrc</code> that
+      strips them — interactive shells only. For <code>bash -c</code>, source
+      <code>shared/screenshots/rosenv.sh</code>.</p>
+    </div></div>
+    <div class="trap"><span class="n">D</span><div>
+      <p><b><code>Package not found</code>.</b> The workspace is not sourced in <em>this</em>
+      terminal. Every terminal, every time.</p>
+    </div></div>
+    <div class="trap"><span class="n">E</span><div>
+      <p><b>RViz2 opens empty.</b> Set <b>Displays → RobotModel → Description Topic</b> to
+      <code>/robot_description</code>, or restart the launch file.</p>
+    </div></div>
+    <div class="trap"><span class="n">F</span><div>
+      <p><b>Gazebo slow, or the square badly wrong.</b> Check the real-time factor. Well below 1.0
+      means timed durations no longer match distances — a real open-loop failure, but not the one
+      you are teaching. Reduce speeds, or use turtlesim.</p>
+    </div></div>
+    <div class="trap"><span class="n">G</span><div>
+      <p><b>A node prints nothing when redirected to a file.</b> Python buffers stdout. Prefix
+      <code>PYTHONUNBUFFERED=1</code>. Affects recording, not live teaching.</p>
+    </div></div>
+    <div class="trap"><span class="n">H</span><div>
+      <p><b>The turtle drives off on its own, or a demo's numbers are absurd.</b> A
+      <code>ros2 topic pub -r 10</code> is still running in a terminal you have scrolled away
+      from. It publishes for ever and nothing says so.</p>
+      <p><code>pgrep -af 'ros2 topic pub'</code> names it. This is worth knowing because it does
+      not look like itself: the symptom is a 2 m square closing 2.8 m out, or a
+      "nothing moved" slide in which the turtle has plainly moved.</p>
+    </div></div>
+    <div class="trap"><span class="n">I</span><div>
+      <p><b><code>Ctrl-C</code> is safe, and it stops the robot.</b> Every node in both packages
+      catches the interrupt itself: it publishes a zero <code>Twist</code>, prints its summary, and
+      exits 0. No traceback. Stop any demonstration at any point.</p>
+      <p>If you ever do see <code>RCLError: publisher's context is invalid</code>, the node was
+      killed some other way and the robot is still driving — <code>ros2 topic pub --once</code> a
+      zero Twist, or restart the simulator.</p>
+    </div></div>
+  </div>
+
+  <h2 style="margin-top:30px">If you have ten minutes, not thirty</h2>
+  <p class="lede">Five commands. The first three need no simulator.</p>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo wheels_to_body --table</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The model is arithmetic. Four cases, four path shapes.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course angle_wrap</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">A <code>rotate(40°)</code> that stops after 12.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo dead_reckoning --compare</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Euler is first order; the arc is exact at every timestep.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {y: 2.0}}'</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The nonholonomic law, as a command that does nothing.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --shape square --distance 2.0</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The square does not close, and nothing tried to make it.</p>
+    </div></li>
+  </ol>
+
+  <section class="colophon">
+    <p>EE 414 · Week 4 Lecture A · companion to
+    <code>slides/EE414_W04A_differential_drive.pdf</code> (40 slides).
+    Lecture programs in <code>code/src/ee414_w04_demo/</code>; student programs in
+    <code>~/ros2_ws/src/ee414_course/</code>, derived from <code>ros2_course_packages</code>
+    (© 2023 Anis Koubaa, CC BY-NC-SA 4.0). Every command here was run on ROS 2 Jazzy with
+    Gazebo Harmonic. Closing errors are simulator-dependent — yours will be close, not
+    identical.</p>
+  </section>
+
+  <div class="pager"><button type="button" data-go="openloop">← 7 · Open loop</button><span></span></div>
+</section>
+
+</div>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- copy buttons -------------------------------------------
+     One command per line, so the button copies exactly one line: the text
+     of the command element, with no prompt character and no output. */
+  document.querySelectorAll(".copy").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var cmd = btn.parentNode.querySelector("code.cmd");
+      if (!cmd) { return; }
+      var text = cmd.textContent.trim();
+
+      var done = function () {
+        btn.textContent = "Copied";
+        btn.classList.add("done");
+        setTimeout(function () {
+          btn.textContent = "Copy";
+          btn.classList.remove("done");
+        }, 1400);
+      };
+
+      function fallback() {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); done(); } catch (e) { /* nothing to do */ }
+        document.body.removeChild(ta);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else {
+        fallback();
+      }
+    });
+  });
+
+  /* ---------- tabs ----------------------------------------------------
+     The hash carries the current tab, so a reload during a lecture comes
+     back to the same part, and a tab can be linked to directly. */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var names = tabs.map(function (t) { return t.dataset.tab; });
+
+  function show(name, focusTab) {
+    if (names.indexOf(name) === -1) { name = names[0]; }
+
+    tabs.forEach(function (tab) {
+      var on = tab.dataset.tab === name;
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.setAttribute("tabindex", on ? "0" : "-1");
+      var panel = document.getElementById("p-" + tab.dataset.tab);
+      if (panel) { panel.hidden = !on; }
+      if (on && focusTab) { tab.focus(); }
+    });
+
+    if (window.location.hash.slice(1) !== name) {
+      history.replaceState(null, "", "#" + name);
+    }
+    // Keep the tab strip in view when jumping between parts.
+    var strip = document.querySelector(".tabs");
+    if (strip && strip.getBoundingClientRect().top < 0) {
+      strip.scrollIntoView({ block: "start" });
+    }
+    var active = tabs.filter(function (t) { return t.dataset.tab === name; })[0];
+    if (active && active.scrollIntoView) {
+      active.scrollIntoView({ inline: "nearest", block: "nearest" });
+    }
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () { show(tab.dataset.tab); });
+  });
+
+  /* Left/Right move between tabs, Home/End jump to the ends -- the usual
+     tablist keyboard contract. */
+  document.querySelector(".tabs").addEventListener("keydown", function (e) {
+    var i = names.indexOf(document.activeElement.dataset && document.activeElement.dataset.tab);
+    if (i === -1) { return; }
+    var next = null;
+    if (e.key === "ArrowRight") { next = (i + 1) % names.length; }
+    else if (e.key === "ArrowLeft") { next = (i - 1 + names.length) % names.length; }
+    else if (e.key === "Home") { next = 0; }
+    else if (e.key === "End") { next = names.length - 1; }
+    if (next !== null) { e.preventDefault(); show(names[next], true); }
+  });
+
+  /* The prev / next buttons at the foot of each panel. */
+  document.querySelectorAll("[data-go]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      show(btn.dataset.go);
+      window.scrollTo({ top: 0 });
+    });
+  });
+
+  window.addEventListener("hashchange", function () {
+    show(window.location.hash.slice(1));
+  });
+
+  show(window.location.hash.slice(1) || "setup");
+
+  /* ---------- hide the talk-only cues ---------------------------------- */
+  var only = document.getElementById("onlyDemo");
+  only.addEventListener("change", function () {
+    var on = only.checked;
+    document.querySelectorAll(".cue").forEach(function (cue) {
+      cue.classList.toggle("hidden", on && cue.dataset.demo === "0");
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

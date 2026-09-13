@@ -64,3 +64,16 @@ Defined in `../ee414-beamer-preamble.tex`:
 
 All of them constrain **both** width and height. Beamer does not warn when an image runs off
 the bottom of a frame; it just takes the caption with it.
+
+## Week 4 additions
+
+| Script | What it does |
+|---|---|
+| `verify_w04_commands.sh` | Runs **every** command in the Week 4A cue sheet, in lecture order, bringing up turtlesim, RViz2 and Gazebo in turn. Writes a pass/fail table to `week04/ros2_lab/command_check.txt`. Long-running commands are ended with `SIGINT` to the process group — what `Ctrl-C` actually sends, not the `SIGTERM` a bare `timeout` sends — and must exit 0 with no traceback. `WITH_GAZEBO=1` includes the TurtleBot 3 rows. |
+| `snippets.py` | Pulls the code snapshots for a cue sheet straight out of the source files: a file, a line range, a summary and a note per snapshot. Long docstrings are squashed to their first line. Print it to inspect; import `render(key)` to use it. |
+| `insert.py` | Drops each snapshot into the cue it belongs to, anchored on the command text so it cannot land under the wrong demonstration. Refuses to run on a sheet that already has snapshots — regenerate from a copy taken before they were added. |
+
+| `assert_clean_graph.sh` + `find_stray_publishers.py` | Sourced first by both of the above: they refuse to start while anything is publishing velocities, and name the process. A `ros2 topic pub -r 10` forgotten in another terminal silently corrupted a capture — a 2 m square "closing" 2.86 m out, and a *nothing moved* demonstration in which the turtle had moved. The search is Python rather than `pgrep -f`, which matches the shell doing the searching; acted on, that kills the caller. |
+
+`rosenv.sh` now also sources `~/ros2_ws` if it exists, because from Week 4 the cue sheets use
+`ee414_w04_demo` and `ee414_course` in the same terminal.

@@ -1,0 +1,21 @@
+# EE 414 Week 4 --- beginner script check
+#
+# ee414_course/beginner_student_freindly, every script run on this machine.
+#   ROS 2 jazzy  |  Ubuntu 24.04.4 LTS
+#   captured 2026-09-13 06:54 UTC
+#
+# Regenerate:  bash ../../shared/screenshots/verify_beginner_scripts.sh
+#
+# [Ctrl-C] means the script was interrupted part way through with a real
+# SIGINT to its process group. Exit 0 and no traceback is the requirement.
+
+  PASS   simple_kinematics
+  PASS   simple_angle_wrap
+  PASS   simple_pose_reader   [Ctrl-C]
+  PASS   simple_nonholonomic   [Ctrl-C]
+  PASS   simple_move   [Ctrl-C]
+  PASS   simple_square   [Ctrl-C]
+  PASS   simple_go_to_goal   [Ctrl-C]
+  FAIL   the turtle is STILL MOVING after Ctrl-C
+
+7 passed, 1 failed.

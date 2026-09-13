@@ -29,6 +29,10 @@ source /opt/ros/jazzy/setup.bash
 WS="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../code" 2>/dev/null && pwd)"
 [ -n "$WS" ] && [ -f "$WS/install/setup.bash" ] && source "$WS/install/setup.bash"
 
+# The student workspace, where ee414_course lives. Week 4 onwards the cue
+# sheets use both packages in the same terminal; the names do not collide.
+[ -f "$HOME/ros2_ws/install/setup.bash" ] && source "$HOME/ros2_ws/install/setup.bash"
+
 # A domain of its own, so a capture never picks up a student's or a colleague's
 # nodes on the same network.
 export ROS_DOMAIN_ID=77
