@@ -47,28 +47,29 @@ velocity ends with `stop(pub)`, which sends an empty `Twist` five times,
 because a topic does not retry and one dropped stop message leaves a robot
 driving away.
 
-## Known limitation: Ctrl-C during a drive
+## Ctrl-C during a drive: withdrawn, 2026-09-15
 
-`simple_square` and `simple_go_to_goal`, interrupted **part way through a
-motion**, can leave the turtle coasting at its last commanded velocity. The
-`finally: stop(pub)` block is there and is correct, but under `ros2 run` the
-interrupt does not reliably reach the node in time for those stops to be
-delivered. Measured on this machine: 3 of 3 interrupted `simple_square` runs
-left `linear_velocity: 1.0`.
+This section previously recorded a limitation — that `simple_square` and
+`simple_go_to_goal`, interrupted part way through a motion, left the turtle
+coasting at its last commanded velocity, measured 3 of 3 and 2 of 3 times.
 
-This is the same class of fault that `../graceful.py` exists to fix, and the
-full versions in `../` do not have it — they poll an interrupt flag instead of
-relying on the exception arriving, and all seven pass the interrupt check in
-`command_check.txt`.
+**There is no such limitation.** The measurement was wrong, and the scripts were
+always correct.
 
-Two ways to live with it during a lecture:
+`verify_beginner_scripts.sh` started its nodes with `setsid cmd &` and signalled
+`kill -INT -$!`. When job control is on — and `set -m` had been added to the
+harness a few hours earlier, for a good reason — `setsid` forks, so `$!` names a
+parent that has already exited. The interrupt went to a process group that no
+longer existed. The nodes were never signalled at all, so of course they never
+stopped: they were still driving when the pose was read.
 
-* Let the script finish. `simple_square` takes 15 seconds, `simple_move` 3.
-* If you do interrupt one, `ros2 service call /reset std_srvs/srv/Empty '{}'`
-  stops the turtle and re-centres it. That command is already in the cue sheet.
+With the harness addressing the right process group, all seven scripts pass,
+including the assertion that the turtle is stopped after every interrupt.
+`beginner_check.txt`: **8 of 8**. The mechanism is in
+`../../../../04-copies-of-teaching-material/shared/screenshots/procgroup.sh`,
+which now carries the explanation so that the next harness cannot repeat it.
 
-Do not present these as the model for a node the students will write. That is
-what the full versions are for.
+The `finally: stop(pub)` block in each script does what it says.
 
 ## Checked
 

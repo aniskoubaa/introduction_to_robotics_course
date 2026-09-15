@@ -1,0 +1,10 @@
+# Add these seven lines to src/ros2_motion_cpp/CMakeLists.txt, immediately
+# above the line that reads `if(BUILD_TESTING)`. rclcpp and geometry_msgs are
+# already found above, so nothing else in the file has to change.
+
+add_executable(circle_cpp src/circle.cpp)
+ament_target_dependencies(circle_cpp rclcpp geometry_msgs)
+
+install(TARGETS
+  circle_cpp
+  DESTINATION lib/${PROJECT_NAME})

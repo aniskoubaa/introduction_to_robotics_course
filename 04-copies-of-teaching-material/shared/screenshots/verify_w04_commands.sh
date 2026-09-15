@@ -26,6 +26,7 @@ set -m
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HERE/rosenv.sh"
+source "$HERE/procgroup.sh"
 source "$HERE/assert_clean_graph.sh"
 assert_clean_graph || exit 1
 export PYTHONUNBUFFERED=1
@@ -69,18 +70,24 @@ check_interrupt_cli() {
   unset INTERRUPT_ANY_EXIT
 }
 
+# The group id comes from the child, never from $!. See procgroup.sh: with
+# `set -m` above, setsid forks and $! is a parent that has already exited, so
+# the old `kill -INT -$!` signalled nothing and every row here passed without
+# testing anything. The leaked `ros2 topic pub` processes it left behind were
+# what gave it away.
 check_interrupt() {
   local secs="$1" label="$2"; shift 2
-  local log="$LOGS/$(echo "$label" | tr -c 'A-Za-z0-9' '_').log"
-  setsid bash -c "source '$HERE/rosenv.sh'; $*" > "$log" 2>&1 &
-  local pgid=$!
+  local slug; slug=$(echo "$label" | tr -c 'A-Za-z0-9' '_')
+  local log="$LOGS/$slug.log" pgf="$LOGS/$slug.pgid"
+  spawn_pg "$pgf" "$log" "source '$HERE/rosenv.sh'; $*" || {
+    rows+=("  FAIL   $label   (could not start)"); fail=$((fail + 1)); return; }
   sleep "$secs"
-  kill -INT -"$pgid" 2>/dev/null
-  local i
-  for i in $(seq 1 40); do kill -0 "$pgid" 2>/dev/null || break; sleep 0.25; done
-  if kill -0 "$pgid" 2>/dev/null; then kill -9 -"$pgid" 2>/dev/null; fi
-  wait "$pgid" 2>/dev/null
-  local rc=$?
+  if ! kill -0 -"$(cat "$pgf")" 2>/dev/null; then
+    rows+=("  FAIL   $label   [Ctrl-C]   (exited before the interrupt; nothing was tested)")
+    fail=$((fail + 1)); return
+  fi
+  local rc=0
+  sigint_pg "$pgf" 10 || rc=1
   [ -n "${INTERRUPT_ANY_EXIT:-}" ] && rc=0
   verdict "$rc" "$label" "$log" 1
 }
@@ -100,10 +107,12 @@ verdict() {
   fi
 }
 
-bgpid=()
-bg() { setsid bash -c "source '$HERE/rosenv.sh'; exec $1" >/dev/null 2>&1 & bgpid+=("$!"); }
-stop_bg() { local p; for p in "${bgpid[@]:-}"; do kill -INT -- "-$p" 2>/dev/null; done; sleep 3
-            for p in "${bgpid[@]:-}"; do kill -9 -- "-$p" 2>/dev/null; done; bgpid=(); }
+bgpg=()
+bg() {   # bg <command> -- a simulator, left running until stop_bg
+  local pgf="$LOGS/bg$(( ${#bgpg[@]} + 1 )).pgid"; bgpg+=("$pgf")
+  spawn_pg "$pgf" /dev/null "source '$HERE/rosenv.sh'; exec $1"
+}
+stop_bg() { local f; for f in "${bgpg[@]:-}"; do kill_pg "$f"; done; bgpg=(); }
 trap stop_bg EXIT
 
 : > "$REPORT"
@@ -118,39 +127,38 @@ note "#   add WITH_GAZEBO=1 to include the TurtleBot 3 rows."
 note ""
 
 # --- setup -----------------------------------------------------------------
-check 300 "colcon build ee414_w04_demo" "cd '$WS' && colcon build --packages-select ee414_w04_demo"
-check 300 "colcon build ee414_course"   "cd ~/ros2_ws && colcon build --packages-select ee414_course"
+check 300 "colcon build ee414_course" "cd '$WS' && colcon build --packages-select ee414_course"
 
 # --- no simulator ----------------------------------------------------------
-check 60 "quaternion_demo --part 1" "ros2 run ee414_w04_demo quaternion_demo --part 1"
-check 60 "quaternion_demo --part 2" "ros2 run ee414_w04_demo quaternion_demo --part 2"
-check 60 "quaternion_demo --part 3" "ros2 run ee414_w04_demo quaternion_demo --part 3"
-check 60 "quaternion_demo --part 4" "ros2 run ee414_w04_demo quaternion_demo --part 4"
+check 60 "quaternion_demo --part 1" "ros2 run ee414_course quaternion_demo --part 1"
+check 60 "quaternion_demo --part 2" "ros2 run ee414_course quaternion_demo --part 2"
+check 60 "quaternion_demo --part 3" "ros2 run ee414_course quaternion_demo --part 3"
+check 60 "quaternion_demo --part 4" "ros2 run ee414_course quaternion_demo --part 4"
 check 60 "the one-liner wrap"       "python3 -c \"import math; a=math.radians(176); b=math.radians(-176); print('naive ', math.degrees(b-a)); print('wrapped', math.degrees(math.atan2(math.sin(b-a), math.cos(b-a))))\""
 check 60 "interface show Twist"     "ros2 interface show geometry_msgs/msg/Twist"
-check 60 "wheels_to_body --table"   "ros2 run ee414_w04_demo wheels_to_body --table"
-check 60 "wheels_to_body 0 10"      "ros2 run ee414_w04_demo wheels_to_body 0 10"
-check 60 "body_to_wheels 0.2 1.0"   "ros2 run ee414_w04_demo body_to_wheels 0.2 1.0"
-check 60 "body_to_wheels 0.5 3.0"   "ros2 run ee414_w04_demo body_to_wheels 0.5 3.0"
-check 60 "grep the URDF"            "grep -E '<joint name|<origin xyz|<cylinder radius' \$(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf"
-check 60 "check_urdf"               "check_urdf \$(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf"
-check 60 "grep the SDF plugin"      "grep -A7 'systems::DiffDrive' \$(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf"
-check 120 "dead_reckoning --compare" "ros2 run ee414_w04_demo dead_reckoning --compare"
+check 60 "wheels_to_body --table"   "ros2 run ee414_course wheels_to_body --table"
+check 60 "wheels_to_body 0 10"      "ros2 run ee414_course wheels_to_body 0 10"
+check 60 "body_to_wheels 0.2 1.0"   "ros2 run ee414_course body_to_wheels 0.2 1.0"
+check 60 "body_to_wheels 0.5 3.0"   "ros2 run ee414_course body_to_wheels 0.5 3.0"
+check 60 "grep the URDF"            "grep -E '<joint name|<origin xyz|<cylinder radius' \$(ros2 pkg prefix --share ee414_course)/urdf/burger_min.urdf"
+check 60 "check_urdf"               "check_urdf \$(ros2 pkg prefix --share ee414_course)/urdf/burger_min.urdf"
+check 60 "grep the SDF plugin"      "grep -A7 'systems::DiffDrive' \$(ros2 pkg prefix --share ee414_course)/worlds/diff_drive_demo.sdf"
+check 120 "dead_reckoning --compare" "ros2 run ee414_course dead_reckoning --compare"
 
 # --- turtlesim -------------------------------------------------------------
 bg "ros2 run turtlesim turtlesim_node"
 sleep 8
 check 30 "pose --once"              "ros2 topic echo /turtle1/pose --once"
-check_interrupt 5 "pose_watch"      "ros2 run ee414_w04_demo pose_watch"
+check_interrupt 5 "pose_watch"      "ros2 run ee414_course pose_watch"
 check_interrupt_cli 5 "cmd_vel pub (drive)" "ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {x: 1.0}, angular: {z: 0.6}}'"
 check 30 "service call /reset"      "ros2 service call /reset std_srvs/srv/Empty '{}'"
 check_interrupt_cli 4 "cmd_vel pub (sideways)" "ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {y: 2.0}}'"
 check 30 "angle_wrap"               "ros2 run ee414_course angle_wrap"
 check 120 "nonholonomic"            "ros2 run ee414_course nonholonomic"
 check 30 "reset"                    "ros2 service call /reset std_srvs/srv/Empty '{}'"
-check 120 "drive --shape square"    "ros2 run ee414_w04_demo drive --shape square --distance 2.0"
+check 120 "drive --shape square"    "ros2 run ee414_course drive --shape square --distance 2.0"
 check 30 "reset"                    "ros2 service call /reset std_srvs/srv/Empty '{}'"
-check 120 "drive --shape spiral"    "ros2 run ee414_w04_demo drive --shape spiral --speed 2.0 --turn-rate 1.2"
+check 120 "drive --shape spiral"    "ros2 run ee414_course drive --shape spiral --speed 2.0 --turn-rate 1.2"
 check 30 "reset"                    "ros2 service call /reset std_srvs/srv/Empty '{}'"
 check 120 "move_rotate --shape square" "ros2 run ee414_course move_rotate --shape square --distance 2.0"
 check 30 "reset"                    "ros2 service call /reset std_srvs/srv/Empty '{}'"
@@ -159,7 +167,7 @@ check 180 "go_to_goal 1.5,2"        "ros2 run ee414_course go_to_goal --x 1.5 --
 stop_bg
 
 # --- the model in RViz -----------------------------------------------------
-bg "ros2 launch ee414_w04_demo view_model.launch.py"
+bg "ros2 launch ee414_course view_model.launch.py"
 sleep 18
 check_interrupt_cli 8 "tf2_echo wheel to wheel" "ros2 run tf2_ros tf2_echo wheel_left_link wheel_right_link"
 stop_bg
@@ -167,7 +175,7 @@ sleep 3
 
 # --- Gazebo ----------------------------------------------------------------
 if [ -n "${WITH_GAZEBO:-}" ]; then
-  bg "gz sim -r \$(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf"
+  bg "gz sim -r \$(ros2 pkg prefix --share ee414_course)/worlds/diff_drive_demo.sdf"
   sleep 35
   check 25 "the demo world publishes /odom" "gz topic -e -t /odom -n 1"
   stop_bg
@@ -178,9 +186,9 @@ if [ -n "${WITH_GAZEBO:-}" ]; then
   check 30  "odom --once"           "ros2 topic echo /odom --once"
   check 20  "topic type /cmd_vel"   "ros2 topic type /cmd_vel"
   check_interrupt_cli 5 "cmd_vel pub, WRONG type" "ros2 topic pub -r 10 /cmd_vel geometry_msgs/msg/Twist '{linear: {x: 0.1}}'"
-  check 180 "drive tb3 square"      "ros2 run ee414_w04_demo drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5"
-  check 120 "drive tb3 arc 180"     "ros2 run ee414_w04_demo drive --robot tb3 --shape arc --angle 180 --speed 0.15 --turn-rate 0.4"
-  check_interrupt 8 "dead_reckoning --robot tb3" "ros2 run ee414_w04_demo dead_reckoning --robot tb3"
+  check 180 "drive tb3 square"      "ros2 run ee414_course drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5"
+  check 120 "drive tb3 arc 180"     "ros2 run ee414_course drive --robot tb3 --shape arc --angle 180 --speed 0.15 --turn-rate 0.4"
+  check_interrupt 8 "dead_reckoning --robot tb3" "ros2 run ee414_course dead_reckoning --robot tb3"
   stop_bg
 else
   rows+=("  SKIP   TurtleBot 3 rows (re-run with WITH_GAZEBO=1)")

@@ -75,6 +75,15 @@ worth remembering for the next harness.
 
 ## Known limitation, not fixed
 
+> **WITHDRAWN 2026-09-15.** There is no such limitation. The harness that
+> measured it was signalling a process group that no longer existed, so the
+> nodes were never interrupted and were simply still driving when the pose was
+> read. With the addressing fixed, all seven scripts stop the turtle on
+> `Ctrl-C`: `beginner_check.txt` is 8 of 8. See
+> `docs/2026-09-15-0252-week04-hands-on-lab-and-one-package.md`. The section
+> below is left as written, because it is what was believed at the time.
+
+
 `simple_square` and `simple_go_to_goal`, interrupted **part way through a
 motion**, can leave the turtle coasting at its last commanded velocity.
 Measured after the fixes above: 3 of 3 interrupted `simple_square` runs left

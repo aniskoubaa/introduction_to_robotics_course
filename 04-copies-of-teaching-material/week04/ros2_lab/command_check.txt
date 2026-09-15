@@ -2,12 +2,11 @@
 #
 # Every command in EE414_W04_demo_cue_sheet.html, run in lecture order.
 #   ROS 2 jazzy  |  Ubuntu 24.04.4 LTS
-#   captured 2026-09-13 06:16 UTC
+#   captured 2026-09-15 02:59 UTC
 #
 # Regenerate:  bash ../../shared/screenshots/verify_w04_commands.sh
 #   add WITH_GAZEBO=1 to include the TurtleBot 3 rows.
 
-  PASS   colcon build ee414_w04_demo
   PASS   colcon build ee414_course
   PASS   quaternion_demo --part 1
   PASS   quaternion_demo --part 2
@@ -42,4 +41,4 @@
   PASS   tf2_echo wheel to wheel   [Ctrl-C]
   SKIP   TurtleBot 3 rows (re-run with WITH_GAZEBO=1)
 
-33 passed, 0 failed.
+32 passed, 0 failed.

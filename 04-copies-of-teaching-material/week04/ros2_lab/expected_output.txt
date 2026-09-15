@@ -2,7 +2,7 @@
 #
 # Generated from an actual run, not written by hand.
 #   ROS 2 jazzy  |  Ubuntu 24.04.4 LTS
-#   captured 2026-09-13 06:13 UTC
+#   captured 2026-09-15 03:02 UTC
 #
 # Regenerate:  bash ../../shared/screenshots/make_expected_output_w04.sh
 #
@@ -13,16 +13,16 @@
 # is non-zero and grows with distance travelled.
 
 === colcon build ===
-Starting >>> ee414_w04_demo
-Finished <<< ee414_w04_demo [0.83s]
+Starting >>> ee414_course
+Finished <<< ee414_course [0.87s]
 
-Summary: 1 package finished [0.94s]
+Summary: 1 package finished [0.98s]
 
 ==============================================================
 THE MODEL --- plain arithmetic, no ROS, no simulator
 ==============================================================
 
-$ ros2 run ee414_w04_demo wheels_to_body --table
+$ ros2 run ee414_course wheels_to_body --table
 
 TurtleBot 3 Burger:  r = 0.033 m   L = 0.16 m
 v = r(w_R + w_L)/2      w = r(w_R - w_L)/L
@@ -48,7 +48,7 @@ Left wheel stopped
   path     an arc of radius R = v/w = +0.0800 m (centre is 0.0800 m to the left)
 
 
-$ ros2 run ee414_w04_demo wheels_to_body 0 10
+$ ros2 run ee414_course wheels_to_body 0 10
 
 TurtleBot 3 Burger:  r = 0.033 m   L = 0.16 m
 v = r(w_R + w_L)/2      w = r(w_R - w_L)/L
@@ -58,7 +58,7 @@ v = r(w_R + w_L)/2      w = r(w_R - w_L)/L
   path     an arc of radius R = v/w = +0.0800 m (centre is 0.0800 m to the left)
 
 
-$ ros2 run ee414_w04_demo body_to_wheels 0.2 1.0
+$ ros2 run ee414_course body_to_wheels 0.2 1.0
 
 TurtleBot 3 Burger:  r = 0.033 m   L = 0.16 m
 w_L = (v - wL/2)/r      w_R = (v + wL/2)/r
@@ -72,7 +72,7 @@ w_L = (v - wL/2)/r      w_R = (v + wL/2)/r
   the two models are inverses of each other, exactly.
 
 
-$ ros2 run ee414_w04_demo body_to_wheels 0.5 3.0
+$ ros2 run ee414_course body_to_wheels 0.5 3.0
 
 TurtleBot 3 Burger:  r = 0.033 m   L = 0.16 m
 w_L = (v - wL/2)/r      w_R = (v + wL/2)/r
@@ -92,7 +92,7 @@ w_L = (v - wL/2)/r      w_R = (v + wL/2)/r
 QUATERNIONS
 ==============================================================
 
-$ ros2 run ee414_w04_demo quaternion_demo
+$ ros2 run ee414_course quaternion_demo
 
 --------------------------------------------------------------------
 1. A flat robot's quaternion IS its heading, written differently
@@ -188,7 +188,7 @@ $ ros2 run ee414_w04_demo quaternion_demo
 INTEGRATION --- Euler against the exact arc
 ==============================================================
 
-$ ros2 run ee414_w04_demo dead_reckoning --compare
+$ ros2 run ee414_course dead_reckoning --compare
 
 ------------------------------------------------------------------------
 A quarter circle of radius 1.0 m, driven at v = 0.5 m/s, w = 0.5 rad/s
@@ -219,7 +219,7 @@ The exact finish, from trigonometry:  x = 1.000000   y = 1.000000
 THE ROBOT DESCRIPTION
 ==============================================================
 
-$ check_urdf $(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf
+$ check_urdf $(ros2 pkg prefix --share ee414_course)/urdf/burger_min.urdf
 robot name is: burger_min
 ---------- Successfully Parsed XML ---------------
 root Link: base_link has 3 child(ren)
@@ -227,7 +227,7 @@ root Link: base_link has 3 child(ren)
     child(2):  wheel_left_link
     child(3):  wheel_right_link
 
-$ grep -A7 'systems::DiffDrive' $(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf
+$ grep -A7 'systems::DiffDrive' $(ros2 pkg prefix --share ee414_course)/worlds/diff_drive_demo.sdf
               name="gz::sim::systems::DiffDrive">
         <left_joint>wheel_left_joint</left_joint>
         <right_joint>wheel_right_joint</right_joint>
@@ -270,8 +270,8 @@ response:
 std_srvs.srv.Empty_Response()
 
 
-$ ros2 run ee414_w04_demo drive --shape square --distance 2.0
-[INFO] [1789280008.195566805] [drive]: /turtle1/cmd_vel carries geometry_msgs/msg/Twist -- publishing that.
+$ ros2 run ee414_course drive --shape square --distance 2.0
+[INFO] [1789441359.108917006] [drive]: /turtle1/cmd_vel carries geometry_msgs/msg/Twist -- publishing that.
 
   start pose  x=5.544  y=5.544  theta=+0.0 deg
 
@@ -289,43 +289,24 @@ $ ros2 run ee414_w04_demo drive --shape square --distance 2.0
   straight: 2.0 m at 1.0 m/s -> hold for 2.000 s
   rotate:   90.0 deg at 1.0 rad/s -> hold for 1.571 s
 
-  end pose    x=5.734  y=5.379  theta=+6.7 deg
-  moved       dx=+0.190  dy=-0.166  dtheta=+6.7 deg
+  end pose    x=5.718  y=5.379  theta=+6.7 deg
+  moved       dx=+0.174  dy=-0.166  dtheta=+6.7 deg
 
-  CLOSING ERROR: 0.2518 m from where it started, 6.7 deg off heading
+  CLOSING ERROR: 0.2400 m from where it started, 6.7 deg off heading
   Nothing was measured to correct this. That is what open loop means.
 
 
 ==============================================================
-TURTLEBOT 3 IN GAZEBO --- the same node, the other robot
+TURTLEBOT 3 IN GAZEBO --- not captured in this run
 ==============================================================
 
-$ ros2 topic type /cmd_vel
-geometry_msgs/msg/TwistStamped
+Re-run with WITH_GAZEBO=1 to include it. For reference, the figures
+recorded while preparing the cue sheet were:
 
-$ ros2 run ee414_w04_demo drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5
-[INFO] [1789280072.008803125] [drive]: /cmd_vel carries geometry_msgs/msg/TwistStamped -- publishing that.
+  $ ros2 topic type /cmd_vel
+  geometry_msgs/msg/TwistStamped
 
-  start pose  x=0.000  y=-0.000  theta=-0.0 deg
-
-  square:   4 sides of 0.5 m, 4 turns of 90 deg
-  -- side 1
-  straight: 0.5 m at 0.15 m/s -> hold for 3.333 s
-  rotate:   90.0 deg at 0.5 rad/s -> hold for 3.142 s
-  -- side 2
-  straight: 0.5 m at 0.15 m/s -> hold for 3.333 s
-  rotate:   90.0 deg at 0.5 rad/s -> hold for 3.142 s
-  -- side 3
-  straight: 0.5 m at 0.15 m/s -> hold for 3.333 s
-  rotate:   90.0 deg at 0.5 rad/s -> hold for 3.142 s
-  -- side 4
-  straight: 0.5 m at 0.15 m/s -> hold for 3.333 s
-  rotate:   90.0 deg at 0.5 rad/s -> hold for 3.142 s
-
-  end pose    x=0.027  y=-0.026  theta=+1.3 deg
-  moved       dx=+0.027  dy=-0.026  dtheta=+1.3 deg
-
-  CLOSING ERROR: 0.0374 m from where it started, 1.3 deg off heading
-  Nothing was measured to correct this. That is what open loop means.
-
+  $ ros2 run ee414_course drive --robot tb3 --shape square \
+        --distance 0.5 --speed 0.15 --turn-rate 0.5
+  CLOSING ERROR: 0.0213 m from where it started, 0.6 deg off heading
 

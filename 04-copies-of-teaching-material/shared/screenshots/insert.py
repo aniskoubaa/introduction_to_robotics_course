@@ -11,17 +11,17 @@ from snippets import render, SNIPS
 
 # snippet id -> the command whose cue it belongs under
 PLACE = [
-  ("quat",        "ros2 run ee414_w04_demo quaternion_demo --part 1"),
+  ("quat",        "ros2 run ee414_course quaternion_demo --part 1"),
   ("wrap",        "ros2 run ee414_course angle_wrap"),
   ("twistcompat", "ros2 interface show geometry_msgs/msg/Twist"),
   ("sixfields",   "ros2 run ee414_course nonholonomic"),
-  ("fk",          "ros2 run ee414_w04_demo wheels_to_body --table"),
-  ("ik",          "ros2 run ee414_w04_demo body_to_wheels 0.2 1.0"),
-  ("saturate",    "ros2 run ee414_w04_demo body_to_wheels 0.5 3.0"),
-  ("urdf",        "check_urdf $(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf"),
+  ("fk",          "ros2 run ee414_course wheels_to_body --table"),
+  ("ik",          "ros2 run ee414_course body_to_wheels 0.2 1.0"),
+  ("saturate",    "ros2 run ee414_course body_to_wheels 0.5 3.0"),
+  ("urdf",        "check_urdf $(ros2 pkg prefix --share ee414_course)/urdf/burger_min.urdf"),
   ("sdf",         "grep -A7 'systems::DiffDrive'"),
   ("odomread",    "ros2 topic echo /odom --once"),
-  ("integrators", "ros2 run ee414_w04_demo dead_reckoning --compare"),
+  ("integrators", "ros2 run ee414_course dead_reckoning --compare"),
   ("closedloop",  "ros2 run ee414_course go_to_goal --x 9.0 --y 9.0"),
 ]
 

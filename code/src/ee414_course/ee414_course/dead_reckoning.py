@@ -107,8 +107,8 @@ def live(robot):
     from rclpy.node import Node
     from turtlesim.msg import Pose as TurtlePose
 
-    from ee414_w04_demo import graceful
-    from ee414_w04_demo.twist_compat import resolve_twist_type, twist_of
+    from ee414_course import graceful
+    from ee414_course.twist_compat import resolve_twist_type, twist_of
 
     def yaw_from_quaternion(q):
         return math.atan2(2.0 * (q.w * q.z + q.x * q.y),

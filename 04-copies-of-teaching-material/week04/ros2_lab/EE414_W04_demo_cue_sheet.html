@@ -576,7 +576,7 @@ figure.shot figcaption b { color: var(--ink-soft); font-weight: 600; }
   <div class="meta">
     <span><b>ROS 2 Jazzy</b> · Gazebo Harmonic</span>
     <span>Deck A · <b>40 slides</b></span>
-    <span><b>ee414_w04_demo</b> + <b>ee414_course</b></span>
+    <span>One package · <b>ee414_course</b></span>
     <span>Every command was <b>run</b></span>
   </div>
 </header>
@@ -602,17 +602,13 @@ figure.shot figcaption b { color: var(--ink-soft); font-weight: 600; }
 <!-- ============================== SETUP ============================== -->
 <section class="panel" id="p-setup" role="tabpanel" aria-labelledby="t-setup" tabindex="-1" hidden>
   <h2>Setup</h2>
-  <p class="lede">Ten minutes before the room fills. Source both workspaces in every terminal.</p>
+  <p class="lede">Ten minutes before the room fills. One workspace, one package, one terminal to prepare.</p>
 
   <ol class="steps">
     <li class="step"><div>
-      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/EE414/introduction_to_robotics_course/code &amp;&amp; colcon build --packages-select ee414_w04_demo &amp;&amp; source install/setup.bash</code><button class="copy" type="button">Copy</button></div>
-      <p class="does">The lecture package. <code>~/EE414</code> is a symlink to the repository on this machine, so the line runs as written; elsewhere, adjust the path.</p>
-    </div></li>
-    <li class="step"><div>
-      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_ws &amp;&amp; colcon build --packages-select ee414_course &amp;&amp; source install/setup.bash</code><button class="copy" type="button">Copy</button></div>
-      <p class="does">The student package. Both can be sourced together — the names do not collide.</p>
-      <div class="out"><span class="olbl">Both should end with</span><pre>Summary: 1 package finished [1.00s]</pre></div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/EE414/introduction_to_robotics_course/code &amp;&amp; colcon build --packages-select ee414_course &amp;&amp; source install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Everything this sheet runs is in that one package. <code>~/EE414</code> is a symlink to the repository on this machine, so the line runs as written; elsewhere, adjust the path.</p>
+      <div class="out"><span class="olbl">Should end with</span><pre>Summary: 1 package finished [1.00s]</pre></div>
     </div></li>
     <li class="step"><div>
       <div class="line"><span class="pr">$</span><code class="cmd">export TURTLEBOT3_MODEL=burger</code><button class="copy" type="button">Copy</button></div>
@@ -621,11 +617,12 @@ figure.shot figcaption b { color: var(--ink-soft); font-weight: 600; }
     </div></li>
   </ol>
 
-  <div class="notice"><span class="lbl">Two packages</span><p><code>ee414_w04_demo</code> is the
-  <b>lecture</b> package — it exists to make a slide's claim visible. <code>ee414_course</code>
-  is the <b>student</b> package, from
-  <a href="https://github.com/aniskoubaa/ros2_course_packages">ros2_course_packages</a>,
-  corrected. Where the student version makes the point better, this sheet uses it.</p></div>
+  <div class="notice"><span class="lbl">One package</span><p>Until 13 September 2026 this sheet
+  used two: <code>ee414_w04_demo</code> for the lecture and <code>ee414_course</code> for the
+  student programs. They are now a single package, <code>ee414_course</code>, in a single
+  repository. Twenty programs: six written for this deck, seven from
+  <a href="https://github.com/aniskoubaa/ros2_course_packages">ros2_course_packages</a>
+  (corrected), and seven short versions of those for the projector.</p></div>
 
   <div class="howto" style="margin-top:20px">
     <h2>Reading a line</h2>
@@ -682,7 +679,7 @@ angular_velocity: 0.0</pre></div>
       restart.</p>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo pose_watch</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course pose_watch</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T3</span> Subscribes to <code>/turtle1/pose</code>
             and <code>/odom</code> at once.</p>
         </div></li>
@@ -707,7 +704,7 @@ angular_velocity: 0.0</pre></div>
       are always zero.</p>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 1</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course quaternion_demo --part 1</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> <code>z</code> is
             <code>sin(theta/2)</code>, <code>w</code> is <code>cos(theta/2)</code>. Nothing more.</p>
           <div class="out"><span class="olbl">You will see</span><pre>   heading        quaternion (x, y, z, w)                    back again
@@ -717,7 +714,7 @@ angular_velocity: 0.0</pre></div>
     -90 deg      (0.000, 0.000, -0.7071, +0.7071)          -90.0 deg</pre></div>
         </div></li>
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 2</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course quaternion_demo --part 2</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> Four numbers, one constraint, three degrees
             of freedom.</p>
           <div class="out"><span class="olbl">You will see</span><pre>   a real heading of 37 deg -&gt; (0.000, 0.000, 0.317305, 0.948324)
@@ -727,7 +724,7 @@ angular_velocity: 0.0</pre></div>
    its norm = 0.707106781186548   &lt;-- not 1, so this is not a rotation</pre></div>
         </div></li>
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 3</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course quaternion_demo --part 3</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> Drift over 200,000 compositions, repaired
             in one line.</p>
           <div class="out"><span class="olbl">You will see</span><pre>   composings        norm                      error from 1
@@ -739,7 +736,7 @@ angular_velocity: 0.0</pre></div>
       </ol>
       <details class="code">
         <summary>Code · heading &#8596; quaternion, both directions</summary>
-        <p class="path">ee414_w04_demo/quaternion_demo.py<span class="ln">lines 24–34</span></p>
+        <p class="path">ee414_course/quaternion_demo.py<span class="ln">lines 24–34</span></p>
         <pre><code>def quat_from_yaw(theta):
     &quot;&quot;&quot;A rotation about z only -- the only kind a floor robot ever has.&quot;&quot;&quot;
     return (0.0, 0.0, math.sin(theta / 2.0), math.cos(theta / 2.0))
@@ -764,7 +761,7 @@ def yaw_from_quat(x, y, z, w):
       <h4>The Same Idea, Drawn: Axis, Angle, and Lock</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo quaternion_demo --part 4</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course quaternion_demo --part 4</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> Walks pitch to 90° and prints the divisor
             going to infinity.</p>
           <div class="out"><span class="olbl">You will see</span><pre>   pitch        cos(pitch)          1/cos(pitch)
@@ -873,7 +870,7 @@ Vector3  angular
       </ol>
       <details class="code">
         <summary>Code · asking the graph which Twist the topic wants</summary>
-        <p class="path">ee414_w04_demo/twist_compat.py<span class="ln">lines 22–42</span></p>
+        <p class="path">ee414_course/twist_compat.py<span class="ln">lines 22–42</span></p>
         <pre><code>def resolve_twist_type(node, topic, timeout=3.0):
     &quot;&quot;&quot;Return the message class `topic` carries, or Twist if nobody says. ...&quot;&quot;&quot;
     topic = topic if topic.startswith(&quot;/&quot;) else &quot;/&quot; + topic
@@ -998,7 +995,7 @@ finally:
       <h4>Forward Kinematics: Wheels to Body</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo wheels_to_body --table</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course wheels_to_body --table</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> Four cases; each prints the path shape that
             follows from <code>v</code> and <code>ω</code>.</p>
           <div class="out"><span class="olbl">You will see — trimmed</span><pre>Both wheels equal
@@ -1026,7 +1023,7 @@ def forward(wL, wR):
       </details>
       <details class="code">
         <summary>Code · forward kinematics — wheels to body</summary>
-        <p class="path">ee414_w04_demo/wheels_to_body.py<span class="ln">lines 25–29</span></p>
+        <p class="path">ee414_course/wheels_to_body.py<span class="ln">lines 25–29</span></p>
         <pre><code>def forward_kinematics(w_left, w_right, r=WHEEL_RADIUS, L=WHEEL_SEPARATION):
     &quot;&quot;&quot;Wheel angular speeds (rad/s) -&gt; body (v, omega) in (m/s, rad/s).&quot;&quot;&quot;
     v = r * (w_right + w_left) / 2.0
@@ -1045,7 +1042,7 @@ def forward(wL, wR):
       circle?</p>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo wheels_to_body 0 10</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course wheels_to_body 0 10</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> <code>0.0800</code> is exactly
             <code>L/2</code> — it pivots about the stopped wheel.</p>
           <div class="out"><span class="olbl">You will see</span><pre>  wheels   w_L =    0.00 rad/s   w_R =   10.00 rad/s
@@ -1062,7 +1059,7 @@ def forward(wL, wR):
       <h4>Inverse Kinematics: Body to Wheels</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo body_to_wheels 0.2 1.0</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course body_to_wheels 0.2 1.0</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> The direction the robot works in. Note the
             round-trip check at the end.</p>
           <div class="out"><span class="olbl">You will see</span><pre>  wheels must do  w_L =   +3.64 rad/s   w_R =   +8.48 rad/s
@@ -1083,7 +1080,7 @@ def forward(wL, wR):
       </details>
       <details class="code">
         <summary>Code · inverse kinematics — body to wheels</summary>
-        <p class="path">ee414_w04_demo/body_to_wheels.py<span class="ln">lines 28–32</span></p>
+        <p class="path">ee414_course/body_to_wheels.py<span class="ln">lines 28–32</span></p>
         <pre><code>def inverse_kinematics(v, omega, r=WHEEL_RADIUS, L=WHEEL_SEPARATION):
     &quot;&quot;&quot;Body (v, omega) -&gt; wheel angular speeds (w_left, w_right) in rad/s.&quot;&quot;&quot;
     w_left = (v - omega * L / 2.0) / r
@@ -1102,7 +1099,7 @@ def forward(wL, wR):
       outside the diamond.</p>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo body_to_wheels 0.5 3.0</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course body_to_wheels 0.5 3.0</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> A real robot does not refuse — it saturates,
             and drives something else.</p>
           <div class="out bad"><span class="olbl">You will see</span><pre>  wheels must do  w_L =   +7.88 rad/s   w_R =  +22.42 rad/s
@@ -1113,7 +1110,7 @@ def forward(wL, wR):
       </ol>
       <details class="code">
         <summary>Code · what a real robot does when you ask for too much</summary>
-        <p class="path">ee414_w04_demo/body_to_wheels.py<span class="ln">lines 49–54</span></p>
+        <p class="path">ee414_course/body_to_wheels.py<span class="ln">lines 49–54</span></p>
         <pre><code>fastest = max(abs(w_left), abs(w_right))
 if fastest &gt; MAX_WHEEL_SPEED:
     # Saturation does not scale v and omega equally, so the robot turns
@@ -1141,7 +1138,7 @@ if fastest &gt; MAX_WHEEL_SPEED:
       <h4>The Model Needs Two Numbers. Where Do They Live?</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 launch ee414_w04_demo view_model.launch.py</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 launch ee414_course view_model.launch.py</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T1</span> RViz2 plus joint sliders. <b>Drag a wheel
             slider</b> and watch its frame turn while the body stays put.</p>
         </div></li>
@@ -1165,7 +1162,7 @@ if fastest &gt; MAX_WHEEL_SPEED:
       <h4>A Differential Drive, in Twelve Lines of URDF</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">grep -E '&lt;joint name|&lt;origin xyz|&lt;cylinder radius' $(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">grep -E '&lt;joint name|&lt;origin xyz|&lt;cylinder radius' $(ros2 pkg prefix --share ee414_course)/urdf/burger_min.urdf</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> <code>radius="0.033"</code> is
             <code>r</code>; <code>xyz="0 0.080 0"</code> is half of <code>L</code>;
             <code>type="continuous"</code> makes it a wheel, not a hinge.</p>
@@ -1177,7 +1174,7 @@ if fastest &gt; MAX_WHEEL_SPEED:
     &lt;origin xyz="0 -0.080 0"/&gt;</pre></div>
         </div></li>
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">check_urdf $(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">check_urdf $(ros2 pkg prefix --share ee414_course)/urdf/burger_min.urdf</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> A URDF is a tree of links joined by joints.</p>
           <div class="out"><span class="olbl">You will see</span><pre>robot name is: burger_min
 root Link: base_link has 3 child(ren)
@@ -1188,7 +1185,7 @@ root Link: base_link has 3 child(ren)
       </ol>
       <details class="code">
         <summary>Code · the wheel, in URDF</summary>
-        <p class="path">ee414_w04_demo/urdf/burger_min.urdf<span class="ln">lines 35–56</span></p>
+        <p class="path">ee414_course/urdf/burger_min.urdf<span class="ln">lines 35–56</span></p>
         <pre><code>&lt;link name=&quot;wheel_left_link&quot;&gt;
   &lt;visual&gt;
     &lt;!-- A cylinder&#x27;s axis in URDF runs along z, so it is rolled a quarter
@@ -1224,7 +1221,7 @@ root Link: base_link has 3 child(ren)
       <h4>…and the World It Is Dropped Into</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">grep -A7 'systems::DiffDrive' $(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">grep -A7 'systems::DiffDrive' $(ros2 pkg prefix --share ee414_course)/worlds/diff_drive_demo.sdf</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> <b>The only thing in the stack that reads
             both constants at run time.</b></p>
           <div class="out"><span class="olbl">You will see</span><pre>        &lt;wheel_separation&gt;0.160&lt;/wheel_separation&gt;
@@ -1233,14 +1230,14 @@ root Link: base_link has 3 child(ren)
         &lt;topic&gt;cmd_vel&lt;/topic&gt;</pre></div>
         </div></li>
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">gz sim -r $(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">gz sim -r $(ros2 pkg prefix --share ee414_course)/worlds/diff_drive_demo.sdf</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T1</span> <b>Optional</b> — skip if time is short;
             Part 6 makes the same point with less setup.</p>
         </div></li>
       </ol>
       <details class="code">
         <summary>Code · the one place both constants are read at run time</summary>
-        <p class="path">ee414_w04_demo/worlds/diff_drive_demo.sdf<span class="ln">lines 439–451</span></p>
+        <p class="path">ee414_course/worlds/diff_drive_demo.sdf<span class="ln">lines 439–451</span></p>
         <pre><code>     ============================================================ --&gt;
 &lt;plugin filename=&quot;gz-sim-diff-drive-system&quot;
         name=&quot;gz::sim::systems::DiffDrive&quot;&gt;
@@ -1280,7 +1277,7 @@ root Link: base_link has 3 child(ren)
       timesteps. No simulator.</p>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo dead_reckoning --compare</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course dead_reckoning --compare</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> A 1 m quarter circle; the exact finish is
             <code>(1, 1)</code>. <b>Read the error columns down, not across.</b></p>
           <div class="out"><span class="olbl">You will see</span><pre>   timestep      Euler finish            error        arc finish              error
@@ -1295,7 +1292,7 @@ root Link: base_link has 3 child(ren)
       </ol>
       <details class="code">
         <summary>Code · the two integrators, side by side</summary>
-        <p class="path">ee414_w04_demo/dead_reckoning.py<span class="ln">lines 29–45</span></p>
+        <p class="path">ee414_course/dead_reckoning.py<span class="ln">lines 29–45</span></p>
         <pre><code>def step_euler(x, y, theta, v, omega, dt):
     &quot;&quot;&quot;Pretend the heading is frozen for the whole timestep, then turn.&quot;&quot;&quot;
     x += v * math.cos(theta) * dt
@@ -1328,7 +1325,7 @@ def step_exact_arc(x, y, theta, v, omega, dt):
       <h4>The Trail Is the Integral</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --shape spiral --speed 2.0 --turn-rate 1.2</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course drive --shape spiral --speed 2.0 --turn-rate 1.2</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> <code>ω</code> fixed, <code>v</code> rising.
             <b>Point at the widening gap</b> — that is <code>R = v/ω</code> growing.</p>
         </div></li>
@@ -1390,7 +1387,7 @@ def step_exact_arc(x, y, theta, v, omega, dt):
       </details>
       <details class="code">
         <summary>Code · what you actually get out of /odom</summary>
-        <p class="path">ee414_w04_demo/pose_watch.py<span class="ln">lines 58–65</span></p>
+        <p class="path">ee414_course/pose_watch.py<span class="ln">lines 58–65</span></p>
         <pre><code>def on_odom(self, msg):
 
     # ...
@@ -1440,13 +1437,13 @@ publishing #1: geometry_msgs.msg.Twist(linear=..., angular=...)
       <p class="say"><b>The deliverable.</b> Put the two closing errors side by side on the board.</p>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --shape square --distance 2.0</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course drive --shape square --distance 2.0</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> The turtle. Every duration is
             <code>distance ÷ speed</code>; nothing is measured.</p>
           <div class="out"><span class="olbl">You will see — trimmed</span><pre>  CLOSING ERROR: 0.2090 m from where it started, 3.9 deg off heading</pre></div>
         </div></li>
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> <b>Identical node</b>, slower and smaller —
             a Burger tops out at 0.22 m/s. Watch Gazebo, not the terminal.</p>
           <div class="out"><span class="olbl">You will see — trimmed</span><pre>[INFO] [drive]: /cmd_vel carries geometry_msgs/msg/TwistStamped -- publishing that.
@@ -1475,12 +1472,12 @@ publishing #1: geometry_msgs.msg.Twist(linear=..., angular=...)
       <h4>Why the Error Has No Ceiling</h4>
       <ol class="steps">
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo dead_reckoning --robot tb3</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course dead_reckoning --robot tb3</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T3</span> Integrates <code>/cmd_vel</code> both ways
             against Gazebo's truth. <b>It never looks at the robot.</b></p>
         </div></li>
         <li class="step"><div>
-          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --robot tb3 --shape arc --angle 180 --speed 0.15 --turn-rate 0.4</code><button class="copy" type="button">Copy</button></div>
+          <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course drive --robot tb3 --shape arc --angle 180 --speed 0.15 --turn-rate 0.4</code><button class="copy" type="button">Copy</button></div>
           <p class="does"><span class="where">T2</span> A half circle. Watch T3's <code>off</code>
             columns.</p>
           <div class="out"><span class="olbl">In T3 — first, middle and last lines</span><pre>  truth ( 0.130, 0.027)   euler ( 0.146, 0.028) off 0.0159   arc ( 0.146, 0.030) off 0.0157
@@ -1539,7 +1536,7 @@ finally:
       </details>
       <details class="code">
         <summary>Code · the whole of open loop</summary>
-        <p class="path">ee414_w04_demo/drive.py<span class="ln">lines 64–78</span></p>
+        <p class="path">ee414_course/drive.py<span class="ln">lines 64–78</span></p>
         <pre><code>def send_for(self, v, omega, seconds):
     &quot;&quot;&quot;Hold one Twist for a fixed time. This is the whole of open loop. ...&quot;&quot;&quot;
     period = 1.0 / self.rate_hz
@@ -1723,7 +1720,7 @@ finally:
   <p class="lede">Five commands. The first three need no simulator.</p>
   <ol class="steps">
     <li class="step"><div>
-      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo wheels_to_body --table</code><button class="copy" type="button">Copy</button></div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course wheels_to_body --table</code><button class="copy" type="button">Copy</button></div>
       <p class="does">The model is arithmetic. Four cases, four path shapes.</p>
     </div></li>
     <li class="step"><div>
@@ -1731,7 +1728,7 @@ finally:
       <p class="does">A <code>rotate(40°)</code> that stops after 12.</p>
     </div></li>
     <li class="step"><div>
-      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo dead_reckoning --compare</code><button class="copy" type="button">Copy</button></div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course dead_reckoning --compare</code><button class="copy" type="button">Copy</button></div>
       <p class="does">Euler is first order; the arc is exact at every timestep.</p>
     </div></li>
     <li class="step"><div>
@@ -1739,7 +1736,7 @@ finally:
       <p class="does">The nonholonomic law, as a command that does nothing.</p>
     </div></li>
     <li class="step"><div>
-      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_w04_demo drive --shape square --distance 2.0</code><button class="copy" type="button">Copy</button></div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ee414_course drive --shape square --distance 2.0</code><button class="copy" type="button">Copy</button></div>
       <p class="does">The square does not close, and nothing tried to make it.</p>
     </div></li>
   </ol>
@@ -1747,9 +1744,8 @@ finally:
   <section class="colophon">
     <p>EE 414 · Week 4 Lecture A · companion to
     <code>slides/EE414_W04A_differential_drive.pdf</code> (40 slides).
-    Lecture programs in <code>code/src/ee414_w04_demo/</code>; student programs in
-    <code>~/ros2_ws/src/ee414_course/</code>, derived from <code>ros2_course_packages</code>
-    (© 2023 Anis Koubaa, CC BY-NC-SA 4.0). Every command here was run on ROS 2 Jazzy with
+    All programs in <code>code/src/ee414_course/</code>; the seven student programs there are
+    derived from <code>ros2_course_packages</code> (© 2023 Anis Koubaa, CC BY-NC-SA 4.0). Every command here was run on ROS 2 Jazzy with
     Gazebo Harmonic. Closing errors are simulator-dependent — yours will be close, not
     identical.</p>
   </section>

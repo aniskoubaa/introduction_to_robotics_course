@@ -6,8 +6,12 @@ handout is generated from the code every time this runs.
 """
 import html, os, re, sys
 
-W04 = os.path.expanduser("~/EE414/introduction_to_robotics_course/code/src/ee414_w04_demo")
-CRS = "/home/alfaisalx/ros2_ws/src/ee414_course"
+# One package since 2026-09-13. The lecture programs and the student programs
+# were merged into ee414_course and both former roots now name the same tree,
+# so the two constants are kept only because the table below reads better with
+# them: W04 marks a lecture program, CRS a student one.
+PKG = os.path.expanduser("~/EE414/introduction_to_robotics_course/code/src/ee414_course")
+W04 = CRS = PKG
 
 def squash_docstrings(lines):
     """Keep the first line of every docstring, drop the rest.
@@ -55,12 +59,12 @@ SNIPS = {
    "One line of arithmetic. <code>sin</code> and <code>cos</code> are already periodic, so "
    "<code>atan2</code> of the pair throws the winding away and keeps the direction."),
 
- "quat": (W04, "ee414_w04_demo/quaternion_demo.py", (24, 34),
+ "quat": (W04, "ee414_course/quaternion_demo.py", (24, 34),
    "heading &#8596; quaternion, both directions",
    "A floor robot only ever rotates about <code>z</code>, so two of the four numbers are always "
    "zero. <code>yaw_from_quat</code> is what tf2 runs at every edge of the tree."),
 
- "twistcompat": (W04, "ee414_w04_demo/twist_compat.py", (22, 42),
+ "twistcompat": (W04, "ee414_course/twist_compat.py", (22, 42),
    "asking the graph which Twist the topic wants",
    "Why every script in both packages runs on turtlesim <em>and</em> TurtleBot 3 without being "
    "edited. Subscribing with the wrong type is silent: nothing moves, and nothing complains."),
@@ -69,16 +73,16 @@ SNIPS = {
    "setting any of the six Twist fields by name",
    "The message accepts all six. The robot honours two. Nothing in ROS 2 stands between them."),
 
- "fk": (W04, "ee414_w04_demo/wheels_to_body.py", (25, 29),
+ "fk": (W04, "ee414_course/wheels_to_body.py", (25, 29),
    "forward kinematics — wheels to body",
    "Two lines of arithmetic. The other ninety in the file are printing."),
 
- "ik": (W04, "ee414_w04_demo/body_to_wheels.py", (28, 32),
+ "ik": (W04, "ee414_course/body_to_wheels.py", (28, 32),
    "inverse kinematics — body to wheels",
    "The same two equations, solved the other way round. This is the direction a real robot works "
    "in: you ask for <code>v</code> and <code>&#969;</code>, the wheels are what it has."),
 
- "saturate": (W04, "ee414_w04_demo/body_to_wheels.py", (49, 54),
+ "saturate": (W04, "ee414_course/body_to_wheels.py", (49, 54),
    "what a real robot does when you ask for too much",
    "Scale <b>both</b> <code>v</code> and <code>&#969;</code> by the same factor. Clamping them "
    "separately changes the shape of the path, which is the other half of why the square comes "
@@ -94,19 +98,19 @@ SNIPS = {
    "Change <code>wheel_separation</code> here and the robot still drives perfectly. Only its "
    "report of where it went is wrong, by the same factor, for ever."),
 
- "odomread": (W04, "ee414_w04_demo/pose_watch.py", [(58, 58), (62, 65)],
+ "odomread": (W04, "ee414_course/pose_watch.py", [(58, 58), (62, 65)],
    "what you actually get out of /odom",
    "<code>turtlesim/Pose</code> hands you <code>theta</code>. <code>nav_msgs/Odometry</code> hands "
    "you four numbers and leaves the trigonometry to you. <code>|q|</code> is printed so the class "
    "can watch it stay at 1.000000."),
 
- "integrators": (W04, "ee414_w04_demo/dead_reckoning.py", (29, 45),
+ "integrators": (W04, "ee414_course/dead_reckoning.py", (29, 45),
    "the two integrators, side by side",
    "Euler freezes the heading for the whole step, then turns. The arc form follows the circle the "
    "robot is genuinely on, and is <b>exact</b> whenever <code>v</code> and <code>&#969;</code> are "
    "held constant — which, between two <code>/cmd_vel</code> messages, they are."),
 
- "openloop": (W04, "ee414_w04_demo/drive.py", (64, 78),
+ "openloop": (W04, "ee414_course/drive.py", (64, 78),
    "the whole of open loop",
    "Publish, wait, stop. The pose IS subscribed to, but only to report the error at the end — "
    "never to decide anything."),
@@ -133,7 +137,7 @@ def render(key):
         pad = " " * (len(nxt) - len(nxt.lstrip()))
         joined += f"\n\n{pad}# ...\n\n{nxt}"
     code = html.escape(joined)
-    pkg = "ee414_w04_demo" if root == W04 else "ee414_course"
+    pkg = "ee414_course"
     shown = rel if rel.startswith(pkg + "/") else f"{pkg}/{rel}"
     return (f'      <details class="code">\n'
             f'        <summary>Code · {summary}</summary>\n'
@@ -150,7 +154,7 @@ def render(key):
 # room reads the forty-line version first and the production version second.
 # Same generation rule: quoted from the files on disk, never retyped.
 # ---------------------------------------------------------------------------
-BEG = os.path.join(CRS, "ee414_course/beginner_student_freindly")
+BEG = os.path.join(PKG, "ee414_course/beginner_student_freindly")
 
 # id of the full snapshot it goes above -> (file, spans, summary, note)
 SIMPLE = {

@@ -1,0 +1,34 @@
+# EE 414 Week 4 --- hands-on lab check
+#
+# Every step of EE414_W04_hands_on_lab.html, from an empty directory.
+#   ROS 2 jazzy  |  Ubuntu 24.04.4 LTS
+#   captured 2026-09-15 03:02 UTC
+#
+# Regenerate:  bash ../../shared/screenshots/verify_w04_handson.sh
+
+  PASS   git clone ros2_course_packages
+  PASS   colcon build (two motion packages)
+  PASS   ros2_motion_python ships 3 executables
+  PASS   ros2_motion_cpp ships 0 executables (empty skeleton)
+  PASS   turtlesim is up
+  PASS   cleaner: move 2.0 forward
+  PASS   cleaner: rotate 90 CCW
+  PASS   cleaner: go to goal 1,1
+  PASS   cleaner: spiral
+  PASS   cleaner: rotate 200 CCW   [fails as documented]
+  PASS   mover: 15 units then stop   [fails as documented]
+  PASS   ros2 pkg create my_turtle_circle
+  PASS   circle.py installed (30 lines)
+  PASS   setup.py entry point added
+  PASS   colcon build my_turtle_circle
+  PASS   circle (python) traces r = 2.000 by 2.000  (v/w = 2.0)
+  PASS   circle (python)   [Ctrl-C] leaves the turtle stopped
+  PASS   circle (python)   [Ctrl-C] no traceback
+  PASS   CMakeLists.txt gains circle_cpp
+  PASS   colcon build ros2_motion_cpp (with circle.cpp)
+  PASS   ros2_motion_cpp now ships circle_cpp
+  PASS   circle_cpp traces r = 2.000 by 2.000  (v/w = 2.0)
+  PASS   circle_cpp   [Ctrl-C] leaves the turtle stopped
+  PASS   circle_cpp   [Ctrl-C] no traceback
+
+24 passed, 0 failed.

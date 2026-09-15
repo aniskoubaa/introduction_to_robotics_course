@@ -25,13 +25,17 @@ export LD_LIBRARY_PATH=$(echo "$LD_LIBRARY_PATH" | tr ':' '\n' | grep -v '^/snap
 
 source /opt/ros/jazzy/setup.bash
 
-# The course workspace, so captures can show the week's own packages.
+# The personal workspace. Nothing for this course lives here any more -- until
+# 2026-09-13 ee414_course was built in ~/ros2_ws and the lecture package in the
+# repository, and the two drifted. It is still sourced because unrelated work
+# lives here, and it is sourced FIRST so that if a copy of ee414_course ever
+# reappears in it, the repository's copy is the one that wins.
+[ -f "$HOME/ros2_ws/install/setup.bash" ] && source "$HOME/ros2_ws/install/setup.bash"
+
+# The course workspace. One package, ee414_course, holding everything the
+# cue sheets run.
 WS="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../code" 2>/dev/null && pwd)"
 [ -n "$WS" ] && [ -f "$WS/install/setup.bash" ] && source "$WS/install/setup.bash"
-
-# The student workspace, where ee414_course lives. Week 4 onwards the cue
-# sheets use both packages in the same terminal; the names do not collide.
-[ -f "$HOME/ros2_ws/install/setup.bash" ] && source "$HOME/ros2_ws/install/setup.bash"
 
 # A domain of its own, so a capture never picks up a student's or a colleague's
 # nodes on the same network.

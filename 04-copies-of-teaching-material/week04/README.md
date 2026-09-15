@@ -17,10 +17,11 @@
 | Light deck | `slides/EE414_W04A_light.tex` / `.pdf` | ✅ 15 slides |
 | Exercise set + key | `exercises/EE414_W04_exercises.pdf` / `_solutions.pdf` | ❌ not authored |
 | Demo runbook (Lecture A) | `ros2_lab/EE414_W04_demo_cue_sheet.html` | ✅ 40 commands, all run · 13 code snapshots |
-| ROS 2 demo package | `../../code/src/ee414_w04_demo/` | ✅ 6 programs · URDF · SDF world · launch |
+| ROS 2 package (one, for the whole course) | `../../code/src/ee414_course/` | ✅ 20 executables · URDF · SDF world · launch |
 | Expected-output transcript | `ros2_lab/expected_output.txt` | ✅ generated from a real run |
 | Command check (every line, pass/fail) | `ros2_lab/command_check.txt` | ✅ full run incl. Gazebo |
-| ROS 2 lab sheet (Lecture B) | `ros2_lab/README.md` | ⚠️ Lecture A covered; B's checkpoint sheet not authored |
+| Hands-on lab sheet (students) | `ros2_lab/EE414_W04_hands_on_lab.html` | ✅ 6 parts · 24/24 steps checked |
+| Hands-on check (every step, pass/fail) | `ros2_lab/handson_check.txt` | ✅ from a clean clone |
 | ROS 2 starter package (Lecture B) | `../../code/src/` | ❌ not authored |
 
 ## Lectures
@@ -47,10 +48,27 @@ their own node print, move, or draw in RViz2 — never with a half-typed file.
 
 | Item | Status |
 |---|---|
-| Lab sheet (step-by-step, 1.5 hours, checkpoint at each step) | ❌ |
+| Lab sheet (step-by-step, 1.5 hours, checkpoint at each step) | ✅ `ros2_lab/EE414_W04_hands_on_lab.html` |
 | Starter package under `code/src/` | ❌ starter versions; the worked nodes exist |
 | Expected-output transcript (for the key) | ✅ `ros2_lab/expected_output.txt` |
 | Common-failure list (what breaks, and the fix) | ✅ `ros2_lab/README.md` |
+
+## The hands-on session
+
+`ros2_lab/EE414_W04_hands_on_lab.html` is what the students work from. It is not a shortened cue
+sheet: the cue sheet shows a package that already works, and the lab sheet builds one from
+nothing. Six parts, each ending in a checkpoint.
+
+The session is arranged so that the last thirty minutes are the payoff. Parts 1 and 2 download
+and run code written in 2023 — including two faults that are met on purpose, an angle-wrapping
+bug that hangs any rotation above 180 degrees and a publish-after-shutdown that ends `mover` in a
+traceback. Part 3 reduces the whole of ROS 2 motion to three ideas and asks for a prediction:
+`R = v / ω = 2.0`. Parts 4 and 5 create a package with `ros2 pkg create` and write **thirty lines
+of Python** in it. The turtle then draws a circle of radius **2.000**, measured, against the 2.0
+predicted before anything was run. Part 6 is optional and does the same in C++, by filling
+`ros2_motion_cpp` — a package that ships in the 2023 repository with no source file in it at all.
+
+Every step was executed from an empty directory: `ros2_lab/handson_check.txt`, **24 of 24**.
 
 ## Teaching Lecture A from the machine
 

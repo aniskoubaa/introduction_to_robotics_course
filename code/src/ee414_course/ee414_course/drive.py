@@ -13,8 +13,8 @@ Nothing is ever measured in order to decide what to do next. The pose IS
 subscribed to -- but only to report the error at the end, never to correct
 it. Week 5 is the week that closes this loop.
 
-    ros2 run ee414_w04_demo drive --shape straight --distance 2.0
-    ros2 run ee414_w04_demo drive --shape square --robot tb3
+    ros2 run ee414_course drive --shape straight --distance 2.0
+    ros2 run ee414_course drive --shape square --robot tb3
 """
 
 import argparse
@@ -27,8 +27,8 @@ from nav_msgs.msg import Odometry
 from rclpy.node import Node
 from turtlesim.msg import Pose as TurtlePose
 
-from ee414_w04_demo import graceful
-from ee414_w04_demo.twist_compat import CmdVelPublisher
+from ee414_course import graceful
+from ee414_course.twist_compat import CmdVelPublisher
 
 
 def yaw_from_quaternion(q):

@@ -17,6 +17,7 @@ set -m
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$HERE/rosenv.sh"
+source "$HERE/procgroup.sh"
 source "$HERE/assert_clean_graph.sh"
 assert_clean_graph || exit 1
 export PYTHONUNBUFFERED=1
@@ -45,22 +46,30 @@ check() {   # check <timeout> <label> <command...>
   verdict "$?" "$label" "$log" 0
 }
 
+# The group id comes from the child, never from $!. See procgroup.sh for why.
 check_interrupt() {   # check_interrupt <seconds before Ctrl-C> <label> <command...>
   local secs="$1" label="$2"; shift 2
-  local log="$LOGS/$(echo "$label" | tr -c 'A-Za-z0-9' '_').log"
-  setsid bash -c "source '$HERE/rosenv.sh'; exec $*" > "$log" 2>&1 &
-  local pgid=$! i
+  local slug; slug=$(echo "$label" | tr -c 'A-Za-z0-9' '_')
+  local log="$LOGS/$slug.log" pgf="$LOGS/$slug.pgid"
+  spawn_pg "$pgf" "$log" "source '$HERE/rosenv.sh'; exec $*" || {
+    rows+=("  FAIL   $label   (could not start)"); fail=$((fail + 1)); return; }
   sleep "$secs"
-  kill -INT -"$pgid" 2>/dev/null
-  for i in $(seq 1 40); do kill -0 -"$pgid" 2>/dev/null || break; sleep 0.25; done
-  kill -0 -"$pgid" 2>/dev/null && kill -9 -"$pgid" 2>/dev/null
-  wait "$pgid" 2>/dev/null
-  verdict "$?" "$label" "$log" 1
+  # A node that has already exited on its own was never interrupted, and a row
+  # that says [Ctrl-C] about it is a lie. Say so instead.
+  if ! kill -0 -"$(cat "$pgf")" 2>/dev/null; then
+    rows+=("  FAIL   $label   [Ctrl-C]   (exited before the interrupt; nothing was tested)")
+    fail=$((fail + 1)); return
+  fi
+  if sigint_pg "$pgf" 10; then verdict 0 "$label" "$log" 1
+  else verdict 1 "$label" "$log" 1; fi
 }
 
 started=()
-bg() { setsid bash -c "source '$HERE/rosenv.sh'; exec $1" >/dev/null 2>&1 & started+=("$!"); }
-cleanup() { for p in "${started[@]:-}"; do kill -9 -- "-$p" 2>/dev/null; done; }
+bg() {   # bg <command> -- a simulator, left running until cleanup
+  local pgf="$LOGS/bg$(( ${#started[@]} + 1 )).pgid"; started+=("$pgf")
+  spawn_pg "$pgf" /dev/null "source '$HERE/rosenv.sh'; exec $1"
+}
+cleanup() { local f; for f in "${started[@]:-}"; do kill_pg "$f"; done; }
 trap cleanup EXIT
 
 echo "no simulator needed"

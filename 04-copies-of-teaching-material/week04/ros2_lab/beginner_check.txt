@@ -2,7 +2,7 @@
 #
 # ee414_course/beginner_student_freindly, every script run on this machine.
 #   ROS 2 jazzy  |  Ubuntu 24.04.4 LTS
-#   captured 2026-09-13 06:54 UTC
+#   captured 2026-09-15 02:59 UTC
 #
 # Regenerate:  bash ../../shared/screenshots/verify_beginner_scripts.sh
 #
@@ -16,6 +16,6 @@
   PASS   simple_move   [Ctrl-C]
   PASS   simple_square   [Ctrl-C]
   PASS   simple_go_to_goal   [Ctrl-C]
-  FAIL   the turtle is STILL MOVING after Ctrl-C
+  PASS   the turtle is stopped after every Ctrl-C
 
-7 passed, 1 failed.
+8 passed, 0 failed.

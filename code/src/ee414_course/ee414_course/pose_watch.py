@@ -9,14 +9,14 @@ nav_msgs/msg/Odometry gives you a quaternion, and you do the atan2 yourself.
 This node subscribes to both and prints whichever is publishing, so the
 difference is visible in one terminal rather than described.
 
-    ros2 run ee414_w04_demo pose_watch
+    ros2 run ee414_course pose_watch
 """
 
 import math
 
 import rclpy
 from nav_msgs.msg import Odometry
-from ee414_w04_demo import graceful
+from ee414_course import graceful
 from rclpy.node import Node
 from turtlesim.msg import Pose as TurtlePose
 

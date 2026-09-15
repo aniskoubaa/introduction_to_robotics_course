@@ -1,0 +1,1739 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html{color-scheme:light dark}body{margin:0;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;background:#fff}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Week 4 Hands-On Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+</head>
+<body>
+<style>
+/* ---------------------------------------------------------------
+   A course handout, not a dashboard. One superfamily does the whole
+   page: IBM Plex Sans for everything that is read, IBM Plex Mono for
+   anything the machine said or the student types. They were drawn
+   together and share their skeletons, so a command sitting inside a
+   sentence does not look like a foreign object. Hierarchy is carried
+   by weight, size and rule thickness -- never by a second typeface.
+
+   The blue is still turtlesim's -- its default background is
+   RGB(69, 86, 255), the literal values the lecture sets on slide 29
+   -- but taken down to an ink-blue that can sit beside black text
+   without competing with it. Everything else is ink on paper and
+   hairline rules.
+   --------------------------------------------------------------- */
+:root {
+  --paper:      #fbfbfc;
+  --panel:      #ffffff;
+  --panel-sunk: #eaecf2;
+  --ink:        #0d1017;   /* headings, commands, output: near-black    */
+  --ink-soft:   #252b38;   /* body prose: dark enough to read as black  */
+  --muted:      #545b6b;   /* captions and asides: 6.5:1 on paper       */
+  --rule:       #c9cfdb;   /* structural rules, visible                 */
+  --rule-soft:  #dee2ea;   /* row separators                            */
+  --accent:     #26348c;
+  --accent-ink: #212d7d;
+  --accent-wash:#e6e9f7;
+  --ok:         #14603f;
+  --ok-wash:    #eef5f1;
+  --warn:       #7a4a0c;
+  --warn-wash:  #f7efe2;
+  --danger:     #8e1f1b;
+  --danger-wash:#faeceb;
+  --cmd-bg:     #edf0f8;
+  --cmd-rule:   #c3cce4;
+  --term-bg:    #12151c;
+  --term-fg:    #d5dbe8;
+  --term-dim:   #7d879e;
+  --term-rule:  #232b3d;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:      #0b0d12;
+    --panel:      #14171f;
+    --panel-sunk: #1b1f2a;
+    --ink:        #f0f2f7;
+    --ink-soft:   #ccd2df;
+    --muted:      #9aa2b5;
+    --rule:       #39404f;
+    --rule-soft:  #262c38;
+    --accent:     #9fabf2;
+    --accent-ink: #b4bcf6;
+    --accent-wash:#1c2239;
+    --ok:         #74d2a8;
+    --ok-wash:    #142a21;
+    --warn:       #e6b676;
+    --warn-wash:  #2a2114;
+    --danger:     #f59991;
+    --danger-wash:#301917;
+    --cmd-bg:     #191d29;
+    --cmd-rule:   #333b52;
+    --term-bg:    #090b11;
+    --term-fg:    #cfd6e5;
+    --term-dim:   #737e97;
+    --term-rule:  #1b2231;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:      #0b0d12;
+  --panel:      #14171f;
+  --panel-sunk: #1b1f2a;
+  --ink:        #f0f2f7;
+  --ink-soft:   #ccd2df;
+  --muted:      #9aa2b5;
+  --rule:       #39404f;
+  --rule-soft:  #262c38;
+  --accent:     #9fabf2;
+  --accent-ink: #b4bcf6;
+  --accent-wash:#1c2239;
+  --ok:         #74d2a8;
+  --ok-wash:    #142a21;
+  --warn:       #e6b676;
+  --warn-wash:  #2a2114;
+  --danger:     #f59991;
+  --danger-wash:#301917;
+  --cmd-bg:     #191d29;
+  --cmd-rule:   #333b52;
+  --term-bg:    #090b11;
+  --term-fg:    #cfd6e5;
+  --term-dim:   #737e97;
+  --term-rule:  #1b2231;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.52;
+  -webkit-font-smoothing: antialiased;
+  counter-reset: fig;
+}
+
+.wrap { max-width: 940px; margin: 0 auto; padding: 0 26px 72px; }
+
+code, kbd, pre { font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace; }
+
+/* ---------- masthead ---------- */
+.masthead { padding: 44px 0 20px; border-bottom: 1.5px solid var(--ink); }
+.eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 10px;
+}
+h1 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 700; font-size: clamp(28px, 3.9vw, 38px); line-height: 1.06;
+  letter-spacing: -.024em; margin: 0 0 12px; text-wrap: balance;
+}
+.standfirst {
+  max-width: 58ch; margin: 0; color: var(--ink-soft); font-size: 16px; line-height: 1.55;
+}
+.standfirst strong { color: var(--ink); font-weight: 600; }
+
+.meta {
+  display: flex; flex-wrap: wrap; gap: 3px 16px; margin-top: 16px;
+  font-size: 11.5px; color: var(--muted); letter-spacing: .01em;
+}
+.meta span { white-space: nowrap; }
+.meta span + span::before { content: "· "; color: var(--rule); margin-right: 6px; }
+.meta span b { color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- sticky control bar ---------- */
+.bar {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin: 0 -26px; padding: 7px 26px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+}
+.bar nav { display: flex; gap: 0; flex-wrap: wrap; }
+.bar a {
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  text-decoration: none; padding: 4px 10px 4px 0;
+}
+.bar a:hover { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; }
+.bar a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.spacer { flex: 1 1 auto; }
+.toggle {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 12px; color: var(--ink-soft);
+  user-select: none; white-space: nowrap;
+}
+.toggle:hover { color: var(--accent-ink); }
+.toggle input { accent-color: var(--accent); margin: 0; }
+
+/* ---------- section furniture ---------- */
+.sec-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--accent-ink); margin: 0 0 4px;
+}
+h2 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-weight: 700;
+  font-size: 21px; letter-spacing: -.016em; margin: 0 0 6px; text-wrap: balance;
+  color: var(--ink);
+}
+.lede { max-width: 64ch; color: var(--ink-soft); margin: 0 0 14px; }
+.preflight { margin: 30px 0 6px; padding-top: 11px; border-top: 2px solid var(--ink); }
+
+/* ---------- how to use ---------- */
+.howto {
+  margin: 24px 0 0; padding: 0 0 0 16px; border-left: 2px solid var(--accent);
+}
+.howto h2 { font-size: 17px; margin-bottom: 7px; }
+.howto ol { margin: 0; padding-left: 17px; max-width: 64ch; color: var(--ink-soft); font-size: 14.5px; }
+.howto li { margin-bottom: 3px; }
+.howto li b { color: var(--ink); font-weight: 600; }
+
+/* ---------- glossary ---------- */
+.words {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 0 26px; border-top: 1px solid var(--rule); margin-top: 2px;
+}
+.word { padding: 9px 0; border-bottom: 1px solid var(--rule-soft); }
+.word b {
+  display: inline; font-size: 12px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--accent-ink); margin-right: 7px;
+}
+.word span { font-size: 14px; color: var(--ink-soft); }
+.word { border-bottom: 1px solid var(--rule-soft); }
+
+/* ---------- terminal-layout cards ---------- */
+.terms {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0 22px; border-top: 1px solid var(--rule);
+}
+.tcard { padding: 10px 0 11px; border-bottom: 1px solid var(--rule-soft); }
+.tcard .tag {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .09em; color: var(--accent-ink);
+  margin-right: 8px;
+}
+.tcard h3 {
+  display: inline; font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 14.5px; font-weight: 600; margin: 0; letter-spacing: -.008em;
+}
+.tcard p { margin: 3px 0 0; font-size: 13.5px; color: var(--muted); line-height: 1.45; }
+
+/* ---------- traps ---------- */
+.traps { margin-top: 14px; display: grid; gap: 0; border-top: 1px solid var(--rule); }
+.trap {
+  display: grid; grid-template-columns: 20px 1fr; gap: 0 10px; align-items: start;
+  padding: 11px 0; border-bottom: 1px solid var(--rule-soft);
+}
+.trap .n { font-size: 12px; font-weight: 600; color: var(--warn); padding-top: 2px; }
+.trap p { margin: 0; font-size: 14px; color: var(--ink-soft); line-height: 1.5; }
+.trap p + p { margin-top: 4px; }
+.trap b { color: var(--ink); font-weight: 600; }
+
+/* ---------- deck sections ---------- */
+.deck { margin-top: 42px; }
+.deck-head {
+  border-top: 3px solid var(--ink); padding-top: 13px; margin-bottom: 4px;
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+}
+.deck-head h2 { font-size: 25px; margin: 0; font-weight: 700; letter-spacing: -.019em; color: var(--ink); }
+.deck-head .file { font-size: 11.5px; color: var(--muted); }
+.deck > .lede { margin-top: 6px; }
+
+.part {
+  margin-top: 30px; padding: 9px 0 7px;
+  border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule);
+  display: flex; align-items: baseline; gap: 11px;
+}
+.part .pn {
+  font-size: 10px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase;
+  color: var(--accent-ink); background: var(--accent-wash);
+  padding: 2px 6px; border-radius: 2px;
+}
+.part h3 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 17px; font-weight: 700;
+  margin: 0; letter-spacing: -.013em; color: var(--ink);
+}
+
+/* ---------- cue rows ---------- */
+.cue {
+  display: grid; grid-template-columns: 42px 1fr; gap: 0 16px;
+  padding: 14px 0; border-bottom: 1px solid var(--rule-soft);
+}
+.cue:last-child { border-bottom: none; }
+.rail { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.pg {
+  font-variant-numeric: tabular-nums; font-size: 17px; font-weight: 700;
+  color: var(--ink); line-height: 1.1;
+}
+.kind {
+  font-size: 9px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  white-space: nowrap; padding: 1px 4px; border-radius: 2px;
+}
+.kind.live  { color: var(--ok);     background: var(--ok-wash); }
+.kind.talk  { color: var(--muted);  background: var(--panel-sunk); }
+.kind.fail  { color: var(--danger); background: var(--danger-wash); }
+
+.cue h4 {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 16.5px; font-weight: 700;
+  margin: 0 0 4px; letter-spacing: -.012em; text-wrap: balance; color: var(--ink);
+}
+.cue h4 code { font-size: .9em; }
+.say { margin: 0 0 9px; color: var(--ink-soft); max-width: 66ch; }
+.say:last-child { margin-bottom: 0; }
+code {
+  font-size: .87em; background: var(--panel-sunk); padding: .08em .3em;
+  border-radius: 2px; color: var(--ink); font-weight: 500;
+}
+
+/* ---------- numbered command steps ----------
+   One command per line, one copy button per line. The command sits in a
+   light panel rather than a black terminal bar: there are 79 of them, and
+   79 black bars make a page that reads as a console log instead of a
+   handout. What the machine printed keeps the dark treatment, in the
+   screenshots. */
+.steps { list-style: none; counter-reset: stp; margin: 0 0 9px; padding: 0; display: grid; gap: 9px; }
+.steps:last-child { margin-bottom: 0; }
+.step { counter-increment: stp; display: grid; grid-template-columns: 17px 1fr; gap: 0 9px; }
+.step::before {
+  content: counter(stp) ".";
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-variant-numeric: tabular-nums;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  text-align: right; margin-top: 5px;
+}
+.step > div { min-width: 0; }
+.step > div > .does:first-child { margin-top: 0; }
+
+.line {
+  display: flex; align-items: flex-start; gap: 9px;
+  background: var(--cmd-bg);
+  border: 1px solid var(--cmd-rule); border-left: 3px solid var(--accent);
+  border-radius: 0 3px 3px 0;
+  padding: 5px 7px 5px 9px; min-width: 0;
+}
+.line .pr {
+  font-size: 12.5px; line-height: 1.5; font-weight: 600; color: var(--accent);
+  user-select: none; flex: 0 0 auto;
+}
+.line code.cmd {
+  /* Long commands WRAP rather than scroll. A clipped line looks like a
+     complete one, and a student following step by step would paste half a
+     command without knowing it. Continuation lines carry a hanging indent so
+     a wrapped command still reads as one command. Copy takes the whole
+     textContent either way. */
+  display: block; flex: 1 1 auto; min-width: 0;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+  padding: 0 0 0 1.5em; text-indent: -1.5em;
+  background: none; border-radius: 0; color: var(--ink);
+  font-size: 12.8px; line-height: 1.5; font-weight: 500;
+}
+.copy {
+  flex: 0 0 auto; align-self: flex-start; margin-top: 1px;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--accent-ink);
+  background: transparent; border: 0; padding: 2px 3px; cursor: pointer;
+  transition: color .12s;
+}
+.copy:hover { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+.copy.done { color: var(--ok); }
+
+.does { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); max-width: 66ch; line-height: 1.45; }
+.does b { color: var(--ink); font-weight: 600; }
+.where {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--accent-ink); margin-right: 3px;
+}
+
+/* ---------- expected output ---------- */
+.out {
+  margin-top: 6px; background: var(--ok-wash);
+  border-left: 3px solid var(--ok); border-radius: 0 2px 2px 0;
+  padding: 0 10px;
+}
+.out .olbl {
+  display: block; padding-top: 4px;
+  font-size: 9.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ok);
+}
+.out pre {
+  margin: 1px 0 0; padding: 0 0 7px; overflow-x: auto; tab-size: 4;
+  font-size: 12px; line-height: 1.45; color: var(--ink);
+}
+details.out > summary {
+  cursor: pointer; padding: 5px 0; list-style: none;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 9.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ok);
+}
+details.out > summary::-webkit-details-marker { display: none; }
+details.out > summary::before { content: "▸ "; }
+details.out[open] > summary::before { content: "▾ "; }
+details.out > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+details.out[open] > pre { padding-bottom: 6px; }
+.out.bad { border-left-color: var(--danger); background: var(--danger-wash); }
+.out.bad .olbl, details.out.bad > summary { color: var(--danger); }
+
+/* ---------- code snapshots ----------
+   Collapsed by default: the command and its output are what the room reads,
+   and the source is what one student in the third row will ask about. Blue,
+   so it never reads as expected output (green) or as a failure (red).
+   The text is generated from the files on disk by shared/screenshots/
+   snippets.py, so the handout cannot drift from the code it quotes. */
+details.code {
+  margin-top: 8px; border-left: 3px solid var(--accent);
+  background: var(--accent-wash); border-radius: 0 2px 2px 0; padding: 0 11px;
+}
+details.code > summary {
+  cursor: pointer; padding: 6px 0; list-style: none;
+  font-size: 9.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent-ink);
+}
+details.code > summary::-webkit-details-marker { display: none; }
+details.code > summary::before { content: "\25B8  "; }
+details.code[open] > summary::before { content: "\25BE  "; }
+details.code > summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+details.code > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+details.code .path {
+  margin: 0 0 5px; font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 11px; color: var(--muted);
+  display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+}
+details.code .path .ln { color: var(--muted); opacity: .75; white-space: nowrap; }
+details.code pre {
+  margin: 0; padding: 0 0 4px; overflow-x: auto; tab-size: 4;
+  font-size: 12px; line-height: 1.5; color: var(--ink);
+}
+details.code pre code { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+details.code .cnote {
+  margin: 7px 0 0; padding: 7px 0 9px; border-top: 1px solid var(--rule-soft);
+  font-size: 13.5px; color: var(--ink-soft); line-height: 1.45; max-width: 66ch;
+}
+details.code .cnote b { color: var(--ink); font-weight: 600; }
+
+/* The beginner snapshot: same component, green rather than indigo, and it sits
+   directly above the full version of the same idea. The colour is the whole
+   signal -- green is the one you read out loud, indigo is the one that ships. */
+details.code.simple {
+  border-left-color: var(--ok); background: var(--ok-wash);
+}
+details.code.simple > summary { color: var(--ok); }
+
+/* ---------- what to notice ---------- */
+.notice {
+  margin: 9px 0 0; padding: 0 0 0 11px; border-left: 3px solid var(--accent);
+  font-size: 14px; color: var(--ink-soft); max-width: 66ch;
+}
+.notice .lbl {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent-ink); margin-right: 7px;
+}
+.notice p { margin: 0; display: inline; }
+.notice p + p { display: block; margin-top: 4px; }
+.notice b { color: var(--ink); font-weight: 600; }
+.notice.warnbox { border-left-color: var(--warn); }
+.cue h4 + .notice, .say + .notice { margin-top: 8px; }
+.notice.warnbox .lbl { color: var(--warn); }
+
+.aside {
+  margin: 8px 0 0; font-size: 13px; color: var(--muted); max-width: 66ch;
+  padding-left: 10px; border-left: 1px solid var(--rule); line-height: 1.45;
+}
+.aside b { color: var(--ink-soft); font-weight: 600; }
+
+/* ---------- figures ----------
+   Numbered, because a numbered figure can be pointed at from the lectern
+   and from a student's question. The counter runs over the whole page. */
+figure.shot { margin: 10px 0 0; counter-increment: fig; }
+figure.shot img {
+  display: block; width: 100%; height: auto; border: 1px solid var(--rule);
+  border-radius: 2px; background: var(--term-bg);
+}
+figure.shot figcaption {
+  margin-top: 4px; font-size: 11.5px; color: var(--muted); line-height: 1.4; max-width: 66ch;
+}
+figure.shot figcaption::before {
+  content: "Fig. " counter(fig) " — "; font-weight: 600; color: var(--ink-soft);
+}
+figure.shot figcaption b { color: var(--ink-soft); font-weight: 600; }
+.shotpair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 10px 0 0; }
+.shotpair figure.shot { margin: 0; }
+.shot.win img { max-width: 260px; }
+@media (max-width: 620px) { .shotpair { grid-template-columns: 1fr; } }
+
+/* ---------- closing ---------- */
+.closing { margin-top: 40px; border-top: 1.5px solid var(--ink); padding-top: 16px; }
+.closing ul { margin: 10px 0 0; padding-left: 18px; max-width: 66ch; color: var(--ink-soft); }
+.closing li { margin-bottom: 5px; }
+.closing li b { color: var(--ink); font-weight: 600; }
+.colophon {
+  margin-top: 22px; padding-top: 11px; border-top: 1px solid var(--rule);
+  font-size: 12px; color: var(--muted); max-width: 70ch; line-height: 1.5;
+}
+
+.hidden { display: none !important; }
+
+@media (max-width: 620px) {
+  .wrap { padding: 0 16px 56px; }
+  .bar { margin: 0 -16px; padding: 7px 16px; }
+  .cue { grid-template-columns: 1fr; gap: 5px; }
+  .rail { flex-direction: row; align-items: baseline; justify-content: flex-start; gap: 8px; }
+}
+@media print {
+  .bar { display: none; }
+  .cue { break-inside: avoid; }
+  figure.shot { break-inside: avoid; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------- tab navigation ---------------------------------------
+   The sheet is taught from, not read. One part on screen at a time,
+   tabs sticky at the top, and the hash keeps your place across a
+   reload -- which matters when a lecture machine gets bumped.
+   ------------------------------------------------------------------ */
+.tabs {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  margin: 0 -26px 0; padding: 0 26px;
+  display: flex; align-items: stretch;
+  overflow-x: auto; scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs [role="tab"] {
+  appearance: none; background: none; border: 0; border-bottom: 2px solid transparent;
+  font-family: inherit; font-size: 12.5px; font-weight: 500; color: var(--muted);
+  padding: 10px 11px 8px; cursor: pointer; white-space: nowrap;
+  display: inline-flex; align-items: baseline; gap: 5px;
+}
+.tabs [role="tab"]:hover { color: var(--accent-ink); }
+.tabs [role="tab"][aria-selected="true"] {
+  color: var(--accent-ink); font-weight: 600; border-bottom-color: var(--accent);
+}
+.tabs [role="tab"]:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.tabs .num { font-variant-numeric: tabular-nums; font-size: 10.5px; opacity: .55; }
+.tabs [role="tab"][aria-selected="true"] .num { opacity: .9; }
+
+.panel { padding-top: 16px; }
+.panel > h2 { font-size: 19px; margin-bottom: 3px; }
+.panel > .lede { font-size: 14px; margin-bottom: 12px; }
+
+.panelbar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin: 10px 0 4px; padding-bottom: 9px; border-bottom: 1px solid var(--rule-soft);
+  font-size: 11.5px; color: var(--muted);
+}
+.panelbar .spacer { flex: 1 1 auto; }
+
+/* prev / next, so a part can be stepped through without the mouse */
+.pager {
+  display: flex; justify-content: space-between; gap: 12px;
+  margin-top: 30px; padding-top: 14px; border-top: 1px solid var(--rule);
+}
+.pager button {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  font-family: inherit; font-size: 12.5px; font-weight: 500; color: var(--accent-ink);
+  padding: 4px 0;
+}
+.pager button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pager button:disabled { color: var(--rule); cursor: default; text-decoration: none; }
+.pager button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* tighter cue spacing now that a panel holds only one part */
+.cue { padding: 12px 0; }
+.cue h4 { margin-bottom: 4px; }
+.say { margin-bottom: 7px; }
+
+/* A grid item will not shrink below its content's min-content width unless it
+   is told to. Without this, a wide <pre> makes the whole page scroll sideways
+   instead of scrolling inside its own box. */
+.cue > div { min-width: 0; }
+.cue > div > * { max-width: 100%; }
+
+@media (max-width: 620px) {
+  .tabs [role="tab"] { padding: 9px 8px 7px; font-size: 12px; }
+  /* One column: the rail becomes a row above the heading, so the LIVE badge
+     stops sitting on top of the title. */
+  .cue { grid-template-columns: 1fr; gap: 5px; }
+  .rail { flex-direction: row; align-items: center; gap: 8px; }
+  .pg { font-size: 15px; }
+  .wrap { padding-left: 16px; padding-right: 16px; }
+  .tabs { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
+}
+
+/* ---------- file cards ------------------------------------------------
+   New in this sheet. The demo cue sheet shows code the lecturer already
+   wrote, so its snapshots are collapsed. Here the student has to type the
+   file, so the file is the point: open by default, its path in the header
+   where a path belongs, and one copy button for the whole file rather than
+   one per line. Same indigo as a code snapshot, because it is the same
+   kind of object -- source, not a command and not output. */
+.filecard {
+  margin: 10px 0 0; border: 1px solid var(--cmd-rule);
+  border-left: 3px solid var(--accent); border-radius: 0 3px 3px 0;
+  background: var(--cmd-bg);
+}
+.filecard > header {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  padding: 6px 9px 5px; border-bottom: 1px solid var(--cmd-rule);
+}
+.filecard > header .fpath {
+  font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11.5px;
+  font-weight: 500; color: var(--accent-ink); overflow-wrap: anywhere;
+}
+.filecard > header .fmeta { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.filecard > header .spacer { flex: 1 1 auto; }
+.filecard pre {
+  margin: 0; padding: 8px 9px 10px; overflow-x: auto; tab-size: 4;
+  font-size: 12.3px; line-height: 1.5; color: var(--ink);
+}
+.filecard pre code { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+/* A line the reader must not skip. Used sparingly: four lines in this sheet. */
+.filecard pre b { font-weight: 600; color: var(--accent-ink); }
+
+/* A keystroke, so Ctrl-C reads as two keys and not as a word. */
+kbd {
+  font-size: .82em; font-weight: 600; padding: .05em .34em;
+  border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 3px;
+  background: var(--panel); color: var(--ink); white-space: nowrap;
+}
+
+/* ---------- checkpoints -----------------------------------------------
+   Every part ends with one. A student who cannot tick it must stop and ask,
+   rather than carry a broken workspace into the next part. */
+.chk {
+  margin: 16px 0 0; padding: 9px 12px 10px; background: var(--ok-wash);
+  border-left: 3px solid var(--ok); border-radius: 0 2px 2px 0;
+}
+.chk .lbl {
+  display: block; font-size: 9.5px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ok); margin-bottom: 4px;
+}
+.chk ul { margin: 0; padding-left: 17px; color: var(--ink-soft); font-size: 14px; }
+.chk li { margin-bottom: 2px; }
+.chk li b { color: var(--ink); font-weight: 600; }
+
+/* ---------- troubleshooting table ---------- */
+table.tbl { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13.5px; }
+table.tbl th {
+  text-align: left; font-size: 10.5px; font-weight: 600; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--accent-ink);
+  border-bottom: 1.5px solid var(--ink); padding: 0 12px 5px 0; vertical-align: bottom;
+}
+table.tbl td {
+  padding: 8px 12px 8px 0; border-bottom: 1px solid var(--rule-soft);
+  color: var(--ink-soft); vertical-align: top; line-height: 1.45;
+}
+table.tbl td:first-child { color: var(--ink); }
+table.tbl code { font-size: .88em; overflow-wrap: anywhere; }
+.tblwrap { overflow-x: auto; }
+
+/* ---------- terminal plan ---------- */
+.plan { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0 22px;
+        border-top: 1px solid var(--rule); margin-top: 10px; }
+</style>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="eyebrow">EE 414 · Introduction to Robotics · Fall 2026</p>
+  <h1>Week 4 Hands-On Laboratory</h1>
+  <p class="standfirst">
+    From an empty directory to a robot driving a circle. You download a package
+    that already works, run it, and then <strong>build your own package from
+    nothing</strong> and write the thirty lines that move the robot.
+  </p>
+  <div class="meta">
+    <span><b>ROS 2 Jazzy</b> · Ubuntu 24.04</span>
+    <span>Six parts · <b>about 90 minutes</b></span>
+    <span>Source: <b>ros2_course_packages</b></span>
+    <span>Every command was <b>run</b> on the laboratory machine</span>
+  </div>
+</header>
+
+<div class="tabs" role="tablist" aria-label="Laboratory parts">
+  <button role="tab" id="t-before"  aria-controls="p-before"  data-tab="before">Before you start</button>
+  <button role="tab" id="t-get"     aria-controls="p-get"     data-tab="get"><span class="num">1</span>Download and build</button>
+  <button role="tab" id="t-run"     aria-controls="p-run"     data-tab="run"><span class="num">2</span>Run and observe</button>
+  <button role="tab" id="t-read"    aria-controls="p-read"    data-tab="read"><span class="num">3</span>How it moves</button>
+  <button role="tab" id="t-create"  aria-controls="p-create"  data-tab="create"><span class="num">4</span>Create a package</button>
+  <button role="tab" id="t-node"    aria-controls="p-node"    data-tab="node"><span class="num">5</span>Write the node</button>
+  <button role="tab" id="t-cpp"     aria-controls="p-cpp"     data-tab="cpp"><span class="num">6</span>The same in C++</button>
+  <button role="tab" id="t-fixes"   aria-controls="p-fixes"   data-tab="fixes">If it does not work</button>
+</div>
+
+<div class="panelbar">
+  <span>T1 = simulator terminal · T2 = your terminal · T3 = opened once, in Part 5.6</span>
+  <span class="spacer"></span>
+  <span>Click a part, or use the arrow keys on the tab strip.</span>
+</div>
+
+<!-- ============================ BEFORE YOU START ============================ -->
+<section class="panel" id="p-before" role="tabpanel" aria-labelledby="t-before" tabindex="-1" hidden>
+  <h2>Before You Start</h2>
+  <p class="lede">Read this page once before you type anything. It takes two minutes and it
+    prevents the three problems that stop most students in the first ten minutes.</p>
+
+  <div class="howto">
+    <h2>What You Will Do</h2>
+    <ol>
+      <li><b>Part 1.</b> Download a package written in 2023 and build it.</li>
+      <li><b>Part 2.</b> Run two programs from it and watch the turtle move.</li>
+      <li><b>Part 3.</b> Learn the three things that make a robot move in ROS 2.</li>
+      <li><b>Part 4.</b> Create your own empty package with one command.</li>
+      <li><b>Part 5.</b> Write thirty lines of Python. The turtle drives a circle.</li>
+      <li><b>Part 6.</b> Optional. Write the same node in C++.</li>
+    </ol>
+  </div>
+
+  <div class="part"><span class="pn">Check</span><h3>What you need on the machine</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">printenv ROS_DISTRO</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Must print <code>jazzy</code>. If it prints nothing, you did not source ROS 2 in
+        this terminal. Run <code>source /opt/ros/jazzy/setup.bash</code> and try again.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>jazzy</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 pkg list | grep turtlesim</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The simulator must already be installed. If nothing is printed, install it with
+        <code>sudo apt install ros-jazzy-turtlesim</code>.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>turtlesim</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">which colcon git</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Two paths must be printed. If <code>colcon</code> is missing, install it with
+        <code>sudo apt install python3-colcon-common-extensions</code>.</p>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">Traps</span><h3>Three Problems That Give No Useful Error Message</h3></div>
+  <p class="lede">All three were seen on the laboratory machines. None of them prints a message
+    that tells you what is wrong, so learn to recognise them now.</p>
+  <div class="traps">
+    <div class="trap"><span class="n">1</span><div>
+      <p><b>Anaconda replaces the system Python.</b> If your prompt begins with <code>(base)</code>,
+        Anaconda is active. ROS 2 then fails with
+        <code>No module named 'rclpy._rclpy_pybind11'</code>, or <code>colcon build</code> fails with
+        <code>No module named 'ament_package'</code>.</p>
+      <p>Type <code>conda deactivate</code> in every terminal you use for this laboratory.</p>
+    </div></div>
+    <div class="trap"><span class="n">2</span><div>
+      <p><b>A new terminal knows nothing.</b> Sourcing a workspace affects only the terminal you
+        typed it in. Every new terminal needs both lines again: first
+        <code>/opt/ros/jazzy/setup.bash</code>, then your own workspace.</p>
+      <p>The symptom is <code>Package 'my_turtle_circle' not found</code> in a terminal where the
+        package plainly exists.</p>
+    </div></div>
+    <div class="trap"><span class="n">3</span><div>
+      <p><b>A terminal opened inside a snap application cannot start a window.</b> turtlesim then
+        dies with <code>undefined symbol: __libc_pthread_init</code>. This happens if you open the
+        terminal from inside Visual Studio Code installed as a snap.</p>
+      <p>Use a normal terminal window for turtlesim.</p>
+    </div></div>
+  </div>
+
+  <div class="part"><span class="pn">Plan</span><h3>Two Terminals, Used Throughout</h3></div>
+  <div class="terms plan">
+    <div class="tcard"><span class="tag">T1</span><h3>The Simulator</h3>
+      <p>turtlesim runs here and is never stopped until the end of the laboratory. Leave this
+        terminal alone after you start it.</p></div>
+    <div class="tcard"><span class="tag">T2</span><h3>Your Work</h3>
+      <p>Building, running nodes, creating packages. Almost everything in this sheet happens here.</p></div>
+    <div class="tcard"><span class="tag">T3</span><h3>One Measurement</h3>
+      <p>Opened once, in Part 5.6, to read the turtle's position while your own node is driving it
+        from T2. Closed again afterwards.</p></div>
+  </div>
+
+  <div class="chk"><span class="lbl">Checkpoint</span>
+    <ul>
+      <li><code>printenv ROS_DISTRO</code> prints <b>jazzy</b>.</li>
+      <li>Your prompt does <b>not</b> begin with <code>(base)</code>.</li>
+      <li><code>ros2 pkg list | grep turtlesim</code> prints <b>turtlesim</b>.</li>
+    </ul>
+  </div>
+
+  <div class="pager"><span></span><button type="button" data-go="get">1 · Download and build →</button></div>
+</section>
+
+<!-- ============================ PART 1 ============================ -->
+<section class="panel" id="p-get" role="tabpanel" aria-labelledby="t-get" tabindex="-1" hidden>
+  <h2>Part 1 — Download and Build</h2>
+  <p class="lede">A ROS 2 <b>workspace</b> is an ordinary directory with one rule: every package
+    lives under <code>src/</code>. You create the directory, put code in <code>src/</code>, and
+    <code>colcon build</code> turns it into programs you can run.</p>
+
+  <div class="part"><span class="pn">1.1</span><h3>Create the Workspace</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">mkdir -p ~/ros2_course_ws/src</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><span class="where">T2</span>That is all a workspace is. There is no
+        <code>init</code> command and no configuration file. A directory with a
+        <code>src/</code> inside it is a workspace.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws/src</code><button class="copy" type="button">Copy</button></div>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">1.2</span><h3>Download the Course Packages</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">git clone --depth 1 https://github.com/aniskoubaa/ros2_course_packages.git</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">About 70 MB on disk, and it takes a minute or two.
+        <code>--depth 1</code> downloads only the current state and not three years of history.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>Cloning into 'ros2_course_packages'...</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ls -1 ros2_course_packages/src</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Ten entries. Only two of them matter today, and they are the two whose names
+        contain <code>motion</code>.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>ros2_essential_cpp
+ros2_essential_python
+ros2_interfaces_cpp
+ros2_laser_python
+ros2_motion_cpp
+ros2_motion_python
+ros2_nav_python
+turtlebot3_description
+turtlebot3_navigation2
+turtlebot3_simulations</pre></div>
+      <p class="does"><code>turtlebot3_simulations</code> is an <b>empty directory</b>. It is a link
+        to another repository that was never downloaded with this one. It contains no package, so
+        <code>colcon</code> ignores it and so should you.</p>
+    </div></li>
+  </ol>
+  <div class="notice"><span class="lbl">Notice</span>
+    <p>The repository has its own <code>src/</code> directory inside your <code>src/</code>
+    directory. This looks wrong, and it is not. <code>colcon</code> searches downwards through
+    every subdirectory until it finds packages, so a repository of packages can be cloned
+    anywhere under <code>src/</code> and will still be found.</p></div>
+
+  <div class="part"><span class="pn">1.3</span><h3>Build the Two Motion Packages</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><b>Always build from the top of the workspace</b>, never from inside
+        <code>src/</code>. Building from the wrong directory is the single most common mistake in
+        this laboratory: <code>colcon</code> creates <code>build/</code>, <code>install/</code> and
+        <code>log/</code> in whatever directory you run it from.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">colcon build --packages-select ros2_motion_python ros2_motion_cpp</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Two packages, about one second. <code>--packages-select</code> names exactly
+        what to build.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>Starting &gt;&gt;&gt; ros2_motion_cpp
+Starting &gt;&gt;&gt; ros2_motion_python
+Finished &lt;&lt;&lt; ros2_motion_python [0.88s]
+Finished &lt;&lt;&lt; ros2_motion_cpp [1.05s]
+
+Summary: 2 packages finished [1.15s]</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">source ~/ros2_course_ws/install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">This line is what connects the words <code>ros2 run</code> to the programs you
+        just built. <b>Repeat it in every new terminal</b>, and repeat it after every build in which
+        you added a new program.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 pkg executables ros2_motion_python</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Three programs. These are the names you will use with <code>ros2 run</code>.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>ros2_motion_python cleaner
+ros2_motion_python mover
+ros2_motion_python tb3_cleaner</pre></div>
+    </div></li>
+  </ol>
+  <div class="notice warnbox"><span class="lbl">Read this</span>
+    <p>Run <code>ros2 pkg executables ros2_motion_cpp</code> and you will see <b>nothing at all</b>.
+    The C++ package compiles, but it contains no source file and therefore produces no program. It
+    was created and never filled in. <b>You will fill it in yourself in Part 6.</b></p></div>
+
+  <div class="notice"><span class="lbl">Why not build everything</span>
+    <p>Plain <code>colcon build</code> also works, and it warns you that
+    <code>turtlebot3_description</code> and <code>turtlebot3_navigation2</code> in this repository
+    are older copies of packages that Ubuntu already installed under <code>/opt/ros/jazzy</code>.
+    Your copies would then hide the official ones for every program on the machine. Name the two
+    packages you want and the problem does not arise.</p></div>
+
+  <div class="chk"><span class="lbl">Checkpoint</span>
+    <ul>
+      <li><code>~/ros2_course_ws</code> now contains <b>build</b>, <b>install</b>, <b>log</b> and <b>src</b>.</li>
+      <li><code>colcon build</code> ended with <b>2 packages finished</b> and no red text.</li>
+      <li><code>ros2 pkg executables ros2_motion_python</code> lists <b>three</b> programs.</li>
+    </ul>
+  </div>
+
+  <div class="pager"><button type="button" data-go="before">← Before you start</button><button type="button" data-go="run">2 · Run and observe →</button></div>
+</section>
+
+<!-- ============================ PART 2 ============================ -->
+<section class="panel" id="p-run" role="tabpanel" aria-labelledby="t-run" tabindex="-1" hidden>
+  <h2>Part 2 — Run the Programs and Observe</h2>
+  <p class="lede">You write nothing in this part. You run code that someone else wrote, and you
+    watch what it does. Two programs: one that asks you what to do, and one that drives the turtle
+    for a fixed distance and then stops.</p>
+
+  <div class="part"><span class="pn">2.1</span><h3>Start the Simulator</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">source /opt/ros/jazzy/setup.bash</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><span class="where">T1</span>Open a second terminal. This one runs only the
+        simulator, and you will not type anything else in it.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run turtlesim turtlesim_node</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">A blue window appears with a turtle in the middle. <b>Leave this terminal
+        running.</b> It must stay open for the rest of the laboratory.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>[INFO] [turtlesim]: Starting turtlesim with node name /turtlesim
+[INFO] [turtlesim]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic list</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><span class="where">T2</span>Back in your own terminal. Five topics. Two of
+        them are the whole laboratory: you write to <code>/turtle1/cmd_vel</code>, and you read from
+        <code>/turtle1/pose</code>.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>/parameter_events
+/rosout
+/turtle1/cmd_vel
+/turtle1/color_sensor
+/turtle1/pose</pre></div>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">2.2</span><h3>Run <code>clean.py</code>, the Motion Menu</h3></div>
+  <p class="say">The program is <code>ros2_motion_python/clean.py</code>, written in 2023. It offers
+    a menu and drives the turtle according to what you choose. The point of running it is not the
+    code. The point is to see the difference between a robot that is told <em>how long to move</em>
+    and a robot that is told <em>where to go</em>.</p>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">source ~/ros2_course_ws/install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">If this is the same T2 terminal as Part 1, you have already done this.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ros2_motion_python cleaner</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The turtle jumps back to the centre, and a menu appears. The program is now
+        waiting for you to type a number and press Enter.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>Turtlesim Reset
+|----------------------------------|
+| 1: Move
+| 2: Rotate
+| 3: Set Orientation
+| 4: Go to Goal
+| 5: Spiral
+| 6: Grid
+| 7: Reset
+| Q: Quit
+|----------------------------------|
+Enter your choice:</pre></div>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">2.3</span><h3>Four Things to Try, in This Order</h3></div>
+
+  <div class="cue"><div class="rail"><span class="pg">A</span><span class="kind live">Try</span></div><div>
+    <h4>Move Forward Two Units</h4>
+    <p class="say">Type <code>1</code>, then <code>2</code> for the distance, then <code>1</code> for
+      forward. The turtle moves to the right and stops.</p>
+    <div class="out"><span class="olbl">Printed when it stops</span><pre>start_pose RobotPose(x=5.544444561004639, y=5.544444561004639, theta=0.0)
+self.pose  RobotPose(x=7.555644512176514, y=5.544444561004639, theta=0.0)
+distance:  2.011199951171875
+The Robot has stopped...</pre></div>
+    <div class="notice"><span class="lbl">Notice</span>
+      <p>You asked for 2.000 and you received 2.011. The program keeps publishing until the measured
+      distance passes the target, and by then it has already gone slightly too far. This is
+      <b>overshoot</b>, and every closed-loop controller has it.</p></div>
+  </div></div>
+
+  <div class="cue"><div class="rail"><span class="pg">B</span><span class="kind live">Try</span></div><div>
+    <h4>Rotate Ninety Degrees</h4>
+    <p class="say">Type <code>2</code>, then <code>90</code> for the angle, then <code>0</code> for
+      counter-clockwise.</p>
+    <div class="out"><span class="olbl">Printed when it stops</span><pre>rotated_related_angle_degree 90.00000250447816 desired_relative_angle_degree 90.0
+The Robot has stopped...</pre></div>
+  </div></div>
+
+  <div class="cue"><div class="rail"><span class="pg">C</span><span class="kind fail">Bug</span></div><div>
+    <h4>Rotate Two Hundred Degrees: the Rotation That Never Finishes</h4>
+    <p class="say">Type <code>7</code> to reset, then <code>2</code>, then <code>200</code>, then
+      <code>0</code>. The turtle keeps turning and does not stop. Press
+      <kbd>Ctrl</kbd>+<kbd>C</kbd> after about ten seconds.</p>
+    <div class="notice warnbox"><span class="lbl">Why</span>
+      <p>The turtle reports its heading as a number between <code>-π</code> and <code>+π</code>.
+      When it passes <code>+π</code> the number jumps to <code>-π</code>. The program measures how
+      far it has turned with <code>abs(start.theta - current.theta)</code>, which can never exceed
+      180 degrees. The loop waits for 200 and 200 never arrives.</p>
+      <p>This is the <b>angle wrapping</b> problem from the lecture, and here it is in code that was
+      used to teach this course for two years. <b>Any rotation above 180 degrees hangs.</b>
+      The repair is one line, and you will see it in Week 5.</p></div>
+  </div></div>
+
+  <div class="cue"><div class="rail"><span class="pg">D</span><span class="kind live">Try</span></div><div>
+    <h4>Go to a Goal, Then Draw a Spiral</h4>
+    <p class="say">Type <code>7</code> to reset, then <code>4</code>, then <code>1</code>,
+      <code>1</code>, <code>0</code> for x, y and theta. The turtle drives to the lower left corner
+      along a curve, not a straight line, and slows down as it arrives.</p>
+    <div class="out"><span class="olbl">Printed on arrival</span><pre>Goal reached. Mission completed.
+distance =  0.4812373789050097
+angle error =  0.05141786386219982</pre></div>
+    <p class="say">Then type <code>7</code>, <code>5</code>, <code>0.2</code>, <code>2.0</code> for
+      the spiral. It runs for about thirty seconds and stops at the wall. Type <code>q</code> to
+      leave the program.</p>
+    <div class="notice"><span class="lbl">Notice</span>
+      <p><b>This is the difference the lecture is about.</b> Choice A was open loop: drive, count,
+      stop. Choice D was closed loop: measure the distance to the goal, and choose the speed from
+      that measurement. Choice A cannot correct an error. Choice D does nothing else.</p></div>
+  </div></div>
+
+  <div class="part"><span class="pn">2.4</span><h3>Run <code>simple_turtlesim_motion.py</code></h3></div>
+  <p class="say">The second program is the simpler one: no menu, no measurement. It publishes a
+    fixed forward speed and a fixed turn rate, counts the seconds, and stops after fifteen units of
+    travel. It takes <b>75 seconds</b> and prints two lines every hundredth of a second, so about
+    fifteen thousand lines will scroll past.</p>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ros2_motion_python mover</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The turtle drives a wide arc for 75 seconds and stops.</p>
+      <details class="out"><summary>The last lines, and a failure</summary><pre>Time Spent:  75.00019907951355
+Traveled Distance:  15.00003981590271
+The Robot Has Stopped
+Traceback (most recent call last):
+  ...
+  File ".../simple_turtlesim_motion.py", line 68, in timer_callback
+    self.publisher.publish(msg)
+rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is
+  invalid, at ./src/rcl/publisher.c:423
+[ros2run]: Process exited with failure 1</pre></details>
+    </div></li>
+  </ol>
+  <div class="notice warnbox"><span class="lbl">This failure is expected</span>
+    <p>The turtle does stop correctly. The error happens one instruction later. The program calls
+    <code>rclpy.shutdown()</code> to end itself and then, on the next line, publishes one more
+    message. Shutting down destroys the connection, so the publish fails. <b>Nothing you did caused
+    this</b>, and the program worked in 2023 on an older ROS 2 release that was more forgiving.</p>
+    <p>Remember this message. <code>publisher's context is invalid</code> almost always means
+    <b>something was published after shutdown</b>.</p></div>
+
+  <div class="chk"><span class="lbl">Checkpoint</span>
+    <ul>
+      <li>You have driven the turtle forward, rotated it, and sent it to a goal.</li>
+      <li>You saw a <b>200 degree rotation hang</b>, and you know the reason is angle wrapping.</li>
+      <li>You saw <code>publisher's context is invalid</code>, and you know it means publishing after shutdown.</li>
+      <li>turtlesim is <b>still running</b> in T1.</li>
+    </ul>
+  </div>
+
+  <div class="pager"><button type="button" data-go="get">← 1 · Download and build</button><button type="button" data-go="read">3 · How it moves →</button></div>
+</section>
+
+<!-- ============================ PART 3 ============================ -->
+<section class="panel" id="p-read" role="tabpanel" aria-labelledby="t-read" tabindex="-1" hidden>
+  <h2>Part 3 — What Actually Makes the Robot Move</h2>
+  <p class="lede">Three ideas. You need all three to write Part 5, and you need nothing else.</p>
+
+  <div class="part"><span class="pn">3.1</span><h3>A Topic Is a Named Channel</h3></div>
+  <p class="say">Nothing in ROS 2 calls a function on the robot. A program puts a message on a named
+    channel, and any program that is listening to that name receives it. The name for velocity
+    commands in turtlesim is <code>/turtle1/cmd_vel</code>.</p>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic info /turtle1/cmd_vel</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">One subscriber: the simulator. No publishers yet, because you have not written
+        one.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>Type: geometry_msgs/msg/Twist
+Publisher count: 0
+Subscription count: 1</pre></div>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">3.2</span><h3>The Message Is Called <code>Twist</code></h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 interface show geometry_msgs/msg/Twist</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Six numbers: three for straight-line speed, three for turning speed.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>Vector3  linear
+	float64 x
+	float64 y
+	float64 z
+Vector3  angular
+	float64 x
+	float64 y
+	float64 z</pre></div>
+    </div></li>
+  </ol>
+  <div class="notice"><span class="lbl">Only two of the six do anything</span>
+    <p>A turtle, like a TurtleBot, drives on two wheels on a flat floor. It can move along the
+    direction it faces, and it can turn. It cannot move sideways. So <code>linear.x</code> and
+    <code>angular.z</code> change the motion, and the other four fields are ignored. This is the
+    <b>nonholonomic constraint</b> from the lecture.</p>
+    <p>Test it for yourself. The command below is valid, is accepted, produces no error, and does not
+    move the turtle at all.</p></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic pub -r 10 /turtle1/cmd_vel geometry_msgs/msg/Twist '{linear: {y: 2.0}}'</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Watch the turtle for five seconds, then press <kbd>Ctrl</kbd>+<kbd>C</kbd>.
+        Nothing moved, and nothing reported a problem. The message was correct; the motion is
+        impossible.</p>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">3.3</span><h3>A Control Loop Is a Timer That Publishes</h3></div>
+  <p class="say">One message is not enough. turtlesim <b>stops the turtle about one second after
+    the last command arrives</b>, so a single message produces one brief movement. To keep a robot moving
+    you must keep publishing. Every node you write in this course has the same shape:</p>
+  <div class="filecard">
+    <header><span class="fpath">the shape of every node in this course</span><span class="spacer"></span><span class="fmeta">pseudocode</span></header>
+<pre><code>create a publisher on /turtle1/cmd_vel
+create a timer that fires ten times a second
+every time the timer fires:
+    build a Twist message
+    put the speeds into it
+    publish it</code></pre>
+  </div>
+  <div class="notice"><span class="lbl">Keep this number</span>
+    <p>A robot that publishes <code>linear.x = v</code> and <code>angular.z = ω</code> without
+    changing them drives a circle of radius <b>R = v / ω</b>. You will use
+    <code>v = 2.0</code> and <code>ω = 1.0</code> in Part 5, so your circle will have a radius of
+    <b>2.0</b>. Write that number down now and compare it with what you measure.</p></div>
+
+  <div class="chk"><span class="lbl">Checkpoint</span>
+    <ul>
+      <li>You can say what a <b>topic</b> is in one sentence.</li>
+      <li>You know which <b>two fields</b> of a Twist message a differential-drive robot obeys.</li>
+      <li>You know why a node must publish <b>repeatedly</b> and not once.</li>
+      <li>You have predicted the radius of your circle: <b>R = v / ω = 2.0</b>.</li>
+    </ul>
+  </div>
+
+  <div class="pager"><button type="button" data-go="run">← 2 · Run and observe</button><button type="button" data-go="create">4 · Create a package →</button></div>
+</section>
+
+<!-- ============================ PART 4 ============================ -->
+<section class="panel" id="p-create" role="tabpanel" aria-labelledby="t-create" tabindex="-1" hidden>
+  <h2>Part 4 — Create Your Own Package</h2>
+  <p class="lede">Everything you have run so far was written by someone else. From here on, the code
+    is yours. A package is created by one command, and then you need to understand four files.</p>
+
+  <div class="part"><span class="pn">4.1</span><h3>One Command</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws/src</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><span class="where">T2</span>Packages are created inside <code>src/</code>,
+        never inside <code>build/</code> or <code>install/</code>.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 pkg create my_turtle_circle --build-type ament_python --license Apache-2.0 --dependencies rclpy geometry_msgs</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><b>The package name must come before <code>--dependencies</code>.</b> If you
+        put it last, <code>--dependencies</code> swallows it and the command fails with
+        <code>the following arguments are required: package_name</code>.</p>
+      <p class="does"><code>--build-type ament_python</code> means a pure Python package.
+        <code>--dependencies rclpy geometry_msgs</code> writes those two names into
+        <code>package.xml</code> so the build system knows what your code needs.</p>
+      <div class="out"><span class="olbl">Expected, abbreviated</span><pre>going to create a new package
+package name: my_turtle_circle
+build type: ament_python
+dependencies: ['rclpy', 'geometry_msgs']
+creating folder ./my_turtle_circle
+creating ./my_turtle_circle/package.xml
+creating source folder
+creating folder ./my_turtle_circle/my_turtle_circle
+creating ./my_turtle_circle/setup.py
+creating ./my_turtle_circle/setup.cfg
+creating folder ./my_turtle_circle/resource
+creating ./my_turtle_circle/resource/my_turtle_circle
+creating ./my_turtle_circle/my_turtle_circle/__init__.py
+creating folder ./my_turtle_circle/test</pre></div>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">4.2</span><h3>What Was Created</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">find my_turtle_circle -type f | sort</code><button class="copy" type="button">Copy</button></div>
+      <div class="out"><span class="olbl">Expected</span><pre>my_turtle_circle/my_turtle_circle/__init__.py
+my_turtle_circle/package.xml
+my_turtle_circle/resource/my_turtle_circle
+my_turtle_circle/setup.cfg
+my_turtle_circle/setup.py
+my_turtle_circle/test/test_copyright.py
+my_turtle_circle/test/test_flake8.py
+my_turtle_circle/test/test_pep257.py</pre></div>
+    </div></li>
+  </ol>
+  <div class="tblwrap">
+  <table class="tbl">
+    <thead><tr><th style="width:30%">File or folder</th><th>What it is for</th></tr></thead>
+    <tbody>
+      <tr><td><code>package.xml</code></td><td>The name of the package and the list of other packages it needs. The build system reads this to decide the build order.</td></tr>
+      <tr><td><code>setup.py</code></td><td>The Python installation instructions. <b>This is the file you will edit</b>, to say which functions become runnable programs.</td></tr>
+      <tr><td><code>my_turtle_circle/</code></td><td>The inner folder with the same name. <b>Your Python files go here.</b> Two folders with the same name is confusing the first time you see it, and it is simply how Python packages are arranged.</td></tr>
+      <tr><td><code>resource/</code></td><td>An empty marker file. It is how <code>ros2 pkg list</code> discovers your package. Do not delete it.</td></tr>
+      <tr><td><code>test/</code></td><td>Automatic style checks. They are not run by <code>colcon build</code> and you can ignore them today.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="part"><span class="pn">4.3</span><h3>Build It While It Is Still Empty</h3></div>
+  <p class="say">Build now, before there is any code in it. An empty package that builds proves the
+    workspace is correct. If you write the node first and the build fails, you will not know whether
+    the fault is in your code or in your setup.</p>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws &amp;&amp; colcon build --packages-select my_turtle_circle</code><button class="copy" type="button">Copy</button></div>
+      <div class="out"><span class="olbl">Expected</span><pre>Starting &gt;&gt;&gt; my_turtle_circle
+Finished &lt;&lt;&lt; my_turtle_circle [0.88s]
+
+Summary: 1 package finished [0.98s]</pre></div>
+    </div></li>
+  </ol>
+
+  <div class="chk"><span class="lbl">Checkpoint</span>
+    <ul>
+      <li><code>~/ros2_course_ws/src/my_turtle_circle</code> exists and contains <b>setup.py</b>.</li>
+      <li>It builds, and the summary says <b>1 package finished</b>.</li>
+      <li>You can point at the folder where your Python file must go.</li>
+    </ul>
+  </div>
+
+  <div class="pager"><button type="button" data-go="read">← 3 · How it moves</button><button type="button" data-go="node">5 · Write the node →</button></div>
+</section>
+
+<!-- ============================ PART 5 ============================ -->
+<section class="panel" id="p-node" role="tabpanel" aria-labelledby="t-node" tabindex="-1" hidden>
+  <h2>Part 5 — Write the Node That Drives a Circle</h2>
+  <p class="lede">Thirty lines. Type them; do not paste them. You will remember the structure of a
+    ROS 2 node far better if you have written it once.</p>
+
+  <div class="part"><span class="pn">5.1</span><h3>Create the File</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws/src/my_turtle_circle/my_turtle_circle</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The <b>inner</b> folder. If you create the file in the outer one, it will not
+        be installed and <code>ros2 run</code> will not find it.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">gedit circle.py</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Or <code>nano circle.py</code>, or <code>code circle.py</code>. Any editor.</p>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">5.2</span><h3>The Whole Program</h3></div>
+  <div class="filecard">
+    <header>
+      <span class="fpath">~/ros2_course_ws/src/my_turtle_circle/my_turtle_circle/circle.py</span>
+      <span class="spacer"></span>
+      <span class="fmeta">30 lines</span>
+      <button class="copyfile" type="button">Copy file</button>
+    </header>
+<pre><code>import time
+import rclpy
+from rclpy.node import Node
+from rclpy.signals import SignalHandlerOptions
+from geometry_msgs.msg import Twist
+
+class Circle(Node):
+    def __init__(self):
+        super().__init__('circle')
+        <b>self.pub = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)</b>
+        <b>self.create_timer(0.1, self.send)</b>
+
+    def send(self):
+        msg = Twist()
+        <b>msg.linear.x = 2.0</b>
+        <b>msg.angular.z = 1.0</b>
+        self.pub.publish(msg)
+
+def main():
+    rclpy.init(signal_handler_options=SignalHandlerOptions.NO)
+    node = Circle()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        node.pub.publish(Twist())
+        time.sleep(0.3)
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()</code></pre>
+  </div>
+
+  <div class="part"><span class="pn">5.3</span><h3>Line by Line</h3></div>
+  <div class="tblwrap">
+  <table class="tbl">
+    <thead><tr><th style="width:38%">Line</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>class Circle(Node)</code></td><td>Your node inherits from <code>Node</code>. That is what gives it a publisher, a timer and a name in the ROS 2 graph.</td></tr>
+      <tr><td><code>super().__init__('circle')</code></td><td>Registers the node under the name <code>circle</code>. This is the name <code>ros2 node list</code> will show.</td></tr>
+      <tr><td><code>create_publisher(Twist, '/turtle1/cmd_vel', 10)</code></td><td>The message type, the topic name, and a queue of 10 messages. The topic name must match exactly, including the leading slash.</td></tr>
+      <tr><td><code>create_timer(0.1, self.send)</code></td><td>Call <code>send</code> every 0.1 seconds, which is ten times a second. <b>This is the control loop.</b></td></tr>
+      <tr><td><code>msg.linear.x = 2.0</code></td><td>Forward speed, in units per second. It must be written <code>2.0</code> and not <code>2</code>. An integer is accepted here and then kills the process later, when the message is published, with a C assertion and no line number. See the last section of this sheet.</td></tr>
+      <tr><td><code>msg.angular.z = 1.0</code></td><td>Turn rate, in radians per second. Positive turns to the left.</td></tr>
+      <tr><td><code>rclpy.spin(node)</code></td><td>Hand control to ROS 2 and let it call your timer. Nothing after this line runs until the node is stopped.</td></tr>
+      <tr><td><code>SignalHandlerOptions.NO</code></td><td>Tells ROS 2 not to handle <kbd>Ctrl</kbd>+<kbd>C</kbd> itself, so Python raises <code>KeyboardInterrupt</code> and your <code>except</code> block runs. Without it, ROS 2 shuts the connection down first and your stop message cannot be sent. That is exactly the failure you saw in Part 2.4.</td></tr>
+      <tr><td><code>node.pub.publish(Twist())</code></td><td>A Twist with every field left at zero is a full stop. <b>Always stop the robot before you exit.</b></td></tr>
+      <tr><td><code>time.sleep(0.3)</code></td><td>Give the stop message time to leave the program. Publishing and then exiting immediately can discard it.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="part"><span class="pn">5.4</span><h3>Tell the Build System About It</h3></div>
+  <p class="say">The file exists, but <code>ros2 run</code> still knows nothing about it. Open
+    <code>setup.py</code> in the package folder above and add <b>one line</b> inside
+    <code>console_scripts</code>.</p>
+  <div class="filecard">
+    <header><span class="fpath">~/ros2_course_ws/src/my_turtle_circle/setup.py</span>
+      <span class="spacer"></span><span class="fmeta">add the line in bold</span></header>
+<pre><code>    entry_points={
+        'console_scripts': [
+            <b>'circle = my_turtle_circle.circle:main',</b>
+        ],
+    },</code></pre>
+  </div>
+  <div class="notice"><span class="lbl">How to read that line</span>
+    <p><code>circle</code> is the name you will type after <code>ros2 run</code>.
+    <code>my_turtle_circle.circle</code> is the folder and the file.
+    <code>main</code> is the function to call. The comma at the end is required.</p></div>
+
+  <div class="part"><span class="pn">5.5</span><h3>Build and Run</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws &amp;&amp; colcon build --packages-select my_turtle_circle</code><button class="copy" type="button">Copy</button></div>
+      <div class="out"><span class="olbl">Expected</span><pre>Summary: 1 package finished [0.98s]</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">source ~/ros2_course_ws/install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><b>Do not skip this.</b> You added a new program, so the terminal must be told
+        about it again. Skipping this line is why <code>Package not found</code> appears for a
+        package that clearly exists.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run my_turtle_circle circle</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The turtle drives a circle and keeps driving it. The program prints nothing at
+        all, which is correct. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop: the turtle stops
+        immediately and the program exits with no error message.</p>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">5.6</span><h3>Measure What You Predicted</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 service call /reset std_srvs/srv/Empty '{}'</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Put the turtle back in the middle first, at <code>x = y = 5.544</code>.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run my_turtle_circle circle</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><span class="where">T2</span>Leave it running, and open T3 for the next line.
+        Remember that T3 needs both <code>source</code> lines before it knows anything.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 topic echo /turtle1/pose --once</code><button class="copy" type="button">Copy</button></div>
+      <p class="does"><span class="where">T3</span>Run this several times over one full revolution, which takes
+        <code>2π / ω = 6.3</code> seconds, and write down the largest and smallest x you see.</p>
+    </div></li>
+  </ol>
+  <div class="notice"><span class="lbl">The measurement</span>
+    <p>Sampled on the laboratory machine over one revolution: x ran from <b>3.528 to 7.528</b> and y
+    from <b>5.544 to 9.544</b>. Half of each span is <b>2.000</b>.</p>
+    <p>You predicted <code>R = v / ω = 2.0 / 1.0 = 2.0</code> in Part 3, before running anything.
+    The model and the robot agree to three decimal places. <b>Change <code>angular.z</code> to
+    <code>2.0</code>, rebuild, and the radius becomes 1.0.</b> Try it.</p></div>
+
+  <div class="notice warnbox"><span class="lbl">One honest detail</span>
+    <p>turtlesim stops the turtle by itself about one second after the last command, so the turtle
+    would have stopped even without your <code>except</code> block. <b>A real robot does not do
+    this.</b> A TurtleBot 3 keeps the last velocity it was given until something tells it otherwise,
+    which is why the habit of publishing a zero Twist before exiting is worth forming now, in a
+    simulator where a mistake costs nothing.</p></div>
+
+  <div class="chk"><span class="lbl">Checkpoint</span>
+    <ul>
+      <li>The turtle drives a circle when you run <b>your own</b> package.</li>
+      <li><kbd>Ctrl</kbd>+<kbd>C</kbd> stops it with <b>no traceback</b>.</li>
+      <li>The measured radius is <b>2.0</b>, and you predicted it before you ran the node.</li>
+      <li>Changing <code>angular.z</code> changes the radius in the direction you expect.</li>
+    </ul>
+  </div>
+
+  <div class="pager"><button type="button" data-go="create">← 4 · Create a package</button><button type="button" data-go="cpp">6 · The same in C++ →</button></div>
+</section>
+
+<!-- ============================ PART 6 ============================ -->
+<section class="panel" id="p-cpp" role="tabpanel" aria-labelledby="t-cpp" tabindex="-1" hidden>
+  <h2>Part 6 — The Same Node in C++</h2>
+  <p class="lede">Optional, and worth the twenty minutes. Recall from Part 1 that
+    <code>ros2_motion_cpp</code> builds but produces no program, because it contains no source
+    file. You are going to give it one, and it will do exactly what your Python node does.</p>
+
+  <div class="notice"><span class="lbl">Why do this</span>
+    <p>The concepts are identical: a node, a publisher, a timer, a Twist. Only the spelling changes.
+    Seeing the same few calls in two languages is the fastest way to learn that ROS 2 is not a
+    Python library. It is a system, and Python is one way to speak to it.</p></div>
+
+  <div class="part"><span class="pn">6.1</span><h3>Write the Source File</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">mkdir -p ~/ros2_course_ws/src/ros2_course_packages/src/ros2_motion_cpp/src</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">A C++ package keeps its sources in a folder called <code>src/</code>. This one
+        has no such folder yet, which is the clearest possible evidence that it was never finished.</p>
+    </div></li>
+  </ol>
+  <div class="filecard">
+    <header>
+      <span class="fpath">~/ros2_course_ws/src/ros2_course_packages/src/ros2_motion_cpp/src/circle.cpp</span>
+      <span class="spacer"></span><span class="fmeta">33 lines</span>
+      <button class="copyfile" type="button">Copy file</button>
+    </header>
+<pre><code>#include &lt;chrono&gt;
+#include &lt;memory&gt;
+#include "rclcpp/rclcpp.hpp"
+#include "geometry_msgs/msg/twist.hpp"
+
+using namespace std::chrono_literals;
+
+class Circle : public rclcpp::Node
+{
+public:
+  Circle() : Node("circle_cpp")
+  {
+    <b>pub_ = create_publisher&lt;geometry_msgs::msg::Twist&gt;("/turtle1/cmd_vel", 10);</b>
+    <b>timer_ = create_wall_timer(100ms, [this]() {</b>
+      geometry_msgs::msg::Twist msg;
+      <b>msg.linear.x = 2.0;</b>
+      <b>msg.angular.z = 1.0;</b>
+      pub_-&gt;publish(msg);
+    });
+  }
+
+private:
+  rclcpp::Publisher&lt;geometry_msgs::msg::Twist&gt;::SharedPtr pub_;
+  rclcpp::TimerBase::SharedPtr timer_;
+};
+
+int main(int argc, char ** argv)
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared&lt;Circle&gt;());
+  rclcpp::shutdown();
+  return 0;
+}</code></pre>
+  </div>
+  <div class="notice"><span class="lbl">Compare the two files</span>
+    <p>Put this beside <code>circle.py</code>. <code>create_publisher</code>,
+    <code>create_wall_timer</code>, <code>msg.linear.x</code>, <code>spin</code>,
+    <code>shutdown</code> — the same five things in the same order. <code>100ms</code> is the same
+    interval as <code>0.1</code>. The node has a different name, <code>circle_cpp</code>, only so
+    that both can run at once and you can see them separately in
+    <code>ros2 node list</code>.</p></div>
+
+  <div class="part"><span class="pn">6.2</span><h3>Tell CMake About It</h3></div>
+  <p class="say">A Python package is described by <code>setup.py</code>; a C++ package is described
+    by <code>CMakeLists.txt</code>. Open it and add these lines <b>immediately above</b> the line
+    that reads <code>if(BUILD_TESTING)</code>. <code>rclcpp</code> and <code>geometry_msgs</code>
+    are already found further up the file, so nothing else needs to change.</p>
+  <div class="filecard">
+    <header><span class="fpath">~/ros2_course_ws/src/ros2_course_packages/src/ros2_motion_cpp/CMakeLists.txt</span>
+      <span class="spacer"></span><span class="fmeta">add 7 lines</span>
+      <button class="copyfile" type="button">Copy file</button></header>
+<pre><code>add_executable(circle_cpp src/circle.cpp)
+ament_target_dependencies(circle_cpp rclcpp geometry_msgs)
+
+install(TARGETS
+  circle_cpp
+  DESTINATION lib/${PROJECT_NAME})</code></pre>
+  </div>
+  <div class="notice"><span class="lbl">What each line does</span>
+    <p><code>add_executable</code> compiles the source into a program.
+    <code>ament_target_dependencies</code> links it against the two ROS 2 libraries.
+    <code>install</code> copies the result into the workspace, where <code>ros2 run</code> looks for
+    it. <b>Leave out the <code>install</code> block and the build succeeds while
+    <code>ros2 run</code> reports that nothing was found</b> — a confusing failure that you can now
+    recognise.</p></div>
+
+  <div class="part"><span class="pn">6.3</span><h3>Build and Run</h3></div>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws &amp;&amp; colcon build --packages-select ros2_motion_cpp</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Two or three seconds. C++ is compiled, so this is slower than the Python
+        build, and a mistake is caught here rather than when you run it.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>Starting &gt;&gt;&gt; ros2_motion_cpp
+Finished &lt;&lt;&lt; ros2_motion_cpp [2.54s]
+
+Summary: 1 package finished [2.65s]</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">source ~/ros2_course_ws/install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 pkg executables ros2_motion_cpp</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The package that had nothing in it now has one program.</p>
+      <div class="out"><span class="olbl">Expected</span><pre>ros2_motion_cpp circle_cpp</pre></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 service call /reset std_srvs/srv/Empty '{}'</code><button class="copy" type="button">Copy</button></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">ros2 run ros2_motion_cpp circle_cpp</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">The same circle, of the same radius. Measured on the laboratory machine:
+        <b>2.000 by 2.000</b>. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop.</p>
+      <div class="out"><span class="olbl">Printed on Ctrl-C</span><pre>[INFO] [rclcpp]: signal_handler(SIGINT/SIGTERM)</pre></div>
+    </div></li>
+  </ol>
+  <div class="notice"><span class="lbl">One difference worth noting</span>
+    <p>The C++ node has no <code>except</code> block, so it publishes no stop message. This is only
+    safe because turtlesim stops the turtle by itself after one second. Writing the C++
+    equivalent of the Python stop is a good exercise, and it is not straightforward: once
+    <code>spin</code> returns, the connection is already closed.</p></div>
+
+  <div class="chk"><span class="lbl">Checkpoint</span>
+    <ul>
+      <li><code>ros2 pkg executables ros2_motion_cpp</code> lists <b>circle_cpp</b>.</li>
+      <li>The C++ node draws the <b>same circle</b> as the Python one.</li>
+      <li>You can name the five things both versions do, in the same order.</li>
+    </ul>
+  </div>
+
+  <div class="pager"><button type="button" data-go="node">← 5 · Write the node</button><button type="button" data-go="fixes">If it does not work →</button></div>
+</section>
+
+<!-- ============================ FIXES ============================ -->
+<section class="panel" id="p-fixes" role="tabpanel" aria-labelledby="t-fixes" tabindex="-1" hidden>
+  <h2>If It Does Not Work</h2>
+  <p class="lede">Every message in this table was produced on purpose on the laboratory machine.
+    Find the text you are seeing in the left column.</p>
+
+  <div class="tblwrap">
+  <table class="tbl">
+    <thead><tr><th style="width:42%">What you see</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><code>Package 'my_turtle_circle' not found</code></td>
+        <td>You did not run <code>source ~/ros2_course_ws/install/setup.bash</code> in <b>this</b> terminal, or you did not run it again after adding the new program. Run it and try once more.</td>
+      </tr>
+      <tr>
+        <td><code>No executable found</code></td>
+        <td>The package was found but the program inside it was not. For Python: the line in <code>console_scripts</code> is missing, misspelled, or you forgot to rebuild. For C++: the <code>install(TARGETS ...)</code> block is missing from <code>CMakeLists.txt</code>.</td>
+      </tr>
+      <tr>
+        <td><code>No module named 'rclpy._rclpy_pybind11'</code></td>
+        <td>Anaconda is active. Run <code>conda deactivate</code>, then start again in that terminal.</td>
+      </tr>
+      <tr>
+        <td><code>No module named 'ament_package'</code> during <code>colcon build</code></td>
+        <td>The same cause. <code>conda deactivate</code>, then delete <code>build/</code> and <code>install/</code> and build again.</td>
+      </tr>
+      <tr>
+        <td><code>undefined symbol: __libc_pthread_init</code></td>
+        <td>The terminal was opened from inside a snap application. Open a normal terminal window and start turtlesim there.</td>
+      </tr>
+      <tr>
+        <td><code>the following arguments are required: package_name</code></td>
+        <td>In <code>ros2 pkg create</code> you put the package name after <code>--dependencies</code>. The name must come first.</td>
+      </tr>
+      <tr>
+        <td>The program dies with no Python traceback:<br>
+          <code>Assertion `PyFloat_Check(field)' failed.</code></td>
+        <td>You wrote <code>msg.linear.x = 2</code> instead of <code>2.0</code>. Twist fields are
+          64-bit floats. The assignment itself is <b>accepted</b> — the check happens in C when the
+          message is converted for publishing, and it aborts the whole process. There is no line
+          number, which is what makes it hard.
+          <br><br>Run the node again with <code>ROS_PYTHON_CHECK_FIELDS=1 ros2 run …</code> and you
+          get a normal Python error at the line that did it:
+          <code>AssertionError: The 'x' field must be of type 'float'</code>. Worth remembering
+          for every message you ever build.</td>
+      </tr>
+      <tr>
+        <td><code>publisher's context is invalid</code></td>
+        <td>Something was published after <code>rclpy.shutdown()</code>. In your own node, check that the stop message is published <b>inside</b> the <code>except</code> block and before <code>rclpy.shutdown()</code>.</td>
+      </tr>
+      <tr>
+        <td>The node runs, prints nothing, and the turtle does not move</td>
+        <td>Three usual causes. The topic name is wrong — it must be <code>/turtle1/cmd_vel</code> with the slash. Or turtlesim is not running. Or the speeds were left at zero. Check with <code>ros2 topic echo /turtle1/cmd_vel</code> in another terminal: if nothing appears, your node is not publishing.</td>
+      </tr>
+      <tr>
+        <td>The turtle moves for a moment and then stops</td>
+        <td>You published once instead of repeatedly. turtlesim stops the turtle about one second after the last command. You need the timer.</td>
+      </tr>
+      <tr>
+        <td>The turtle circles but the radius is wrong</td>
+        <td>Radius is <code>linear.x / angular.z</code>. Check both numbers in your file, and remember to rebuild after changing them — <code>ros2 run</code> executes the installed copy, not the file you just edited.</td>
+      </tr>
+      <tr>
+        <td>Two turtles, or two circles at once</td>
+        <td>An earlier node is still running in another terminal. Run <code>ros2 node list</code>; anything you do not recognise is a leftover. Stop it with <kbd>Ctrl</kbd>+<kbd>C</kbd> in its own terminal.</td>
+      </tr>
+      <tr>
+        <td>Rotation of more than 180 degrees never finishes in <code>cleaner</code></td>
+        <td>Expected. It is the angle wrapping fault described in Part 2.3, and it is in the original 2023 code. Press <kbd>Ctrl</kbd>+<kbd>C</kbd>.</td>
+      </tr>
+      <tr>
+        <td><code>colcon build</code> warns about <code>turtlebot3_description</code></td>
+        <td>You built the whole workspace instead of naming the packages. It is a warning, not an error, but build with <code>--packages-select</code> to avoid hiding the official packages.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="part"><span class="pn">Reset</span><h3>Starting Over Cleanly</h3></div>
+  <p class="say">If the workspace has become confusing, delete the generated directories and build
+    again. Your source code is never touched by this.</p>
+  <ol class="steps">
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">cd ~/ros2_course_ws &amp;&amp; rm -rf build install log</code><button class="copy" type="button">Copy</button></div>
+      <p class="does">Only <code>src/</code> matters. Everything else is regenerated.</p>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">colcon build --packages-select ros2_motion_python ros2_motion_cpp my_turtle_circle</code><button class="copy" type="button">Copy</button></div>
+    </div></li>
+    <li class="step"><div>
+      <div class="line"><span class="pr">$</span><code class="cmd">source ~/ros2_course_ws/install/setup.bash</code><button class="copy" type="button">Copy</button></div>
+    </div></li>
+  </ol>
+
+  <div class="part"><span class="pn">Next</span><h3>What to Take Away</h3></div>
+  <div class="closing" style="margin-top:8px;border-top:none;padding-top:0">
+    <ul>
+      <li><b>A workspace is a directory with a <code>src/</code> in it.</b> Build from the top, and source the result in every terminal.</li>
+      <li><b>Motion is a message on a topic.</b> No function is called on the robot. You publish a Twist on <code>/turtle1/cmd_vel</code>, and a program that is listening acts on it.</li>
+      <li><b>A robot obeys two of the six Twist fields.</b> It drives forward and it turns. It cannot move sideways, and asking it to produces no error.</li>
+      <li><b>One message does not last.</b> The simulator forgets it after about a second, so motion requires a loop that keeps publishing.</li>
+      <li><b>R = v / ω.</b> You predicted 2.0 from the lecture and measured 2.000 from the robot.</li>
+      <li><b>Stop the robot before you exit.</b> The simulator hides this mistake. Real hardware does not.</li>
+    </ul>
+    <p style="margin-top:14px;color:var(--ink-soft)">Week 5 takes the last idea further. Your node
+      drives a circle for ever because nothing measures anything. A node that reads
+      <code>/turtle1/pose</code> and chooses its speed from what it reads is a <b>closed-loop
+      controller</b>, and that is the whole of the next laboratory.</p>
+  </div>
+
+  <section class="colophon">
+    <p>EE 414 · Week 4 hands-on laboratory · companion to
+    <code>slides/EE414_W04A_light.pdf</code>. Source repository:
+    <code>github.com/aniskoubaa/ros2_course_packages</code> (© 2023 Anis Koubaa, CC BY-NC-SA 4.0).
+    Reference copies of the two files you write are in <code>handson/</code> beside this sheet.
+    Every command was run on ROS 2 Jazzy on Ubuntu 24.04; the pass and fail table for the whole
+    sheet is <code>handson_check.txt</code>, regenerated by
+    <code>shared/screenshots/verify_w04_handson.sh</code>.</p>
+  </section>
+
+  <div class="pager"><button type="button" data-go="cpp">← 6 · The same in C++</button><span></span></div>
+</section>
+
+</div>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- clipboard ------------------------------------------------
+     Two kinds of button. `.copy` sits beside one command and copies that
+     command, with no prompt character. `.copyfile` sits in a file header and
+     copies the whole file below it. The bold <b> marks inside a file are
+     emphasis for the reader, so textContent -- which ignores them -- is
+     exactly the text the student needs. */
+  function attach(btn, source, label) {
+    btn.addEventListener("click", function () {
+      var node = source();
+      if (!node) { return; }
+      var text = node.textContent.replace(/\s+$/, "");
+
+      var done = function () {
+        btn.textContent = "Copied";
+        btn.classList.add("done");
+        setTimeout(function () {
+          btn.textContent = label;
+          btn.classList.remove("done");
+        }, 1400);
+      };
+
+      function fallback() {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); done(); } catch (e) { /* nothing to do */ }
+        document.body.removeChild(ta);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else {
+        fallback();
+      }
+    });
+  }
+
+  document.querySelectorAll(".copy").forEach(function (btn) {
+    attach(btn, function () { return btn.parentNode.querySelector("code.cmd"); }, "Copy");
+  });
+  document.querySelectorAll(".copyfile").forEach(function (btn) {
+    var card = btn.closest(".filecard");
+    attach(btn, function () { return card && card.querySelector("pre"); }, "Copy file");
+  });
+
+  /* ---------- tabs ----------------------------------------------------
+     One part on screen at a time. The hash carries the current part, so a
+     student who reloads, or who is sent a link to "part 5", lands there. */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var names = tabs.map(function (t) { return t.dataset.tab; });
+
+  function show(name, focusTab) {
+    if (names.indexOf(name) === -1) { name = names[0]; }
+
+    tabs.forEach(function (tab) {
+      var on = tab.dataset.tab === name;
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.setAttribute("tabindex", on ? "0" : "-1");
+      var panel = document.getElementById("p-" + tab.dataset.tab);
+      if (panel) { panel.hidden = !on; }
+      if (on && focusTab) { tab.focus(); }
+    });
+
+    if (window.location.hash.slice(1) !== name) {
+      history.replaceState(null, "", "#" + name);
+    }
+    var strip = document.querySelector(".tabs");
+    if (strip && strip.getBoundingClientRect().top < 0) {
+      strip.scrollIntoView({ block: "start" });
+    }
+    var active = tabs.filter(function (t) { return t.dataset.tab === name; })[0];
+    if (active && active.scrollIntoView) {
+      active.scrollIntoView({ inline: "nearest", block: "nearest" });
+    }
+  }
+
+  tabs.forEach(function (tab) {
+    tab.addEventListener("click", function () { show(tab.dataset.tab); });
+  });
+
+  document.querySelector(".tabs").addEventListener("keydown", function (e) {
+    var i = names.indexOf(document.activeElement.dataset && document.activeElement.dataset.tab);
+    if (i === -1) { return; }
+    var next = null;
+    if (e.key === "ArrowRight") { next = (i + 1) % names.length; }
+    else if (e.key === "ArrowLeft") { next = (i - 1 + names.length) % names.length; }
+    else if (e.key === "Home") { next = 0; }
+    else if (e.key === "End") { next = names.length - 1; }
+    if (next !== null) { e.preventDefault(); show(names[next], true); }
+  });
+
+  document.querySelectorAll("[data-go]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      show(btn.dataset.go);
+      window.scrollTo({ top: 0 });
+    });
+  });
+
+  window.addEventListener("hashchange", function () {
+    show(window.location.hash.slice(1));
+  });
+
+  show(window.location.hash.slice(1) || "before");
+})();
+</script>
+
+</body>
+</html>

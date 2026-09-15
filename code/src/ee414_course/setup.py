@@ -13,6 +13,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name + '/urdf', glob('urdf/*')),
+        ('share/' + package_name + '/worlds', glob('worlds/*')),
         ('share/' + package_name + '/launch', glob('launch/*.launch.py')),
         ('share/' + package_name + '/rviz', glob('rviz/*.rviz')),
     ],
@@ -20,10 +21,20 @@ setup(
     zip_safe=True,
     maintainer='Anis Koubaa',
     maintainer_email='akoubaa@alfaisal.edu',
-    description='EE 414 — Introduction to Robotics: simple scripts to run in class.',
+    description='EE 414 — Introduction to Robotics: every program the course runs, in one package.',
     license='CC BY-NC-SA 4.0',
     entry_points={
         'console_scripts': [
+            # ---- the LECTURE programs (were ee414_w04_demo until 2026-09-13) ----
+            # Each one exists to make a slide's claim visible on a projector.
+            'wheels_to_body  = ee414_course.wheels_to_body:main',
+            'body_to_wheels  = ee414_course.body_to_wheels:main',
+            'quaternion_demo = ee414_course.quaternion_demo:main',
+            'pose_watch      = ee414_course.pose_watch:main',
+            'drive           = ee414_course.drive:main',
+            'dead_reckoning  = ee414_course.dead_reckoning:main',
+
+            # ---- the STUDENT programs: the shape they write themselves ----
             # No simulator needed — the model as arithmetic
             'kinematics   = ee414_course.kinematics:main',
             'angle_wrap   = ee414_course.angle_wrap:main',

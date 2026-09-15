@@ -46,36 +46,36 @@ run() {   # run() "command" -- echoes the command, then its output
   echo
 
   echo "=== colcon build ==="
-  ( cd "$WS" && colcon build --packages-select ee414_w04_demo 2>&1 | grep -vi warning )
+  ( cd "$WS" && colcon build --packages-select ee414_course 2>&1 | grep -vi warning )
   echo
 
   echo "=============================================================="
   echo "THE MODEL --- plain arithmetic, no ROS, no simulator"
   echo "=============================================================="
   echo
-  run "ros2 run ee414_w04_demo wheels_to_body --table"
-  run "ros2 run ee414_w04_demo wheels_to_body 0 10"
-  run "ros2 run ee414_w04_demo body_to_wheels 0.2 1.0"
-  run "ros2 run ee414_w04_demo body_to_wheels 0.5 3.0"
+  run "ros2 run ee414_course wheels_to_body --table"
+  run "ros2 run ee414_course wheels_to_body 0 10"
+  run "ros2 run ee414_course body_to_wheels 0.2 1.0"
+  run "ros2 run ee414_course body_to_wheels 0.5 3.0"
 
   echo "=============================================================="
   echo "QUATERNIONS"
   echo "=============================================================="
   echo
-  run "ros2 run ee414_w04_demo quaternion_demo"
+  run "ros2 run ee414_course quaternion_demo"
 
   echo "=============================================================="
   echo "INTEGRATION --- Euler against the exact arc"
   echo "=============================================================="
   echo
-  run "ros2 run ee414_w04_demo dead_reckoning --compare"
+  run "ros2 run ee414_course dead_reckoning --compare"
 
   echo "=============================================================="
   echo "THE ROBOT DESCRIPTION"
   echo "=============================================================="
   echo
-  run "check_urdf \$(ros2 pkg prefix --share ee414_w04_demo)/urdf/burger_min.urdf"
-  run "grep -A7 'systems::DiffDrive' \$(ros2 pkg prefix --share ee414_w04_demo)/worlds/diff_drive_demo.sdf"
+  run "check_urdf \$(ros2 pkg prefix --share ee414_course)/urdf/burger_min.urdf"
+  run "grep -A7 'systems::DiffDrive' \$(ros2 pkg prefix --share ee414_course)/worlds/diff_drive_demo.sdf"
 
   echo "=============================================================="
   echo "TURTLESIM --- the nonholonomic constraint, and the square"
@@ -98,7 +98,7 @@ run() {   # run() "command" -- echoes the command, then its output
   echo "--- the open-loop square (APPROXIMATE: see the header) ---"
   run "ros2 service call /reset std_srvs/srv/Empty '{}'"
   sleep 1
-  run "ros2 run ee414_w04_demo drive --shape square --distance 2.0"
+  run "ros2 run ee414_course drive --shape square --distance 2.0"
 
   if [ -n "${WITH_GAZEBO:-}" ]; then
     echo "=============================================================="
@@ -108,7 +108,7 @@ run() {   # run() "command" -- echoes the command, then its output
     bg "ros2 launch turtlebot3_gazebo empty_world.launch.py"
     sleep 45
     run "ros2 topic type /cmd_vel"
-    run "ros2 run ee414_w04_demo drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5"
+    run "ros2 run ee414_course drive --robot tb3 --shape square --distance 0.5 --speed 0.15 --turn-rate 0.5"
   else
     echo "=============================================================="
     echo "TURTLEBOT 3 IN GAZEBO --- not captured in this run"
@@ -120,7 +120,7 @@ run() {   # run() "command" -- echoes the command, then its output
     echo "  \$ ros2 topic type /cmd_vel"
     echo "  geometry_msgs/msg/TwistStamped"
     echo
-    echo "  \$ ros2 run ee414_w04_demo drive --robot tb3 --shape square \\"
+    echo "  \$ ros2 run ee414_course drive --robot tb3 --shape square \\"
     echo "        --distance 0.5 --speed 0.15 --turn-rate 0.5"
     echo "  CLOSING ERROR: 0.0213 m from where it started, 0.6 deg off heading"
     echo

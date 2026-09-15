@@ -71,9 +71,14 @@ the bottom of a frame; it just takes the caption with it.
 |---|---|
 | `verify_w04_commands.sh` | Runs **every** command in the Week 4A cue sheet, in lecture order, bringing up turtlesim, RViz2 and Gazebo in turn. Writes a pass/fail table to `week04/ros2_lab/command_check.txt`. Long-running commands are ended with `SIGINT` to the process group — what `Ctrl-C` actually sends, not the `SIGTERM` a bare `timeout` sends — and must exit 0 with no traceback. `WITH_GAZEBO=1` includes the TurtleBot 3 rows. |
 | `snippets.py` | Pulls the code snapshots for a cue sheet straight out of the source files: a file, a line range, a summary and a note per snapshot. Long docstrings are squashed to their first line. Print it to inspect; import `render(key)` to use it. |
+| `verify_w04_handson.sh` | Walks the Week 4 hands-on lab sheet from an empty directory: clones `ros2_course_packages`, builds it, runs the 2023 demonstrations, creates `my_turtle_circle` with `ros2 pkg create`, installs the two files from `week04/ros2_lab/handson/`, and **measures the circle** the finished node traces against `R = v / ω`. Writes `week04/ros2_lab/handson_check.txt`. Two rows are asserted to keep failing, because the lab sheet warns about them. `KEEP=1` leaves the scratch workspace behind. |
 | `insert.py` | Drops each snapshot into the cue it belongs to, anchored on the command text so it cannot land under the wrong demonstration. Refuses to run on a sheet that already has snapshots — regenerate from a copy taken before they were added. |
 
 | `assert_clean_graph.sh` + `find_stray_publishers.py` | Sourced first by both of the above: they refuse to start while anything is publishing velocities, and name the process. A `ros2 topic pub -r 10` forgotten in another terminal silently corrupted a capture — a 2 m square "closing" 2.86 m out, and a *nothing moved* demonstration in which the turtle had moved. The search is Python rather than `pgrep -f`, which matches the shell doing the searching; acted on, that kills the caller. |
 
-`rosenv.sh` now also sources `~/ros2_ws` if it exists, because from Week 4 the cue sheets use
-`ee414_w04_demo` and `ee414_course` in the same terminal.
+`rosenv.sh` sources `~/ros2_ws` if it exists and then the repository's own `code/` workspace,
+in that order. Until 13 September 2026 there were two course packages — `ee414_w04_demo` in the
+repository and `ee414_course` in `~/ros2_ws` — and keeping two copies of overlapping code in two
+places was exactly as durable as it sounds. They are now one package, `ee414_course`, inside the
+repository. The order matters: the repository is sourced last, so it wins if a stale copy ever
+reappears in the personal workspace.
